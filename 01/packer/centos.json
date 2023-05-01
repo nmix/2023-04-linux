@@ -18,7 +18,7 @@
       "guest_os_type": "RedHat_64",
       "http_directory": "http",
       "iso_checksum": "ce31ac97e2f5a0a2930adaddd86c992eee59e5a6a2ba2b8367938efe291a6ff6",
-      "iso_url": "http://mirror.corbina.net/pub/Linux/centos/8-stream/isos/x86_64/CentOS-Stream-8-20230427.2-x86_64-boot.iso",
+      "iso_url": "http://mirror.corbina.net/pub/Linux/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso",
       "name": "{{user `image_name`}}",
       "output_directory": "builds",
       "shutdown_command": "sudo -S /sbin/halt -h -p",
