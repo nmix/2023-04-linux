@@ -2,9 +2,9 @@
 
 В качестве базового используем предложенный Vagrantfile https://github.com/erlong15/otus-linux , который доработаем в части:
 * замена образа на Ubuntu
-* замена SATA на Virtual SCSI (система не загружается)
+* замена SATA на Virtual SCSI (иначе система не загружается)
 * удаляем диски при удалении ВМ (если этого не сделать, заново создать диски не получится)
-* provision ВМ скорректирован: использован apt-get и 
+* provision ВМ скорректирован: использован apt-get и копируем скрипт в домашнюю директорию
 
 ```bash
 vagrant up
@@ -151,6 +151,7 @@ for i in $(seq 1 5); do sudo umount /dev/md0p$i; done
 
 Выполняем все действия одним скриптом
 ```bash
+vagrant up
 vagrant ssh
 sudo ./mkraid6.sh
 ```
