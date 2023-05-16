@@ -1,0 +1,83 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+  :otuslinux => {
+    :box_name => "ubuntu/lunar64",
+    :disks => {
+      :scsi1 => {
+        :dfile => './scsi1.vdi',
+        :size => 10240, # Megabytes
+        :port => 1
+      },
+      :scsi2 => {
+        :dfile => './scsi2.vdi',
+        :size => 2048,
+        :port => 2
+      },
+      :scsi3 => {
+        :dfile => './scsi3.vdi',
+        :size => 1024,
+        :port => 3
+      },
+      :scsi4 => {
+        :dfile => './scsi4.vdi',
+        :size => 1024,
+        :port => 4
+      }
+    }
+  },
+}
+
+VAGRANT_CONTROLLER_NAME = "Virtual I/O Device SCSI controller"
+VAGRANT_CONTROLLER_TYPE = "virtio-scsi"
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+    config.vm.define boxname do |box|
+
+      box.vm.box = boxconfig[:box_name]
+      box.vm.host_name = boxname.to_s
+
+      box.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", "1024"]
+        needsController = false
+        boxconfig[:disks].each do |_, dconf|
+          unless File.exist?(dconf[:dfile])
+            vb.customize ['createhd', '--filename', dconf[:dfile], '--variant', 'Fixed', '--size', dconf[:size]]
+            needsController =  true
+          end
+        end
+        if needsController == true
+          vb.customize ["storagectl", :id, "--name", VAGRANT_CONTROLLER_NAME, "--add", VAGRANT_CONTROLLER_TYPE, '--hostiocache', 'off']
+          boxconfig[:disks].each do |_, dconf|
+            vb.customize ['storageattach', :id, '--storagectl', VAGRANT_CONTROLLER_NAME, '--port', dconf[:port], '--device', 0, '--type', 'hdd', '--medium', dconf[:dfile]]
+          end
+        end
+      end
+
+      box.vm.provision "shell", inline: <<-SHELL
+        mkdir -p ~root/.ssh
+        cp ~vagrant/.ssh/auth* ~root/.ssh
+        apt-get update
+        apt-get install -y mdadm smartmontools hdparm gdisk tree
+      SHELL
+    end
+
+    # --- cleanup after "destroy" action
+    config.trigger.after :destroy do |trigger|
+      trigger.name = "Cleanup operation"
+      trigger.ruby do
+        # --- the following loop is now obsolete as these files will be removed automatically as machine dependency
+        boxconfig[:disks].each do |_, dconf|
+          if File.exist?(dconf[:dfile])
+            puts "Deleting \"#{dconf[:dfile]}\" disk"
+            system("vboxmanage closemedium disk #{dconf[:dfile]} --delete")
+          end
+        end
+      end
+    end
+  end
+end
