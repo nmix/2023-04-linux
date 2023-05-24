@@ -1,6 +1,7 @@
 *.vdi
 *.box
 .vagrant
+*.file
 
 # Swap
 [._]*.s[a-v][a-z]
