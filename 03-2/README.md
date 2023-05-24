@@ -1,5 +1,7 @@
 # 03. Файловые системы и LVM
 
+## Задание
+
 На имеющемся образе (centos/7 1804.2)
 https://gitlab.com/otus_linux/stands-03-lvm
 /dev/mapper/VolGroup00-LogVol00 38G 738M 37G 2% /
