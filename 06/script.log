@@ -1,0 +1,634 @@
+Script started on 2023-05-29 15:59:08+03:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="190" LINES="51"]
+[?2004h]0;zoid@npc: ~/projects/otus/2023-04-linux/06[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/06[00m$ 
+[?2004l[?2004h]0;zoid@npc: ~/projects/otus/2023-04-linux/06[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/06[00m$ 
+[?2004l[?2004h]0;zoid@npc: ~/projects/otus/2023-04-linux/06[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/06[00m$ vagrant up[K[K[K[K[K[K[K[K[K[Kcat Vagrantfile
+[?2004l[38;5;238m───────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[m
+       [38;5;238m│ [0mFile: [1mVagrantfile[0m[m
+[38;5;238m───────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[m
+[38;5;238m   1[0m   [38;5;238m│[0m [38;2;117;113;94m#[0m[38;2;117;113;94m -*- mode: ruby -*-[0m[m
+[38;5;238m   2[0m   [38;5;238m│[0m [38;2;117;113;94m#[0m[38;2;117;113;94m vi: set ft=ruby : vsa[0m[m
+[38;5;238m   3[0m   [38;5;238m│[0m [m
+[38;5;238m   4[0m   [38;5;238m│[0m [38;2;102;217;239mVagrant[0m[38;2;248;248;242m.[0m[38;2;248;248;242mconfigure[0m[38;2;255;255;255m([0m[38;2;190;132;255m2[0m[38;2;255;255;255m)[0m[38;2;248;248;242m [0m[38;2;249;38;114mdo[0m[38;2;248;248;242m [0m[38;2;248;248;242m|[0m[38;2;253;151;31mconfig[0m[38;2;248;248;242m|[0m[m
+[38;5;238m   5[0m   [38;5;238m│[0m [38;2;248;248;242m  config[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mbox [0m[38;2;249;38;114m=[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116mcentos/7[0m[38;2;249;38;114m"[0m[m
+[38;5;238m   6[0m   [38;5;238m│[0m [38;2;248;248;242m  config[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mbox_version [0m[38;2;249;38;114m=[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116m2004.01[0m[38;2;249;38;114m"[0m[m
+[38;5;238m   7[0m   [38;5;238m│[0m [38;2;248;248;242m  config[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mprovider [0m[38;2;249;38;114m"[0m[38;2;230;219;116mvirtualbox[0m[38;2;249;38;114m"[0m[38;2;248;248;242m [0m[38;2;249;38;114mdo[0m[38;2;248;248;242m [0m[38;2;248;248;242m|[0m[38;2;253;151;31mv[0m[38;2;248;248;242m|[0m[m
+[38;5;238m   8[0m   [38;5;238m│[0m [38;2;248;248;242m    v[0m[38;2;248;248;242m.[0m[38;2;248;248;242mmemory [0m[38;2;249;38;114m=[0m[38;2;248;248;242m [0m[38;2;190;132;255m256[0m[m
+[38;5;238m   9[0m   [38;5;238m│[0m [38;2;248;248;242m    v[0m[38;2;248;248;242m.[0m[38;2;248;248;242mcpus [0m[38;2;249;38;114m=[0m[38;2;248;248;242m [0m[38;2;190;132;255m1[0m[m
+[38;5;238m  10[0m   [38;5;238m│[0m [38;2;248;248;242m  [0m[38;2;249;38;114mend[0m[m
+[38;5;238m  11[0m   [38;5;238m│[0m [38;2;248;248;242m  config[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mdefine [0m[38;2;249;38;114m"[0m[38;2;230;219;116mnfss[0m[38;2;249;38;114m"[0m[38;2;248;248;242m [0m[38;2;249;38;114mdo[0m[38;2;248;248;242m [0m[38;2;248;248;242m|[0m[38;2;253;151;31mnfss[0m[38;2;248;248;242m|[0m[m
+[38;5;238m  12[0m   [38;5;238m│[0m [38;2;248;248;242m    nfss[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mnetwork [0m[38;2;249;38;114m"[0m[38;2;230;219;116mprivate_network[0m[38;2;249;38;114m"[0m[38;2;248;248;242m,[0m[38;2;248;248;242m [0m[38;2;246;240;128mip[0m[38;2;246;240;128m:[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116m192.168.50.10[0m[38;2;249;38;114m"[0m[38;2;248;248;242m,[0m[38;2;248;248;242m [0m[38;2;246;240;128mvirtualbox__intnet[0m[38;2;246;240;128m:[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116mnet1[0m[38;2;249;38;114m"[0m[m
+[38;5;238m  13[0m   [38;5;238m│[0m [38;2;248;248;242m    nfss[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mhostname [0m[38;2;249;38;114m=[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116mnfss[0m[38;2;249;38;114m"[0m[m
+[38;5;238m  14[0m   [38;5;238m│[0m [38;2;248;248;242m  [0m[38;2;249;38;114mend[0m[m
+[38;5;238m  15[0m   [38;5;238m│[0m [m
+[38;5;238m  16[0m   [38;5;238m│[0m [38;2;248;248;242m  config[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mdefine [0m[38;2;249;38;114m"[0m[38;2;230;219;116mnfsc[0m[38;2;249;38;114m"[0m[38;2;248;248;242m [0m[38;2;249;38;114mdo[0m[38;2;248;248;242m [0m[38;2;248;248;242m|[0m[38;2;253;151;31mnfsc[0m[38;2;248;248;242m|[0m[m
+[38;5;238m  17[0m   [38;5;238m│[0m [38;2;248;248;242m    nfsc[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mnetwork [0m[38;2;249;38;114m"[0m[38;2;230;219;116mprivate_network[0m[38;2;249;38;114m"[0m[38;2;248;248;242m,[0m[38;2;248;248;242m [0m[38;2;246;240;128mip[0m[38;2;246;240;128m:[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116m192.168.50.11[0m[38;2;249;38;114m"[0m[38;2;248;248;242m,[0m[38;2;248;248;242m [0m[38;2;246;240;128mvirtualbox__intnet[0m[38;2;246;240;128m:[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116mnet1[0m[38;2;249;38;114m"[0m[m
+[38;5;238m  18[0m   [38;5;238m│[0m [38;2;248;248;242m    nfsc[0m[38;2;248;248;242m.[0m[38;2;248;248;242mvm[0m[38;2;248;248;242m.[0m[38;2;248;248;242mhostname [0m[38;2;249;38;114m=[0m[38;2;248;248;242m [0m[38;2;249;38;114m"[0m[38;2;230;219;116mnfsc[0m[38;2;249;38;114m"[0m[m
+[38;5;238m  19[0m   [38;5;238m│[0m [38;2;248;248;242m  [0m[38;2;249;38;114mend[0m[m
+[38;5;238m  20[0m   [38;5;238m│[0m [38;2;249;38;114mend[0m[m
+[38;5;238m───────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[m
+[K[?2004h]0;zoid@npc: ~/projects/otus/2023-04-linux/06[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/06[00m$ cat Vagrantfile[Kvagrant up
+[?2004l[0mBringing machine 'nfss' up with 'virtualbox' provider...[0m
+[0mBringing machine 'nfsc' up with 'virtualbox' provider...[0m
+[1m==> nfss: Importing base box 'centos/7'...[0m
+[0m[K[0m[0mProgress: 20%[0m[0m[K[0m[0mProgress: 40%[0m[0m[K[0m[0mProgress: 70%[0m[0m[K[0m[0mProgress: 90%[0m[0m[K[0m[1m==> nfss: Matching MAC address for NAT networking...[0m
+[1m==> nfss: Checking if box 'centos/7' version '2004.01' is up to date...[0m
+[1m==> nfss: Setting the name of the VM: 06_nfss_1685365177009_22914[0m
+[1m==> nfss: Clearing any previously set network interfaces...[0m
+[1m==> nfss: Preparing network interfaces based on configuration...[0m
+[0m    nfss: Adapter 1: nat[0m
+[0m    nfss: Adapter 2: intnet[0m
+[1m==> nfss: Forwarding ports...[0m
+[0m    nfss: 22 (guest) => 2222 (host) (adapter 1)[0m
+[1m==> nfss: Running 'pre-boot' VM customizations...[0m
+[1m==> nfss: Booting VM...[0m
+[1m==> nfss: Waiting for machine to boot. This may take a few minutes...[0m
+[0m    nfss: SSH address: 127.0.0.1:2222[0m
+[0m    nfss: SSH username: vagrant[0m
+[0m    nfss: SSH auth method: private key[0m
+[0m    nfss: 
+    nfss: Vagrant insecure key detected. Vagrant will automatically replace
+    nfss: this with a newly generated keypair for better security.[0m
+[0m    nfss: 
+    nfss: Inserting generated public key within guest...[0m
+[0m    nfss: Removing insecure key from the guest if it's present...[0m
+[0m    nfss: Key inserted! Disconnecting and reconnecting using new SSH key...[0m
+[1m==> nfss: Machine booted and ready![0m
+[1m==> nfss: Checking for guest additions in VM...[0m
+[0m    nfss: No guest additions were detected on the base box for this VM! Guest
+    nfss: additions are required for forwarded ports, shared folders, host only
+    nfss: networking, and more. If SSH fails on this machine, please install
+    nfss: the guest additions and repackage the box to continue.
+    nfss: 
+    nfss: This is not an error message; everything may continue to work properly,
+    nfss: in which case you may ignore this message.[0m
+[1m==> nfss: Setting hostname...[0m
+[1m==> nfss: Configuring and enabling network interfaces...[0m
+[1m==> nfss: Rsyncing folder: /home/zoid/projects/otus/2023-04-linux/06/ => /vagrant[0m
+[1m==> nfsc: Importing base box 'centos/7'...[0m
+[0m[K[0m[0mProgress: 20%[0m[0m[K[0m[0mProgress: 40%[0m[0m[K[0m[0mProgress: 70%[0m[0m[K[0m[0mProgress: 90%[0m[0m[K[0m[1m==> nfsc: Matching MAC address for NAT networking...[0m
+[1m==> nfsc: Checking if box 'centos/7' version '2004.01' is up to date...[0m
+[1m==> nfsc: Setting the name of the VM: 06_nfsc_1685365213485_55948[0m
+[1m==> nfsc: Fixed port collision for 22 => 2222. Now on port 2200.[0m
+[1m==> nfsc: Clearing any previously set network interfaces...[0m
+[1m==> nfsc: Preparing network interfaces based on configuration...[0m
+[0m    nfsc: Adapter 1: nat[0m
+[0m    nfsc: Adapter 2: intnet[0m
+[1m==> nfsc: Forwarding ports...[0m
+[0m    nfsc: 22 (guest) => 2200 (host) (adapter 1)[0m
+[1m==> nfsc: Running 'pre-boot' VM customizations...[0m
+[1m==> nfsc: Booting VM...[0m
+[1m==> nfsc: Waiting for machine to boot. This may take a few minutes...[0m
+[0m    nfsc: SSH address: 127.0.0.1:2200[0m
+[0m    nfsc: SSH username: vagrant[0m
+[0m    nfsc: SSH auth method: private key[0m
+[0m    nfsc: 
+    nfsc: Vagrant insecure key detected. Vagrant will automatically replace
+    nfsc: this with a newly generated keypair for better security.[0m
+[0m    nfsc: 
+    nfsc: Inserting generated public key within guest...[0m
+[0m    nfsc: Removing insecure key from the guest if it's present...[0m
+[0m    nfsc: Key inserted! Disconnecting and reconnecting using new SSH key...[0m
+[1m==> nfsc: Machine booted and ready![0m
+[1m==> nfsc: Checking for guest additions in VM...[0m
+[0m    nfsc: No guest additions were detected on the base box for this VM! Guest
+    nfsc: additions are required for forwarded ports, shared folders, host only
+    nfsc: networking, and more. If SSH fails on this machine, please install
+    nfsc: the guest additions and repackage the box to continue.
+    nfsc: 
+    nfsc: This is not an error message; everything may continue to work properly,
+    nfsc: in which case you may ignore this message.[0m
+[1m==> nfsc: Setting hostname...[0m
+[1m==> nfsc: Configuring and enabling network interfaces...[0m
+[1m==> nfsc: Rsyncing folder: /home/zoid/projects/otus/2023-04-linux/06/ => /vagrant[0m
+^B0[?2004h]0;zoid@npc: ~/projects/otus/2023-04-linux/06[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/06[00m$ 0[Ktmux
+[?2004l[?1049h[22;0;0t[?1h=[H[2J[?12l[?25h[?1000l[?1002l[?1003l[?1006l[?1005l(B[m[?12l[?25h[?1006l[?1000l[?1002l[?1003l[?2004l[1;1H[1;51r[>c[>q[1;1H[?25l[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:00 29-мая-23(B[m[?12l[?25h[1;1H(B[m[?12l[?25h[?1006l[?1000l[?1002l[?1003l[?2004l[1;1H[1;51r[1;1H[?25l[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:00 29-мая-23(B[m[?12l[?25h[1;1H[?7727h[32m[1mzoid@npc(B[m:[34m[1m~/projects/otus/2023-04-linux/06(B[m$ [?2004hvagrant[Kt ssh nfss
+[?2004l[vagrant@nfss ~]$ [?25l[30m[42m[51;1H[0] 0:bash*                                                                                                                                                              "npc" 16:01 29-мая-23(B[m[?12l[?25h[2;19Hyum install nfs-utils
+Failed to set locale, defaulting to C
+Loaded plugins: fastestmirror
+You need to be root to perform this command.
+[vagrant@nfss ~]$ sudo -i
+[root@nfss ~]# yum install nfs-utils
+Failed to set locale, defaulting to C
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: mirror.sale-dedic.com
+ * extras: mirrors.datahouse.ru
+ * updates: mirror.sale-dedic.com
+base                                                                                                                                                                   | 3.6 kB  00:00:00     [15;1Hextras                                                                                                                                                                 | 2.9 kB  00:00:00     [16;1Hupdates                                                                                                                                                                | 2.9 kB  00:00:00     [17;1H(1/4): base/7/x86_64/group_gz                                                                                                                                          | 153 kB  00:00:00     [18;1H(3/4): extras/7/x86_64/primary_db                                                1% [-                                                                      ]  0.0 B/s | 384 kB  --:--:-- ETA [18;1H(2/4): extras/7/x86_64/primary_db                                                                                                                                      | 249 kB  00:00:00     [19;1H(4/4): updates/7/x86_64/primary_db                                               20% [==============                                                        ] 6.1 MB/s | 5.6 MB  00:00:03 ETA [19;1H(4/4): updates/7/x86_64/primary_db                                               32% [======================-                                               ] 6.3 MB/s | 8.8 MB  00:00:02 ETA [19;1H(4/4): updates/7/x86_64/primary_db                                               44% [===============================                                       ] 6.6 MB/s |  12 MB  00:00:02 ETA [19;1H(3/4): base/7/x86_64/primary_db                                                  57% [=======================================-                              ] 6.9 MB/s |  16 MB  00:00:01 ETA [19;1H(3/4): base/7/x86_64/primary_db                                                  69% [================================================-                     ] 7.2 MB/s |  19 MB  00:00:01 ETA [19;1H(3/4): base/7/x86_64/primary_db                                                  82% [=========================================================-            ] 7.4 MB/s |  23 MB  00:00:00 ETA [19;1H(3/4): updates/7/x86_64/primary_db                                                                                                                                     |  21 MB  00:00:02     [20;1H(4/4): base/7/x86_64/primary_db                                                  94% [=================================================================-    ] 7.4 MB/s |  26 MB  00:00:00 ETA [20;1H(4/4): base/7/x86_64/primary_db                                                  99% [===================================================================== ] 7.2 MB/s |  27 MB  00:00:00 ETA [20;1H(4/4): base/7/x86_64/primary_db                                                                                                                                        | 6.1 MB  00:00:03     [21;1HResolving Dependencies
+--> Running transaction check
+---> Package nfs-utils.x86_64 1:1.3.0-0.66.el7 will be updated
+---> Package nfs-utils.x86_64 1:1.3.0-0.68.el7.2 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==============================================================================================================================================================================================[30;1H Package                                     Arch                                     Version                                                 Repository                                 Size
+==============================================================================================================================================================================================[32;1HUpdating:
+ nfs-utils                                   x86_64                                   1:1.3.0-0.68.el7.2                                      updates                                   413 k[35;1HTransaction Summary
+==============================================================================================================================================================================================[37;1HUpgrade  1 Package[39;1HTotal download size: 413 k
+Is this ok [y/d/N]: y
+Downloading packages:
+No Presto metadata available for updates
+warning: /var/cache/yum/x86_64/7/updates/packages/nfs-utils-1.3.0-0.68.el7.2.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+Public key for nfs-utils-1.3.0-0.68.el7.2.x86_64.rpm is not installed
+nfs-utils-1.3.0-0.68.el7.2.x86_64.rpm                                                                                                                                  | 413 kB  00:00:00     [46;1HRetrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+[1;50r[1;1H[2S[45dImporting GPG key 0xF4A80EB5:
+ Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
+ Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
+ Package    : centos-release-7-8.2003.0.el7.centos.x86_64 (@anaconda)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7[K
+Is this ok [y/N]: [K[1;51r[50;19Hy[1;50r[50;1H
+[K[1;51r[50;1H[1;50r[50;1H
+[ARunning transaction check
+[K[1;51r[50;1H[1;50r[50;1H
+[ARunning transaction test
+[K[1;51r[50;1H[1;50r[50;1H
+[ATransaction test succeeded
+[K[1;51r[50;1H[1;50r[50;1H
+[ARunning transaction
+[K[1;51r[50;1H  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [                                                                                                                                    ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##############                                                                                                                      ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##########################                                                                                                          ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [####################################                                                                                                ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##############################################################                                                                      ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [###############################################################                                                                     ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [###################################################################                                                                 ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##########################################################################################################                          ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [#############################################################################################################################       ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##############################################################################################################################      ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [#################################################################################################################################   ] 1/2[1;50r[50;1H
+[A  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64                                                                                                                                        1/2 [50;1H[K[1;51r[50;1H[1;50r[50;1H
+[A  Cleanup    : 1:nfs-utils-1.3.0-0.66.el7.x86_64                                                                                                                                          2/2 [50;1H[K[1;51r[50;1H[1;50r[50;1H
+[A  Verifying  : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64                                                                                                                                        1/2 [50;1H[K[1;51r[50;1H[1;50r[50;1H
+[A  Verifying  : 1:nfs-utils-1.3.0-0.66.el7.x86_64                                                                                                                                          2/2 [50;1H[K[1;51r[50;1H[1;50r[1;1H[5S[46dUpdated:[K
+  nfs-utils.x86_64 1:1.3.0-0.68.el7.2                                                                                                                                                         [48;1H[K
+Complete![K
+[K[1;51r[50;1H[root@nfss ~]# [1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H# включаем firewall[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16Hsystemctl enable firewalld --now[1;50r[50;1H
+[K[1;51r[50;1H[1;50r[1;1H[2S[48dCreated symlink from /etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service to /usr/lib/systemd/system/firewalld.service.
+Created symlink from /etc/systemd/system/multi-user.target.wants/firewalld.service to /usr/lib/systemd/system/firewalld.service.[K
+[K[1;51r[50;1H[root@nfss ~]# # разрешаем в firewall доступ к сервисам NFS[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[1;1H[3S[47;16Hfirewall-cmd --add-service="nfs3" \
+>   --add-service="rpc-bind" \[K
+>   --add-service="mountd" \[K
+>   --permanent[K[1;51r[50;16H[1;50r[50;1H
+[K[1;51r[50;1H[1;50r[50;1H
+[Asuccess
+[root@nfss ~]# [K[1;51r[50;16Hfirewall-cmd --reload[1;50r[50;1H
+[K[1;51r[50;1H[1;50r[50;1H
+[Asuccess
+[K[1;51r[50;1H[root@nfss ~]# # [1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H# --- включаем сервер NFS [?25l[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:02 29-мая-23(B[m[?12l[?25h[50;42H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16H[1;50r[50;1H
+[root@nfss ~]# [K[1;51r[50;16Hвключаем сервер NFS                        [1;50r[50;1H
+[49;13H^C
+[K[1;51r[50;1H[root@nfss ~]# systemctl enable nfs --now[1;50r[50;1H
+[K[1;51r[50;1H[1;50r[50;1H
+[ACreated symlink from /etc/systemd/system/multi-user.target.wants/nfs-server.service to /usr/lib/systemd/system/nfs-server.service.
+[K[1;51r[50;1H[root@nfss ~]# ss -tnplu | grep 29 049[1;50r[50;1H
+[K[1;51r[50;1H[1;50r[1;1H[4S[46dudp    UNCONN     0      0         *:[31m[1m2049(B[m                  *:*                  [K
+udp    UNCONN     0      0      [::]:[31m[1m2049(B[m               [::]:*                  [K
+tcp    LISTEN     0      64        *:[31m[1m2049(B[m                  *:*                  [K
+tcp    LISTEN     0      64     [::]:[31m[1m2049(B[m               [::]:*                  [K
+[root@nfss ~]# [K[1;51r[50;16Hss -tnplu | grep 2049[root@nfss ~]#                      [16Gmkdir -p /srv/share/upload[1;50r[50;1H
+[K[1;51r[50;1H[root@nfss ~]# chown -R nfsnobody:nfsnobody /srv/share[1;50r[50;1H
+[K[1;51r[50;1H[root@nfss ~]# chmod 0777 /srv/share/upload[1;50r[50;1H
+[K[1;51r[50;1H[root@nfss ~]# [1;50r[1;1H[2S[48;16Hcat << EOF > /etc/exports
+> /srv/share 192.168.50.11/32(rw,sync,root_squash)[K
+> EOF[K[1;51r[50;6H[1;50r[50;1H
+[K[1;51r[50;1H[root@nfss ~]# exportfs -r[1;50r[50;1H
+[K[1;51r[50;1H[root@nfss ~]# exportfs -s[1;50r[50;1H
+[K[1;51r[50;1H[1;50r[50;1H
+[A/srv/share  192.168.50.11/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
+[root@nfss ~]# [K[1;51r[50;16H[?25l[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:03 29-мая-23(B[m[?12l[?25h[50;16H[?25l[26;1H────────────────────────────────────────────────────────────────────────────────────────────────[32m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[1;1H[root@nfss ~]# firewall-cmd --reload[K
+success[K
+[root@nfss ~]#  [K
+[root@nfss ~]# [K
+[root@nfss ~]# [K
+[root@nfss ~]# # --- включаем сервер NFS [K
+[root@nfss ~]# [K
+[root@nfss ~^C                     [K
+[root@nfss ~]# systemctl enable nfs --now[K
+Created symlink from /etc/systemd/system/multi-user.target.wants/nfs-server.service to /usr/lib/systemd/system/nfs-server.service.[K
+[root@nfss ~]# ss -tnplu | grep 2049[K
+udp    UNCONN     0      0         *:[31m[1m2049(B[m                  *:*                  [K
+udp    UNCONN     0      0      [::]:[31m[1m2049(B[m               [::]:*                  [K
+tcp    LISTEN     0      64        *:[31m[1m2049(B[m                  *:*                  [K
+tcp    LISTEN     0      64     [::]:[31m[1m2049(B[m               [::]:*                  [K
+[root@nfss ~]# mkdir -p /srv/share/upload[K
+[root@nfss ~]# chown -R nfsnobody:nfsnobody /srv/share[K
+[root@nfss ~]# chmod 0777 /srv/share/upload[K
+[root@nfss ~]# cat << EOF > /etc/exports[K
+> /srv/share 192.168.50.11/32(rw,sync,root_squash)[K
+> EOF[K
+[root@nfss ~]# exportfs -r[K
+[root@nfss ~]# exportfs -s[K
+/srv/share  192.168.50.11/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)[K
+[root@nfss ~]# [K[27;1H[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:03 29-мая-23(B[m[?12l[?25h[27;1H[2A[root@nfss ~]#                                                                                                                                                                               [27;1H[32m[1mzoid@npc(B[m:[34m[1m~/projects/otus/2023-04-linux/06(B[m$ [?2004hvagrant ssh nfsc
+[?2004l[vagrant@nfsc ~]$ sudo -i
+[root@nfsc ~]# yum install nfs-utils
+Failed to set locale, defaulting to C
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: mirror.sale-dedic.com
+ * extras: mirror.corbina.net
+ * updates: mirror.corbina.net
+base                                                                                                                                                                   | 3.6 kB  00:00:00     [37;1Hextras                                                                                                                                                                 | 2.9 kB  00:00:00     [38;1Hupdates                                                                                                                                                                | 2.9 kB  00:00:00     [39;1H(1/4): base/7/x86_64/group_gz                                                                                                                                          | 153 kB  00:00:00     [40;1H(2/4): extras/7/x86_64/primary_db                                                                                                                                      | 249 kB  00:00:00     [41;1H(4/4): updates/7/x86_64/primary_db                                               7% [=====                                                                  ]  0.0 B/s | 1.9 MB  --:--:-- ETA [41;1H(4/4): updates/7/x86_64/primary_db                                               17% [============                                                          ] 3.3 MB/s | 4.8 MB  00:00:06 ETA [41;1H(4/4): updates/7/x86_64/primary_db                                               28% [====================                                                  ] 3.7 MB/s | 7.9 MB  00:00:05 ETA [41;1H(3/4): base/7/x86_64/primary_db                                                                                                                                        | 6.1 MB  00:00:01     [42;1H(4/4): updates/7/x86_64/primary_db                                               36% [=========================-                                            ] 3.9 MB/s |  10 MB  00:00:04 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               40% [============================-                                         ] 3.9 MB/s |  11 MB  00:00:04 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               45% [===============================-                                      ] 3.9 MB/s |  12 MB  00:00:03 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               50% [===================================                                   ] 3.9 MB/s |  14 MB  00:00:03 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               55% [=======================================                               ] 4.0 MB/s |  15 MB  00:00:03 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               61% [===========================================                           ] 4.0 MB/s |  17 MB  00:00:02 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               67% [===============================================                       ] 4.1 MB/s |  18 MB  00:00:02 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               74% [===================================================-                  ] 4.2 MB/s |  20 MB  00:00:01 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               80% [========================================================-             ] 4.3 MB/s |  22 MB  00:00:01 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               87% [=============================================================-        ] 4.4 MB/s |  24 MB  00:00:00 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                               95% [==================================================================-   ] 4.6 MB/s |  26 MB  00:00:00 ETA [42;1H(4/4): updates/7/x86_64/primary_db                                                                                                                                     |  21 MB  00:00:04     [43;1HResolving Dependencies
+--> Running transaction check
+---> Package nfs-utils.x86_64 1:1.3.0-0.66.el7 will be updated
+---> Package nfs-utils.x86_64 1:1.3.0-0.68.el7.2 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+[27;50r[1;1H[12S[39d==============================================================================================================================================================================================[40;1H Package                                     Arch                                     Version                                                 Repository                                 Size[K
+==============================================================================================================================================================================================[42;1HUpdating:[K
+ nfs-utils                                   x86_64                                   1:1.3.0-0.68.el7.2                                      updates                                   413 k[K
+[K
+Transaction Summary[K
+==============================================================================================================================================================================================[47;1HUpgrade  1 Package[K
+[K
+Total download size: 413 k[K
+Is this ok [y/d/N]: [K[1;51r[50;21Hy[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[50;1H
+[ADownloading packages:
+[K[1;51r[50;1H[27;50r[50;1H
+[ANo Presto metadata available for updates
+[K[1;51r[50;1H[27;50r[1;1H[3S[47dwarning: /var/cache/yum/x86_64/7/updates/packages/nfs-utils-1.3.0-0.68.el7.2.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+Public key for nfs-utils-1.3.0-0.68.el7.2.x86_64.rpm is not installed[K
+nfs-utils-1.3.0-0.68.el7.2.x86_64.rpm                                                                                                                                  | 413 kB  00:00:00     [50;1H[K[1;51r[50;1H[27;50r[50;1H
+[ARetrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+[K[1;51r[50;1H[27;50r[1;1H[5S[45dImporting GPG key 0xF4A80EB5:
+ Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"[K
+ Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5[K
+ Package    : centos-release-7-8.2003.0.el7.centos.x86_64 (@anaconda)[K
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7[K
+Is this ok [y/N]: [K[1;51r[50;19Hy[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[50;1H
+[ARunning transaction check
+[K[1;51r[50;1H[27;50r[50;1H
+[ARunning transaction test
+[K[1;51r[50;1H[27;50r[50;1H
+[ATransaction test succeeded
+[K[1;51r[50;1H[27;50r[50;1H
+[ARunning transaction
+[K[1;51r[50;1H  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [                                                                                                                                    ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##############                                                                                                                      ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##########################                                                                                                          ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [####################################                                                                                                ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##############################################################                                                                      ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [###################################################################                                                                 ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##########################################################################################################                          ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [#############################################################################################################################       ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##############################################################################################################################      ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [#################################################################################################################################   ] 1/2  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64 [##################################################################################################################################  ] 1/2[27;50r[50;1H
+[A  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64                                                                                                                                        1/2 [50;1H[K[1;51r[50;1H[27;50r[50;1H
+[A  Cleanup    : 1:nfs-utils-1.3.0-0.66.el7.x86_64                                                                                                                                          2/2 [50;1H[K[1;51r[50;1H[27;50r[50;1H
+[A  Verifying  : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64                                                                                                                                        1/2 [50;1H[K[1;51r[50;1H[27;50r[50;1H
+[A  Verifying  : 1:nfs-utils-1.3.0-0.66.el7.x86_64                                                                                                                                          2/2 [50;1H[K[1;51r[50;1H[27;50r[1;1H[4S[47dUpdated:[K
+  nfs-utils.x86_64 1:1.3.0-0.68.el7.2                                                                                                                                                         [49;1H[K
+[K[1;51r[50;1H[27;50r[50;1H
+[AComplete!
+[K[1;51r[50;1H[root@nfsc ~]# y systemctl enable firewalld --now[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[1;1H[2S[48dCreated symlink from /etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service to /usr/lib/systemd/system/firewalld.service.
+Created symlink from /etc/systemd/system/multi-user.target.wants/firewalld.service to /usr/lib/systemd/system/firewalld.service.[K
+[K[1;51r[50;1H[root@nfsc ~]# systemctl status firewalld[27;50r[50;1H
+[K[1;51r[50;1H[32m[1m●(B[m[27;50r[1;1H[6S[44;2H firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)[K
+   Active: [32m[1mactive (running)(B[m since Mon 2023-05-29 13:03:47 UTC; 3s ago[K
+     Docs: man:firewalld(1)[K
+ Main PID: 3427 (firewalld)[K
+   CGroup: /system.slice/firewalld.service[K
+           [K└─
+[49;14H3427 /usr/bin/python2 -Es /usr/sbin/firewalld --nofork --nopid
+[K[1;51r[50;1H[27;50r[1;1H[5S[46dMay 29 13:03:47 nfsc systemd[1]: Starting firewalld - dynamic firewall daemon...[K
+May 29 13:03:47 nfsc systemd[1]: Started firewalld - dynamic firewall daemon.[K
+May 29 13:03:47 nfsc firewalld[3427]: [1mWARNING: AllowZoneDrifting is enabled. This is considered an insecure configuration option. It will be removed in a future release. Plea...bling it now.[49;1H(B[mHint: Some lines were ellipsized, use -l to show in full.[K
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16Hecho "192.168.50.10:/srv/share/ /mnt nfs vers=3,proto=udp,noauto,x-systemd.automount 0 0" >> /etc/fstab[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16Hsystemctl daemon-reload[27;50r[50;1H
+[K[1;51r[50;1H[root@nfsc ~]# [?25l[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:04 29-мая-23(B[m[?12l[?25h[50;16Hsystemctl restart remote-fs.target[27;50r[50;1H
+[K[1;51r[50;1H[root@nfsc ~]# [27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16Hmount | grep mnt[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[50;1H
+[Asystemd-1 on /[31m[1mmnt(B[m type autofs (rw,relatime,fd=46,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=26947)[K
+[root@nfsc ~]# [K[1;51r[50;16Hmount | grep mnt[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[50;1H
+[Asystemd-1 on /[31m[1mmnt(B[m type autofs (rw,relatime,fd=46,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=26947)[K
+[K[1;51r[50;1H[root@nfsc ~]# mount[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[1;1H[24S[27dcgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,xattr,release_agent=/usr/lib/systemd/systemd-cgroups-agent,name=systemd)[K
+pstore on /sys/fs/pstore type pstore (rw,nosuid,nodev,noexec,relatime)[K
+cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuset)[K
+cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,memory)[K
+cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,net_prio,net_cls)[K
+cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,freezer)[K
+cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,hugetlb)[K
+cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuacct,cpu)[K
+cgroup on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,pids)[K
+cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,blkio)[K
+cgroup on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,perf_event)[K
+cgroup on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,devices)[K
+configfs on /sys/kernel/config type configfs (rw,relatime)[K
+/dev/sda1 on / type xfs (rw,relatime,seclabel,attr2,inode64,noquota)[K
+selinuxfs on /sys/fs/selinux type selinuxfs (rw,relatime)[K
+systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=21,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=10861)[K
+mqueue on /dev/mqueue type mqueue (rw,relatime,seclabel)[K
+debugfs on /sys/kernel/debug type debugfs (rw,relatime)[K
+hugetlbfs on /dev/hugepages type hugetlbfs (rw,relatime,seclabel)[K
+sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw,relatime)[K
+tmpfs on /run/user/0 type tmpfs (rw,nosuid,nodev,relatime,seclabel,size=24068k,mode=700)[K
+tmpfs on /run/user/1000 type tmpfs (rw,nosuid,nodev,relatime,seclabel,size=24068k,mode=700,uid=1000,gid=1000)[K
+systemd-1 on /mnt type autofs (rw,relatime,fd=46,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=26947)[K
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16Hmount | grep mnt[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[50;1H
+[Asystemd-1 on /[31m[1mmnt(B[m type autofs (rw,relatime,fd=46,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=26947)[K
+[root@nfsc ~]# [K[1;51r[50;16H[?25l[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:05 29-мая-23(B[m[?12l[?25h[50;16H[?25l[26;1H[32m────────────────────────────────────────────────────────────────────────────────────────────────[39m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16Hcd /srv/share/upload[1;25r[25;1H
+[root@nfss upload]# [K[1;51r[25;21Htouch check_file[1;25r[25;1H
+[K[1;51r[25;1H[root@nfss upload]# [?25l
+────────────────────────────────────────────────────────────────────────────────────────────────[32m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16H[27;50r[50;1H
+[root@nfsc ~]# [K[1;51r[50;16Hcd /mnt/uop  o pload/[27;50r[50;1H
+[K[1;51r[50;1H[root@nfsc upload]# ls -l[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[1;1H[2S[48dtotal 0
+-rw-r--r--. 1 root root 0 May 29 13:05 check_file[K
+[root@nfsc upload]# [K[1;51r[50;21Htouch client_file[27;50r[50;1H
+[K[1;51r[50;1H[root@nfsc upload]# [?25l[26;1H[32m────────────────────────────────────────────────────────────────────────────────────────────────[39m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[25;21Hll[1;25r[25;1H
+[K[1;51r[25;1H[1;25r[1;1H[3S[22dtotal 0
+-rw-r--r--. 1 root      root      0 May 29 13:05 check_file[K
+-rw-r--r--. 1 nfsnobody nfsnobody 0 May 29 13:05 client_file[K
+[root@nfss upload]# [K[1;51r[25;21H[?25l[30m[42m[51;1H[0] 0:bash*                                                                                                                                                              "npc" 16:06 29-мая-23(B[m[?12l[?25h[25;21H[?25l
+────────────────────────────────────────────────────────────────────────────────────────────────[32m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[50;21Hreboot[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[50;1H
+[AConnection to 127.0.0.1 closed by remote host.
+[K[1;51r[50;1H[?2004h[32m[1mzoid@npc(B[m:[34m[1m~/projects/otus/2023-04-linux/06(B[m$ vagrant ssh nfsc[27;50r[50;1H
+[K[1;51r[50;1H[?2004l[27;50r[50;1H
+[ALast login: Mon May 29 13:03:14 2023 from 10.0.2.2
+[K[1;51r[50;1H[vagrant@nfsc ~]$ ls -l /mnt/upload/[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[1;1H[3S[47dtotal 0
+-rw-r--r--. 1 root      root      0 May 29 13:05 check_file[K
+-rw-r--r--. 1 nfsnobody nfsnobody 0 May 29 13:05 client_file[K
+[vagrant@nfsc ~]$ [K[1;51r[50;19H[?25l[26;1H[32m────────────────────────────────────────────────────────────────────────────────────────────────[39m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[25;21H[1;25r[25;1H
+[root@nfss upload]# [K[1;51r[25;21H[1;25r[25;1H
+[root@nfss upload]# [K[1;51r[25;21H[1;25r[25;1H
+[root@nfss upload]# [K[1;51r[25;21H[1;25r[25;1H
+[root@nfss upload]# [K[1;51r[25;21Hreboot[1;25r[25;1H
+[K[1;51r[25;1H[1;25r[25;1H
+[AConnection to 127.0.0.1 closed by remote host.
+[K[1;51r[25;1H[?2004h[32m[1mzoid@npc(B[m:[34m[1m~/projects/otus/2023-04-linux/06(B[m$ vagrant ssh nfss[1;25r[25;1H
+[K[1;51r[25;1H[?2004l[1;25r[25;1H
+[ALast login: Mon May 29 13:00:59 2023 from 10.0.2.2
+[K[1;51r[25;1H[vagrant@nfss ~]$ /srv/share/upload/[18Dc/srv/share/upload/[18Dd/srv/share/upload/[18D /srv/share/upload/[18D[1;25r[25;1H
+[vagrant@nfss upload]$ [K[1;51r[25;24Hls -l[1;25r[25;1H
+[K[1;51r[25;1H[1;25r[1;1H[3S[22dtotal 0
+-rw-r--r--. 1 root      root      0 May 29 13:05 check_file[K
+-rw-r--r--. 1 nfsnobody nfsnobody 0 May 29 13:05 client_file[K
+[vagrant@nfss upload]$ [K[1;51r[25;24H[?25l[30m[42m[51;1H[0] 0:bash*                                                                                                                                                              "npc" 16:07 29-мая-23(B[m[?12l[?25h[25;24Hsudo -i[1;25r[25;1H
+[K[1;51r[25;1H[root@nfss ~]# systemctl status nfs[1;25r[25;1H
+[K[1;51r[25;1H[32m[1m●(B[m[1;25r[1;1H[3S[22;2H nfs-server.service - NFS server and services
+   Loaded: loaded (/usr/lib/systemd/system/nfs-server.service; enabled; vendor preset: disabled)[K
+  Drop-In: /run/systemd/generator/nfs-server.service.d[K
+           [K└─[10S[15;14Horder-with-mounts.conf
+   Active: [32m[1mactive (exited)(B[m since Mon 2023-05-29 13:06:46 UTC; 22s ago[K
+  Process: 834 ExecStartPost=/bin/sh -c if systemctl -q is-active gssproxy; then systemctl reload gssproxy ; fi (code=exited, status=0/SUCCESS)[K
+  Process: 808 ExecStart=/usr/sbin/rpc.nfsd $RPCNFSDARGS (code=exited, status=0/SUCCESS)[K
+  Process: 803 ExecStartPre=/usr/sbin/exportfs -r (code=exited, status=0/SUCCESS)[K
+ Main PID: 808 (code=exited, status=0/SUCCESS)[K
+   CGroup: /system.slice/nfs-server.service[K
+[K
+May 29 13:06:45 nfss systemd[1]: Starting NFS server and services...[K
+May 29 13:06:46 nfss systemd[1]: Started NFS server and services.[K
+[root@nfss ~]# [K[1;51r[25;16Hsystemctl status firewalld[1;25r[25;1H
+[K[1;51r[25;1H[32m[1m●(B[m[1;25r[1;1H[6S[19;2H firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)[K
+   Active: [32m[1mactive (running)(B[m since Mon 2023-05-29 13:06:42 UTC; 31s ago[K
+     Docs: man:firewalld(1)[K
+ Main PID: 399 (firewalld)[K
+   CGroup: /system.slice/firewalld.service[K
+           [K└─[6S[19;14H399 /usr/bin/python2 -Es /usr/sbin/firewalld --nofork --nopid
+[K
+May 29 13:06:42 nfss systemd[1]: Starting firewalld - dynamic firewall daemon...[K
+May 29 13:06:42 nfss systemd[1]: Started firewalld - dynamic firewall daemon.[K
+May 29 13:06:42 nfss firewalld[399]: [1mWARNING: AllowZoneDrifting is enabled. This is considered an insecure configuration option. It will be removed in a future release. Pleas...bling it now.[24;1H(B[mHint: Some lines were ellipsized, use -l to show in full.[K
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16Hexportfs -s[1;25r[25;1H
+[K[1;51r[25;1H[1;25r[25;1H
+[A/srv/share  192.168.50.11/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16Hshowmount -a 192.168.50.10[1;25r[25;1H
+[K[1;51r[25;1H[1;25r[1;1H[2S[23dAll mount points on 192.168.50.10:
+192.168.50.11:/srv/share[K
+[root@nfss ~]# [K[1;51r[25;16H[?25l
+────────────────────────────────────────────────────────────────────────────────────────────────[32m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[50;19H[27;50r[50;1H
+[vagrant@nfsc ~]$ [K[1;51r[50;19H[27;50r[50;1H
+[vagrant@nfsc ~]$ [K[1;51r[50;19H[27;50r[50;1H
+[vagrant@nfsc ~]$ [K[1;51r[50;19H[27;50r[50;1H
+[vagrant@nfsc ~]$ [K[1;51r[50;19Hcd /    sudo -      cd /mnt/upload/[27;50r[50;1H
+[K[1;51r[50;1H[vagrant@nfsc upload]$ mount | grep mnt[27;50r[50;1H
+[K[1;51r[50;1H[27;50r[1;1H[3S[47dsystemd-1 on /[31m[1mmnt(B[m type autofs (rw,relatime,fd=30,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=10883)[K
+192.168.50.10:/srv/share/ on /[31m[1mmnt(B[m type nfs (rw,relatime,vers=3,rsize=32768,wsize=32768,namlen=255,hard,proto=udp,timeo=11,retrans=3,sec=sys,mountaddr=192.168.50.10,mountvers=3,mountport=20048,mountproto=udp,local_lock=none,addr=192.168.50.10)[K
+[K[1;51r[50;1H[vagrant@nfsc upload]$ [?25l[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:08 29-мая-23(B[m[?12l[?25h[50;24Htouch final_check[27;50r[50;1H
+[K[1;51r[50;1H[vagrant@nfsc upload]$ [?25l[26;1H[32m────────────────────────────────────────────────────────────────────────────────────────────────[39m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16H[1;25r[25;1H
+[root@nfss ~]# [K[1;51r[25;16Hls -l /srv/share/upload/[1;25r[25;1H
+[K[1;51r[25;1H[1;25r[1;1H[4S[21dtotal 0
+-rw-r--r--. 1 root      root      0 May 29 13:05 check_file[K
+-rw-r--r--. 1 nfsnobody nfsnobody 0 May 29 13:05 client_file[K
+-rw-rw-r--. 1 vagrant   vagrant   0 May 29 13:08 final_check[K
+[root@nfss ~]# [K[1;51r[25;16H[?25l
+────────────────────────────────────────────────────────────────────────────────────────────────[32m──────────────────────────────────────────────────────────────────────────────────────────────(B[m[?12l[?25h[50;24H[27;50r[50;1H
+[49;24Hlogout
+[K[1;51r[50;1H[32m[1mzoid@npc(B[m:[34m[1m~/projects/otus/2023-04-linux/06(B[m$ [?2004h[27;50r[50;1H
+[K[1;51r[50;1H[?2004lвыход[27;50r[50;1H
+[K[1;51r[50;1H[?25l[H[vagrant@nfss upload]$ ls -l[K
+total 0[K
+-rw-r--r--. 1 root      root      0 May 29 13:05 check_file[K
+-rw-r--r--. 1 nfsnobody nfsnobody 0 May 29 13:05 client_file[K
+[vagrant@nfss upload]$ sudo -i[K
+[root@nfss ~]# systemctl status nfs[K[32m[1m
+●(B[m nfs-server.service - NFS server and services[K
+   Loaded: loaded (/usr/lib/systemd/system/nfs-server.service; enabled; vendor preset: disabled)[K
+  Drop-In: /run/systemd/generator/nfs-server.service.d[K
+           └─order-with-mounts.conf[K
+   Active: [32m[1mactive (exited)(B[m since Mon 2023-05-29 13:06:46 UTC; 22s ago[K
+  Process: 834 ExecStartPost=/bin/sh -c if systemctl -q is-active gssproxy; then systemctl reload gssproxy ; fi (code=exited, status=0/SUCCESS)[K
+  Process: 808 ExecStart=/usr/sbin/rpc.nfsd $RPCNFSDARGS (code=exited, status=0/SUCCESS)[K
+  Process: 803 ExecStartPre=/usr/sbin/exportfs -r (code=exited, status=0/SUCCESS)[K
+ Main PID: 808 (code=exited, status=0/SUCCESS)[K
+   CGroup: /system.slice/nfs-server.service[K
+[K
+May 29 13:06:45 nfss systemd[1]: Starting NFS server and services...[K
+May 29 13:06:46 nfss systemd[1]: Started NFS server and services.[K
+[root@nfss ~]# systemctl status firewalld[K[32m[1m
+●(B[m firewalld.service - firewalld - dynamic firewall daemon[K
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)[K
+   Active: [32m[1mactive (running)(B[m since Mon 2023-05-29 13:06:42 UTC; 31s ago[K
+     Docs: man:firewalld(1)[K
+ Main PID: 399 (firewalld)[K
+   CGroup: /system.slice/firewalld.service[K
+           └─399 /usr/bin/python2 -Es /usr/sbin/firewalld --nofork --nopid[K
+[K
+May 29 13:06:42 nfss systemd[1]: Starting firewalld - dynamic firewall daemon...[K
+May 29 13:06:42 nfss systemd[1]: Started firewalld - dynamic firewall daemon.[K
+May 29 13:06:42 nfss firewalld[399]: [1mWARNING: AllowZoneDrifting is enabled. This is considered an insecure configuration option. It will be removed in a future release. Pleas...bling it now.(B[m[32;1HHint: Some lines were ellipsized, use -l to show in full.[K
+[root@nfss ~]# [K
+[root@nfss ~]# [K
+[root@nfss ~]# exportfs -s[K
+/srv/share  192.168.50.11/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)[K
+[root@nfss ~]# [K
+[root@nfss ~]# [K
+[root@nfss ~]# [K
+[root@nfss ~]# showmount -a 192.168.50.10[K
+All mount points on 192.168.50.10:[K
+192.168.50.11:/srv/share[K
+[root@nfss ~]# [K
+[root@nfss ~]# [K
+[root@nfss ~]# ls -l /srv/share/upload/[K
+total 0[K
+-rw-r--r--. 1 root      root      0 May 29 13:05 check_file[K
+-rw-r--r--. 1 nfsnobody nfsnobody 0 May 29 13:05 client_file[K
+-rw-rw-r--. 1 vagrant   vagrant   0 May 29 13:08 final_check[K
+[root@nfss ~]# [K[30m[42m
+[0] 0:bash*                                                                                                                                                              "npc" 16:08 29-мая-23(B[m[?12l[?25h[50;16H[root@nfss ~]#                                                                                                                                                                               [16G[1;50r[50;1H
+[49;16Hlogout
+[vagrant@nfss upload]$ [K[1;51r[50;24H[1;50r[50;1H
+[49;24Hlogout
+[K[1;51r[50;1H[?2004h[32m[1mzoid@npc(B[m:[34m[1m~/projects/otus/2023-04-linux/06(B[m$ [1;50r[50;1H
+[K[1;51r[50;1H[?2004lвыход[1;50r[50;1H
+[K[1;51r[50;1H[1;51r(B[m[?1l>[H[2J[?12l[?25h[?1000l[?1002l[?1003l[?1006l[?1005l[?7727l[?1004l[?1049l[23;0;0t[exited]
+[?2004h]0;zoid@npc: ~/projects/otus/2023-04-linux/06[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/06[00m$ [?2004l
+exit
+
+Script done on 2023-05-29 16:08:44+03:00 [COMMAND_EXIT_CODE="0"]
