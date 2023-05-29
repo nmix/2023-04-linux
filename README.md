@@ -9,3 +9,5 @@
 [03. Файловые системы и LVM](03-2/README.md)
 
 [05. ZFS](05/README.md)
+
+[06. NFS](06/README.md)
