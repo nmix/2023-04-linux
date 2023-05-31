@@ -1,0 +1,11 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby : vsa
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "generic/centos8s"
+  config.vm.box_version = "4.2.16"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 256
+    v.cpus = 1
+  end
+end

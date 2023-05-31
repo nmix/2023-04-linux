@@ -11,3 +11,5 @@
 [05. ZFS](05/README.md)
 
 [06. NFS](06/README.md)
+
+[07. RPM](07/README.md)
