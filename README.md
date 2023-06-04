@@ -13,3 +13,5 @@
 [06. NFS](06/README.md)
 
 [07. RPM](07/README.md)
+
+[08. Загрузка системы](08/README.md)
