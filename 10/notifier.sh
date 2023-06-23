@@ -5,22 +5,58 @@
 # * Ошибки веб-сервера/приложения c момента последнего запуска;
 # * Список всех кодов HTTP ответа с указанием их кол-ва с момента последнего запуска скрипта.
 # * Скрипт должен предотвращать одновременный запуск нескольких копий, до его завершения.
+# * В письме должен быть прописан обрабатываемый временной диапазон.
+
+# --- файл лога (абс. путь)
+log_file=${1:-"access.log"}
+# --- начальная дата чтения лога
+#     пример: "2023-06-22 00:39:10 +0300"
+prev_date_time=${2:-"1970-01-01"}
+
+# --- номер строки, с которого будем читать лог
+line_number=0
+# --- читаем файл с заданного номера строки
+function catn {
+  tail +$line_number $log_file
+}
+
+# --- преобразуем дату в timestamp
+specified_timestamp=$(date -d "$prev_date_time" +"%s")
+
+# --- читаем лог пока не встретим дату, больше чем начальная
+#     при этом увеличиваем счетчик строк
+while IFS= read -r log_entry
+do
+    ((line_number++))
+
+    # --- извлекаем дату из строки журнала
+    log_date_time=$(echo $log_entry | egrep '\[.*]' -o | head | tr -d "[]"  | sed 's/\// /g' | sed 's/:/ /')
+
+    # --- преобразуем в timestamp
+    log_timestamp=$(date -d "$log_date_time" +"%s")
+
+    # --- сравниваем и если дата в строке больше, то прерываем чтение
+    if [ "$log_timestamp" -ge "$specified_timestamp" ]
+    then
+        break
+    fi
+done < "$log_file"
 
 echo "Top 10 IPs"
 echo "-----------------------------------------"
-cat access.log | awk '{print $1}' | uniq -c | sort -nr | head -n 10 #  | awk '{printf ("%s\t\t%s\n", $2, $1)}'
+catn | awk '{print $1}' | uniq -c | sort -nr | head -n 10
 
 echo ""
 echo "Top 8 Requests"
 echo "-----------------------------------------"
-cat access.log | egrep '(GET|POST)\s/\S?+' -o | sort | uniq -c | sort -nr | head -n 8
+catn | egrep '(GET|POST)\s/\S?+' -o | sort | uniq -c | sort -nr | head -n 8
 
 echo ""
 echo "Top Requests With Server Errors"
 echo "-----------------------------------------"
-cat access.log | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" 5[0-9]{2}' -o | sort | uniq -c | sort -nr
+catn | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" 5[0-9]{2}' -o | sort | uniq -c | sort -nr
 
 echo ""
 echo "HTTP Codes"
 echo "-----------------------------------------"
-cat access.log | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" [0-9]{3}' -o | awk '{print $4}' | sort | uniq -c | sort -nr
+catn | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" [0-9]{3}' -o | awk '{print $4}' | sort | uniq -c | sort -nr
