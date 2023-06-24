@@ -7,6 +7,21 @@
 # * Скрипт должен предотвращать одновременный запуск нескольких копий, до его завершения.
 # * В письме должен быть прописан обрабатываемый временной диапазон.
 
+# --- директория для хранения состояния
+conf_dir="$HOME/.otus"
+# --- файл блокировки одновременного запуска
+lock_file=$conf_dir/notifier.lock
+
+if [ -f "$lock_file" ]; then
+  echo "Process running already. Lock file $lock_file exists"
+  exit 1
+fi
+
+# --- создаем директорию для хранения состояния
+mkdir $conf_dir
+# --- создаем файл для блокировки одновременного запуска
+touch $conf_dir/notifier.lock
+
 # --- файл лога (абс. путь)
 log_file=${1:-"access.log"}
 # --- начальная дата чтения лога
@@ -21,7 +36,7 @@ function catn {
 }
 
 # --- преобразуем дату в timestamp
-specified_timestamp=$(date -d "$prev_date_time" +"%s")
+prev_timestamp=$(date -d "$prev_date_time" +"%s")
 
 # --- читаем лог пока не встретим дату, больше чем начальная
 #     при этом увеличиваем счетчик строк
@@ -36,7 +51,7 @@ do
     log_timestamp=$(date -d "$log_date_time" +"%s")
 
     # --- сравниваем и если дата в строке больше, то прерываем чтение
-    if [ "$log_timestamp" -ge "$specified_timestamp" ]
+    if [ "$log_timestamp" -ge "$prev_timestamp" ]
     then
         break
     fi
@@ -60,3 +75,6 @@ echo ""
 echo "HTTP Codes"
 echo "-----------------------------------------"
 catn | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" [0-9]{3}' -o | awk '{print $4}' | sort | uniq -c | sort -nr
+
+# --- удаляем файл блокировки
+rm $lock_file
