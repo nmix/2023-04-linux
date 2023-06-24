@@ -15,5 +15,5 @@
 ## Выполнение
 
 ```bash
-./notifier.sh access.log "2023-06-22 00:39:10 +0300"
+./notifier.sh access.log "2023-06-22T00:39:10+0300"
 ```

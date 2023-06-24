@@ -18,7 +18,7 @@ if [ -f "$lock_file" ]; then
 fi
 
 # --- создаем директорию для хранения состояния
-mkdir $conf_dir
+mkdir -p $conf_dir
 # --- создаем файл для блокировки одновременного запуска
 touch $conf_dir/notifier.lock
 
@@ -27,6 +27,8 @@ log_file=${1:-"access.log"}
 # --- начальная дата чтения лога
 #     пример: "2023-06-22 00:39:10 +0300"
 prev_date_time=${2:-"1970-01-01"}
+
+curr_date_time=$(date --iso-8601=seconds)
 
 # --- номер строки, с которого будем читать лог
 line_number=0
@@ -57,21 +59,26 @@ do
     fi
 done < "$log_file"
 
+echo "LOG REPORT"
+echo "-----------------------------------------"
+echo "Start date-time:  $prev_date_time"
+echo "Finish date-time: $curr_date_time"
+echo
 echo "Top 10 IPs"
 echo "-----------------------------------------"
 catn | awk '{print $1}' | uniq -c | sort -nr | head -n 10
 
-echo ""
+echo
 echo "Top 8 Requests"
 echo "-----------------------------------------"
 catn | egrep '(GET|POST)\s/\S?+' -o | sort | uniq -c | sort -nr | head -n 8
 
-echo ""
+echo
 echo "Top Requests With Server Errors"
 echo "-----------------------------------------"
 catn | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" 5[0-9]{2}' -o | sort | uniq -c | sort -nr
 
-echo ""
+echo
 echo "HTTP Codes"
 echo "-----------------------------------------"
 catn | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" [0-9]{3}' -o | awk '{print $4}' | sort | uniq -c | sort -nr
