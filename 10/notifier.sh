@@ -25,7 +25,7 @@ touch $conf_dir/notifier.lock
 # --- файл лога (абс. путь)
 log_file=${1:-"access.log"}
 # --- начальная дата чтения лога
-#     пример: "2023-06-22 00:39:10 +0300"
+#     пример: "2023-06-22T00:39:10+0300"
 prev_date_time=${2:-"1970-01-01"}
 
 curr_date_time=$(date --iso-8601=seconds)
