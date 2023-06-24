@@ -11,27 +11,37 @@
 conf_dir="$HOME/.otus"
 # --- файл блокировки одновременного запуска
 lock_file=$conf_dir/notifier.lock
+# --- файл для хранения даты-времени прошлого запуска 
+prev_file=$conf_dir/prev_date_time
 
 if [ -f "$lock_file" ]; then
   echo "Process running already. Lock file $lock_file exists"
   exit 1
 fi
 
-# --- создаем директорию для хранения состояния
 mkdir -p $conf_dir
-# --- создаем файл для блокировки одновременного запуска
-touch $conf_dir/notifier.lock
+touch $lock_file
+touch $prev_file
 
 # --- файл лога (абс. путь)
 log_file=${1:-"access.log"}
+
 # --- начальная дата чтения лога
 #     пример: "2023-06-22T00:39:10+0300"
-prev_date_time=${2:-"1970-01-01"}
+prev_date_time=$2
+# --- если дата не задана через аргумент, то читаем ее из файла
+if [ -z "$prev_date_time" ]; then
+  prev_date_time=$(cat $conf_dir/prev_date_time)
+fi
+# --- если и в файле дата не указана, то фиксируем значение
+if [ -z "$prev_date_time" ]; then
+  prev_date_time="1970-01-01"
+fi
 
 curr_date_time=$(date --iso-8601=seconds)
 
 # --- номер строки, с которого будем читать лог
-line_number=0
+line_number=1
 # --- читаем файл с заданного номера строки
 function catn {
   tail +$line_number $log_file
@@ -85,3 +95,5 @@ catn | egrep '(GET|POST).*(HTTP/[0-9].[0-9])" [0-9]{3}' -o | awk '{print $4}' | 
 
 # --- удаляем файл блокировки
 rm $lock_file
+# --- прописываем новую дату-время в файл
+echo $curr_date_time > $prev_file
