@@ -32,3 +32,5 @@ scriptreplay --timing=timing2.log --divisor=5 script2.log
 ```bash
 yum install policycoreutils-python
 ```
+
+Для второго задания скорректирован Vagrantfile: значение `virtualbox__intnet` приведено в соответствие с настройками Virtual Box.
