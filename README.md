@@ -23,3 +23,7 @@
 [12. Управление процессами](12/README.md)
 
 [15. Автоматизация администрирования. Ansible-1](15/README.md)
+
+[17. SELinux](17/README.md)
+
+[18. Docker](18/README.md)
