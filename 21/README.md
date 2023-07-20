@@ -10,7 +10,7 @@
 
 ## Tutorial
 
-В качестве готовой сборки prometheus + grafana + nodeexporter будем использовать проект [duckprom](https://github.com/stefanprodan/dockprom).
+В качестве готовой сборки prometheus + grafana + nodeexporter будем использовать проект [dockprom](https://github.com/stefanprodan/dockprom).
 
 Проект представляет собой *docker-compose* файл с преднастроенной конфигурацией.
 
