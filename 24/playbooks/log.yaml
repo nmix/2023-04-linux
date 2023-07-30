@@ -1,0 +1,57 @@
+---
+- name: Config log server
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Set localtime
+      ansible.builtin.file:
+        src: /usr/share/zoneinfo/Europe/Moscow
+        dest: /etc/localtime
+        state: link
+
+    - name: Restart chronyd
+      ansible.builtin.service:
+        name: chronyd
+        state: restarted
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - vim
+
+    - name: Config rsyslog
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog.conf
+        line: "{{ item }}"
+      with_items:
+        - 'module(load="imudp")'
+        - 'input(type="imudp" port="514")'
+        - 'module(load="imtcp")'
+        - 'input(type="imtcp" port="514")'
+        - '$template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"'
+        - '*.* ?RemoteLogs'
+        - '& ~'
+
+    - name: Restart rsyslog
+      ansible.builtin.service:
+        name: rsyslog
+        state: restarted
+
+    - name: Test port 514
+      ansible.builtin.wait_for:
+        host: localhost
+        port: 514
+        timeout: 5
+      register: port_514_status
+      failed_when: port_514_status is not success
+
+    - name: Config auditd
+      ansible.builtin.lineinfile:
+        path: /etc/audit/auditd.conf
+        line: "tcp_listen_port = 60"
+
+    - name: Restart auditd
+      ansible.builtin.shell: service auditd restart

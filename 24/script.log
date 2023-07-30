@@ -1,0 +1,622 @@
+Script started on 2023-07-30 11:03:58+03:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="183" LINES="40"]
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ cat Vagrantfile 
+[?2004lVagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+  config.vm.box_version = "2004.01"
+  config.vm.provider :virtualbox do |v|
+    v.memory = 512
+    v.cpus = 1
+  end
+
+  boxes = [
+    {
+      name: "web",
+      ip: "192.168.59.10",
+      playbook: "playbooks/web.yaml",
+    },
+    {
+      name: "log",
+      ip: "192.168.59.15",
+      playbook: "playbooks/log.yaml",
+    },
+  ]
+
+  boxes.each do |opts|
+    config.vm.define opts[:name] do |config|
+      config.vm.hostname = opts[:name]
+      config.vm.network "private_network", ip: opts[:ip]
+      config.vm.provision :ansible do |ansible|
+        ansible.playbook = opts[:playbook]
+      end
+    end
+  end
+end
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ vagrant up
+[?2004l[0mBringing machine 'web' up with 'virtualbox' provider...[0m
+[0mBringing machine 'log' up with 'virtualbox' provider...[0m
+[1m==> web: Importing base box 'centos/7'...[0m
+[0m[K[0m[0mProgress: 20%[0m[0m[K[0m[0mProgress: 40%[0m[0m[K[0m[0mProgress: 70%[0m[0m[K[0m[0mProgress: 90%[0m[0m[K[0m[1m==> web: Matching MAC address for NAT networking...[0m
+[1m==> web: Checking if box 'centos/7' version '2004.01' is up to date...[0m
+[1m==> web: Setting the name of the VM: 24_web_1690704267132_68382[0m
+[1m==> web: Clearing any previously set network interfaces...[0m
+[1m==> web: Preparing network interfaces based on configuration...[0m
+[0m    web: Adapter 1: nat[0m
+[0m    web: Adapter 2: hostonly[0m
+[1m==> web: Forwarding ports...[0m
+[0m    web: 22 (guest) => 2222 (host) (adapter 1)[0m
+[1m==> web: Running 'pre-boot' VM customizations...[0m
+[1m==> web: Booting VM...[0m
+[1m==> web: Waiting for machine to boot. This may take a few minutes...[0m
+[0m    web: SSH address: 127.0.0.1:2222[0m
+[0m    web: SSH username: vagrant[0m
+[0m    web: SSH auth method: private key[0m
+[0m    web: 
+    web: Vagrant insecure key detected. Vagrant will automatically replace
+    web: this with a newly generated keypair for better security.[0m
+[0m    web: 
+    web: Inserting generated public key within guest...[0m
+[0m    web: Removing insecure key from the guest if it's present...[0m
+[0m    web: Key inserted! Disconnecting and reconnecting using new SSH key...[0m
+[1m==> web: Machine booted and ready![0m
+[1m==> web: Checking for guest additions in VM...[0m
+[0m    web: No guest additions were detected on the base box for this VM! Guest
+    web: additions are required for forwarded ports, shared folders, host only
+    web: networking, and more. If SSH fails on this machine, please install
+    web: the guest additions and repackage the box to continue.
+    web: 
+    web: This is not an error message; everything may continue to work properly,
+    web: in which case you may ignore this message.[0m
+[1m==> web: Setting hostname...[0m
+[1m==> web: Configuring and enabling network interfaces...[0m
+[1m==> web: Rsyncing folder: /home/zoid/projects/otus/2023-04-linux/24/ => /vagrant[0m
+[1m==> web: Running provisioner: ansible...[0m
+[0m    web: Running ansible-playbook...[0m
+[0m
+PLAY [Config web server] *******************************************************
+[0m[0m
+TASK [Gathering Facts] *********************************************************
+[0m[0m[0;32mok: [web][0m
+[0m[0m
+TASK [Set localtime] ***********************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Restart chronyd] *********************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Install packages] ********************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Install nginx] ***********************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Config nginx error log] **************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Config nginx access log] *************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Test nginx config syntax] ************************************************
+[0m[0m[0;32mok: [web][0m
+[0m[0m
+TASK [Start nginx] *************************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Add audit rules] *********************************************************
+[0m[0m[0;33mchanged: [web] => (item=-w /etc/nginx/nginx.conf -p wa -k nginx_conf)[0m
+[0m[0m[0;33mchanged: [web] => (item=-w /etc/nginx/default.d/ -p wa -k nginx_conf)[0m
+[0m[0m
+TASK [Config auditd] ***********************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Config plugin] ***********************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Config audisp-remote] ****************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+TASK [Restart auditd] **********************************************************
+[0m[0m[0;33mchanged: [web][0m
+[0m[0m
+PLAY RECAP *********************************************************************
+[0;33mweb[0m                        : [0;32mok=14  [0m [0;33mchanged=12  [0m unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+[0m[1m==> log: Importing base box 'centos/7'...[0m
+[0m[K[0m[0mProgress: 20%[0m[0m[K[0m[0mProgress: 40%[0m[0m[K[0m[0mProgress: 70%[0m[0m[K[0m[0mProgress: 90%[0m[0m[K[0m[1m==> log: Matching MAC address for NAT networking...[0m
+[1m==> log: Checking if box 'centos/7' version '2004.01' is up to date...[0m
+[1m==> log: Setting the name of the VM: 24_log_1690704362251_45[0m
+[1m==> log: Fixed port collision for 22 => 2222. Now on port 2200.[0m
+[1m==> log: Clearing any previously set network interfaces...[0m
+[1m==> log: Preparing network interfaces based on configuration...[0m
+[0m    log: Adapter 1: nat[0m
+[0m    log: Adapter 2: hostonly[0m
+[1m==> log: Forwarding ports...[0m
+[0m    log: 22 (guest) => 2200 (host) (adapter 1)[0m
+[1m==> log: Running 'pre-boot' VM customizations...[0m
+[1m==> log: Booting VM...[0m
+[1m==> log: Waiting for machine to boot. This may take a few minutes...[0m
+[0m    log: SSH address: 127.0.0.1:2200[0m
+[0m    log: SSH username: vagrant[0m
+[0m    log: SSH auth method: private key[0m
+[0m    log: 
+    log: Vagrant insecure key detected. Vagrant will automatically replace
+    log: this with a newly generated keypair for better security.[0m
+[0m    log: 
+    log: Inserting generated public key within guest...[0m
+[0m    log: Removing insecure key from the guest if it's present...[0m
+[0m    log: Key inserted! Disconnecting and reconnecting using new SSH key...[0m
+[1m==> log: Machine booted and ready![0m
+[1m==> log: Checking for guest additions in VM...[0m
+[0m    log: No guest additions were detected on the base box for this VM! Guest
+    log: additions are required for forwarded ports, shared folders, host only
+    log: networking, and more. If SSH fails on this machine, please install
+    log: the guest additions and repackage the box to continue.
+    log: 
+    log: This is not an error message; everything may continue to work properly,
+    log: in which case you may ignore this message.[0m
+[1m==> log: Setting hostname...[0m
+[1m==> log: Configuring and enabling network interfaces...[0m
+[1m==> log: Rsyncing folder: /home/zoid/projects/otus/2023-04-linux/24/ => /vagrant[0m
+[1m==> log: Running provisioner: ansible...[0m
+[0m    log: Running ansible-playbook...[0m
+[0m
+PLAY [Config log server] *******************************************************
+[0m[0m
+TASK [Gathering Facts] *********************************************************
+[0m[0m[0;32mok: [log][0m
+[0m[0m
+TASK [Set localtime] ***********************************************************
+[0m[0m[0;33mchanged: [log][0m
+[0m[0m
+TASK [Restart chronyd] *********************************************************
+[0m[0m[0;33mchanged: [log][0m
+[0m[0m
+TASK [Install packages] ********************************************************
+[0m[0m[0;33mchanged: [log][0m
+[0m[0m
+TASK [Config rsyslog] **********************************************************
+[0m[0m[0;33mchanged: [log] => (item=module(load="imudp"))[0m
+[0m[0m[0;33mchanged: [log] => (item=input(type="imudp" port="514"))[0m
+[0m[0m[0;33mchanged: [log] => (item=module(load="imtcp"))[0m
+[0m[0m[0;33mchanged: [log] => (item=input(type="imtcp" port="514"))[0m
+[0m[0m[0;33mchanged: [log] => (item=$template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log")[0m
+[0m[0m[0;33mchanged: [log] => (item=*.* ?RemoteLogs)[0m
+[0m[0m[0;33mchanged: [log] => (item=& ~)[0m
+[0m[0m
+TASK [Restart rsyslog] *********************************************************
+[0m[0m[0;33mchanged: [log][0m
+[0m[0m
+TASK [Test port 514] ***********************************************************
+[0m[0m[0;32mok: [log][0m
+[0m[0m
+TASK [Config auditd] ***********************************************************
+[0m[0m[0;33mchanged: [log][0m
+[0m[0m
+TASK [Restart auditd] **********************************************************
+[0m[0m[0;33mchanged: [log][0m
+[0m[0m
+PLAY RECAP *********************************************************************
+[0;33mlog[0m                        : [0;32mok=9   [0m [0;33mchanged=7   [0m unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+[0m[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ vagra[K[K[K[K[Kjt[K[Khttp 192.168.58[K9/[K.10
+[?2004l[34mHTTP[39;49;00m/[34m1.1[39;49;00m [34m200[39;49;00m [36mOK[39;49;00m
+[36mAccept-Ranges[39;49;00m: bytes
+[36mConnection[39;49;00m: keep-alive
+[36mContent-Length[39;49;00m: 4833
+[36mContent-Type[39;49;00m: text/html
+[36mDate[39;49;00m: Sun, 30 Jul 2023 08:07:20 GMT
+[36mETag[39;49;00m: "53762af0-12e1"
+[36mLast-Modified[39;49;00m: Fri, 16 May 2014 15:12:48 GMT
+[36mServer[39;49;00m: nginx/1.20.1
+
+[36m<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">[39;49;00m
+<[94mhtml[39;49;00m>
+<[94mhead[39;49;00m>
+  <[94mtitle[39;49;00m>Welcome to CentOS</[94mtitle[39;49;00m>
+  <[94mstyle[39;49;00m [36mrel[39;49;00m=[33m"stylesheet"[39;49;00m [36mtype[39;49;00m=[33m"text/css"[39;49;00m>[37m [39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m[94mhtml[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mbackground-image[39;49;00m:[36murl[39;49;00m([33mimg/html-background.png[39;49;00m);[37m[39;49;00m
+[37m	[39;49;00m[34mbackground-color[39;49;00m:[37m [39;49;00m[34mwhite[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mfont-family[39;49;00m:[37m [39;49;00m[33m"DejaVu Sans"[39;49;00m,[37m [39;49;00m[33m"Liberation Sans"[39;49;00m,[37m [39;49;00m[34msans-serif[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mfont-size[39;49;00m:[37m [39;49;00m[34m0.85[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mline-height[39;49;00m:[37m [39;49;00m[34m1.25[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mmargin[39;49;00m:[37m [39;49;00m[34m0[39;49;00m[37m [39;49;00m[34m4[39;49;00m[36m%[39;49;00m[37m [39;49;00m[34m0[39;49;00m[37m [39;49;00m[34m4[39;49;00m[36m%[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m[94mbody[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mborder[39;49;00m:[37m [39;49;00m[34m10[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34msolid[39;49;00m[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mmargin[39;49;00m:[34m0[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mpadding[39;49;00m:[34m0[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mbackground[39;49;00m:[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m[37m/* Links */[39;49;00m[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m[94ma[39;49;00m:[90mlink[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[37m [39;49;00m[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ccc[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#204d92[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m[94ma[39;49;00m:[90mhover[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ccc[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34munderline[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34mgreen[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m[94ma[39;49;00m:[90mactive[39;49;00m[37m [39;49;00m{[37m  [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ccc[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34munderline[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#204d92[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m[94ma[39;49;00m:[90mvisited[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ccc[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#204d92[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m[94ma[39;49;00m:[90mvisited[39;49;00m:[90mhover[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ccc[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34munderline[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34mgreen[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m [39;49;00m
+[37m	[39;49;00m.[04m[32mlogo[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mlink[39;49;00m,[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mlogo[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mhover[39;49;00m,[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mlogo[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mvisited[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mlink[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[37m [39;49;00m[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ddd[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#eee[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mhover[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ddd[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34munderline[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34mwhite[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mactive[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ddd[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34munderline[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34mwhite[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mvisited[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ddd[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34mwhite[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m[94ma[39;49;00m:[90mvisited[39;49;00m:[90mhover[39;49;00m[37m [39;49;00m{[37m [39;49;00m[34mborder-bottom[39;49;00m:[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ddd[39;49;00m;[37m [39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34munderline[39;49;00m;[37m [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34mwhite[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m[37m/* User interface styles */[39;49;00m[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m#[04m[36mheader[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mmargin[39;49;00m:[34m0[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m0.5[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mbackground[39;49;00m:[37m [39;49;00m[34m#204D8C[39;49;00m[37m [39;49;00m[36murl[39;49;00m([33mimg/header-background.png[39;49;00m);[37m[39;49;00m
+[37m	[39;49;00m[34mtext-align[39;49;00m:[37m [39;49;00m[34mleft[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mlogo[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m0[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[37m/* For text only logo */[39;49;00m[37m[39;49;00m
+[37m	[39;49;00m[34mfont-size[39;49;00m:[37m [39;49;00m[34m1.4[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mline-height[39;49;00m:[37m [39;49;00m[34m1[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mfont-weight[39;49;00m:[37m [39;49;00m[34mbold[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mlogo[39;49;00m[37m [39;49;00m[94mimg[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mvertical-align[39;49;00m:[37m [39;49;00m[34mmiddle[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mpadding-right[39;49;00m:[37m [39;49;00m[34m1[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m.[04m[32mlogo[39;49;00m[37m [39;49;00m[94ma[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mtext-decoration[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m[94mp[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mline-height[39;49;00m:[34m1.5[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m[94mh1[39;49;00m[37m [39;49;00m{[37m [39;49;00m
+[37m		[39;49;00m[34mmargin-bottom[39;49;00m:[37m [39;49;00m[34m0[39;49;00m;[37m[39;49;00m
+[37m		[39;49;00m[34mline-height[39;49;00m:[37m [39;49;00m[34m1.9[39;49;00m[36mem[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m	[39;49;00m[94mh2[39;49;00m[37m [39;49;00m{[37m [39;49;00m
+[37m		[39;49;00m[34mmargin-top[39;49;00m:[37m [39;49;00m[34m0[39;49;00m;[37m[39;49;00m
+[37m		[39;49;00m[34mline-height[39;49;00m:[37m [39;49;00m[34m1.7[39;49;00m[36mem[39;49;00m;[37m [39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m	[39;49;00m#[04m[36mcontent[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m	[39;49;00m[34mclear[39;49;00m:[34mboth[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mpadding-left[39;49;00m:[37m [39;49;00m[34m30[39;49;00m[36mpx[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mpadding-right[39;49;00m:[37m [39;49;00m[34m30[39;49;00m[36mpx[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mpadding-bottom[39;49;00m:[37m [39;49;00m[34m30[39;49;00m[36mpx[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m[34mborder-bottom[39;49;00m:[37m [39;49;00m[34m5[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34msolid[39;49;00m[37m [39;49;00m[34m#eee[39;49;00m;[37m[39;49;00m
+[37m	[39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m    [39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m        [39;49;00m[34mfloat[39;49;00m:[37m [39;49;00m[34mright[39;49;00m;[37m[39;49;00m
+[37m        [39;49;00m[34mmargin-top[39;49;00m:[37m [39;49;00m[34m0.5[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m        [39;49;00m[34mtext-align[39;49;00m:[37m [39;49;00m[34mright[39;49;00m;[37m[39;49;00m
+[37m    [39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m    [39;49;00m[94mul[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m>[37m [39;49;00m[94mli[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m    [39;49;00m[34mborder-right[39;49;00m:[37m [39;49;00m[34m1[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34mdotted[39;49;00m[37m [39;49;00m[34m#ddd[39;49;00m;[37m[39;49;00m
+[37m    [39;49;00m[34mpadding-right[39;49;00m:[37m [39;49;00m[34m10[39;49;00m[36mpx[39;49;00m;[37m[39;49;00m
+[37m    [39;49;00m[34mpadding-left[39;49;00m:[37m [39;49;00m[34m10[39;49;00m[36mpx[39;49;00m;[37m[39;49;00m
+[37m    [39;49;00m[34mdisplay[39;49;00m:[37m [39;49;00m[34minline[39;49;00m;[37m[39;49;00m
+[37m    [39;49;00m[34mlist-style[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m[39;49;00m
+[37m    [39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m    [39;49;00m[94mul[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m>[37m [39;49;00m[94mli[39;49;00m.[04m[32mlast[39;49;00m,[37m[39;49;00m
+[37m    [39;49;00m[94mul[39;49;00m.[04m[32mmainlinks[39;49;00m[37m [39;49;00m>[37m [39;49;00m[94mli[39;49;00m.[04m[32mfirst[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m    [39;49;00m[34mborder-right[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m[39;49;00m
+[37m    [39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m  [39;49;00m</[94mstyle[39;49;00m>
+
+</[94mhead[39;49;00m>
+
+<[94mbody[39;49;00m>
+
+<[94mdiv[39;49;00m [36mid[39;49;00m=[33m"header"[39;49;00m>
+
+    <[94mul[39;49;00m [36mclass[39;49;00m=[33m"mainlinks"[39;49;00m>
+        <[94mli[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://www.centos.org/"[39;49;00m>Home</[94ma[39;49;00m> </[94mli[39;49;00m>
+        <[94mli[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://wiki.centos.org/"[39;49;00m>Wiki</[94ma[39;49;00m> </[94mli[39;49;00m>
+        <[94mli[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://wiki.centos.org/GettingHelp/ListInfo"[39;49;00m>Mailing Lists</[94ma[39;49;00m></[94mli[39;49;00m>
+        <[94mli[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://www.centos.org/download/mirrors/"[39;49;00m>Mirror List</[94ma[39;49;00m></[94mli[39;49;00m>
+        <[94mli[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://wiki.centos.org/irc"[39;49;00m>IRC</[94ma[39;49;00m></[94mli[39;49;00m>
+        <[94mli[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"https://www.centos.org/forums/"[39;49;00m>Forums</[94ma[39;49;00m></[94mli[39;49;00m>
+        <[94mli[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://bugs.centos.org/"[39;49;00m>Bugs</[94ma[39;49;00m> </[94mli[39;49;00m>
+        <[94mli[39;49;00m [36mclass[39;49;00m=[33m"last"[39;49;00m> <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://wiki.centos.org/Donate"[39;49;00m>Donate</[94ma[39;49;00m></[94mli[39;49;00m>
+    </[94mul[39;49;00m>
+
+	<[94mdiv[39;49;00m [36mclass[39;49;00m=[33m"logo"[39;49;00m>
+		<[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://www.centos.org/"[39;49;00m><[94mimg[39;49;00m [36msrc[39;49;00m=[33m"img/centos-logo.png"[39;49;00m [36mborder[39;49;00m=[33m"0"[39;49;00m></[94ma[39;49;00m>
+	</[94mdiv[39;49;00m>
+
+</[94mdiv[39;49;00m>
+
+<[94mdiv[39;49;00m [36mid[39;49;00m=[33m"content"[39;49;00m>
+
+	<[94mh1[39;49;00m>Welcome to CentOS</[94mh1[39;49;00m>
+
+	<[94mh2[39;49;00m>The Community ENTerprise Operating System</[94mh2[39;49;00m>
+
+	<[94mp[39;49;00m><[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://www.centos.org/"[39;49;00m>CentOS</[94ma[39;49;00m> is an Enterprise-class Linux Distribution derived from sources freely provided
+to the public by Red Hat, Inc. for Red Hat Enterprise Linux.  CentOS conforms fully with the upstream vendors
+redistribution policy and aims to be functionally compatible. (CentOS mainly changes packages to remove upstream vendor
+branding and artwork.)</[94mp[39;49;00m>
+
+	<[94mp[39;49;00m>CentOS is developed by a small but growing team of core
+developers.&nbsp; In turn the core developers are supported by an active user community
+including system administrators, network administrators, enterprise users, managers, core Linux contributors and Linux enthusiasts from around the world.</[94mp[39;49;00m>
+
+	<[94mp[39;49;00m>CentOS has numerous advantages including: an active and growing user community, quickly rebuilt, tested, and QA'ed errata packages, an extensive <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://www.centos.org/download/mirrors/"[39;49;00m>mirror network</[94ma[39;49;00m>, developers who are contactable and responsive, Special Interest Groups (<[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://wiki.centos.org/SpecialInterestGroup/"[39;49;00m>SIGs</[94ma[39;49;00m>) to add functionality to the core CentOS distribution, and multiple community support avenues including a <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://wiki.centos.org/"[39;49;00m>wiki</[94ma[39;49;00m>, <[94ma[39;49;00m
+[36mhref[39;49;00m=[33m"http://wiki.centos.org/irc"[39;49;00m>IRC Chat</[94ma[39;49;00m>, <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://wiki.centos.org/GettingHelp/ListInfo"[39;49;00m>Email Lists</[94ma[39;49;00m>, <[94ma[39;49;00m [36mhref[39;49;00m=[33m"https://www.centos.org/forums/"[39;49;00m>Forums</[94ma[39;49;00m>, <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://bugs.centos.org/"[39;49;00m>Bugs Database</[94ma[39;49;00m>, and an <[94ma[39;49;00m
+[36mhref[39;49;00m=[33m"http://wiki.centos.org/FAQ/"[39;49;00m>FAQ</[94ma[39;49;00m>.</[94mp[39;49;00m>
+
+	</[94mdiv[39;49;00m>
+
+</[94mdiv[39;49;00m>
+
+
+</[94mbody[39;49;00m>
+</[94mhtml[39;49;00m>
+
+
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ http 192.168.59.10/asdasdasd
+[?2004l[34mHTTP[39;49;00m/[34m1.1[39;49;00m [34m404[39;49;00m [36mNot Found[39;49;00m
+[36mConnection[39;49;00m: keep-alive
+[36mContent-Length[39;49;00m: 3650
+[36mContent-Type[39;49;00m: text/html
+[36mDate[39;49;00m: Sun, 30 Jul 2023 08:07:25 GMT
+[36mETag[39;49;00m: "636d2d22-e42"
+[36mServer[39;49;00m: nginx/1.20.1
+
+[36m<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">[39;49;00m
+
+<[94mhtml[39;49;00m [36mxmlns[39;49;00m=[33m"http://www.w3.org/1999/xhtml"[39;49;00m [36mxml:lang[39;49;00m=[33m"en"[39;49;00m>
+    <[94mhead[39;49;00m>
+        <[94mtitle[39;49;00m>The page is not found</[94mtitle[39;49;00m>
+        <[94mmeta[39;49;00m [36mhttp-equiv[39;49;00m=[33m"Content-Type"[39;49;00m [36mcontent[39;49;00m=[33m"text/html; charset=UTF-8"[39;49;00m />
+        <[94mstyle[39;49;00m [36mtype[39;49;00m=[33m"text/css"[39;49;00m>[37m[39;49;00m
+[37m            [39;49;00m[37m/*<![CDATA[*/[39;49;00m[37m[39;49;00m
+[37m            [39;49;00m[94mbody[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mbackground-color[39;49;00m:[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#000[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mfont-size[39;49;00m:[37m [39;49;00m[34m0.9[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mfont-family[39;49;00m:[37m [39;49;00m[34msans-serif[39;49;00m,helvetica;[37m[39;49;00m
+[37m                [39;49;00m[34mmargin[39;49;00m:[37m [39;49;00m[34m0[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m0[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m:[90mlink[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#c00[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m:[90mvisited[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#c00[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[94ma[39;49;00m:[90mhover[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#f50[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[94mh1[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mtext-align[39;49;00m:[37m [39;49;00m[34mcenter[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mmargin[39;49;00m:[37m [39;49;00m[34m0[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m0.6[39;49;00m[36mem[39;49;00m[37m [39;49;00m[34m2[39;49;00m[36mem[39;49;00m[37m [39;49;00m[34m0.4[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mbackground-color[39;49;00m:[37m [39;49;00m[34m#294172[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mfont-weight[39;49;00m:[37m [39;49;00m[34mnormal[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mfont-size[39;49;00m:[37m [39;49;00m[34m1.75[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mborder-bottom[39;49;00m:[37m [39;49;00m[34m2[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34msolid[39;49;00m[37m [39;49;00m[34m#000[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[94mh1[39;49;00m[37m [39;49;00m[94mstrong[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mfont-weight[39;49;00m:[37m [39;49;00m[34mbold[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mfont-size[39;49;00m:[37m [39;49;00m[34m1.5[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[94mh2[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mtext-align[39;49;00m:[37m [39;49;00m[34mcenter[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mbackground-color[39;49;00m:[37m [39;49;00m[34m#3C6EB4[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mfont-size[39;49;00m:[37m [39;49;00m[34m1.1[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mfont-weight[39;49;00m:[37m [39;49;00m[34mbold[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mmargin[39;49;00m:[37m [39;49;00m[34m0[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m0.5[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mborder-bottom[39;49;00m:[37m [39;49;00m[34m2[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34msolid[39;49;00m[37m [39;49;00m[34m#294172[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[94mh3[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mtext-align[39;49;00m:[37m [39;49;00m[34mcenter[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mbackground-color[39;49;00m:[37m [39;49;00m[34m#ff0000[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m0.5[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mcolor[39;49;00m:[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[94mhr[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mdisplay[39;49;00m:[37m [39;49;00m[34mnone[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m.[04m[32mcontent[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m1[39;49;00m[36mem[39;49;00m[37m [39;49;00m[34m5[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m.[04m[32malert[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mborder[39;49;00m:[37m [39;49;00m[34m2[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34msolid[39;49;00m[37m [39;49;00m[34m#000[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m[39;49;00m
+[37m            [39;49;00m[94mimg[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mborder[39;49;00m:[37m [39;49;00m[34m2[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34msolid[39;49;00m[37m [39;49;00m[34m#fff[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mpadding[39;49;00m:[37m [39;49;00m[34m2[39;49;00m[36mpx[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mmargin[39;49;00m:[37m [39;49;00m[34m2[39;49;00m[36mpx[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[94ma[39;49;00m:[90mhover[39;49;00m[37m [39;49;00m[94mimg[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mborder[39;49;00m:[37m [39;49;00m[34m2[39;49;00m[36mpx[39;49;00m[37m [39;49;00m[34msolid[39;49;00m[37m [39;49;00m[34m#294172[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m.[04m[32mlogos[39;49;00m[37m [39;49;00m{[37m[39;49;00m
+[37m                [39;49;00m[34mmargin[39;49;00m:[37m [39;49;00m[34m1[39;49;00m[36mem[39;49;00m;[37m[39;49;00m
+[37m                [39;49;00m[34mtext-align[39;49;00m:[37m [39;49;00m[34mcenter[39;49;00m;[37m[39;49;00m
+[37m            [39;49;00m}[37m[39;49;00m
+[37m            [39;49;00m[37m/*]]>*/[39;49;00m[37m[39;49;00m
+[37m        [39;49;00m</[94mstyle[39;49;00m>
+    </[94mhead[39;49;00m>
+
+    <[94mbody[39;49;00m>
+        <[94mh1[39;49;00m><[94mstrong[39;49;00m>nginx error!</[94mstrong[39;49;00m></[94mh1[39;49;00m>
+
+        <[94mdiv[39;49;00m [36mclass[39;49;00m=[33m"content"[39;49;00m>
+
+            <[94mh3[39;49;00m>The page you are looking for is not found.</[94mh3[39;49;00m>
+
+            <[94mdiv[39;49;00m [36mclass[39;49;00m=[33m"alert"[39;49;00m>
+                <[94mh2[39;49;00m>Website Administrator</[94mh2[39;49;00m>
+                <[94mdiv[39;49;00m [36mclass[39;49;00m=[33m"content"[39;49;00m>
+                    <[94mp[39;49;00m>Something has triggered missing webpage on your
+                    website. This is the default 404 error page for
+                    <[94mstrong[39;49;00m>nginx</[94mstrong[39;49;00m> that is distributed with
+                    Fedora.  It is located
+                    <[94mtt[39;49;00m>/usr/share/nginx/html/404.html</[94mtt[39;49;00m></[94mp[39;49;00m>
+
+                    <[94mp[39;49;00m>You should customize this error page for your own
+                    site or edit the <[94mtt[39;49;00m>error_page</[94mtt[39;49;00m> directive in
+                    the <[94mstrong[39;49;00m>nginx</[94mstrong[39;49;00m> configuration file
+                    <[94mtt[39;49;00m>/etc/nginx/nginx.conf</[94mtt[39;49;00m>.</[94mp[39;49;00m>
+
+                </[94mdiv[39;49;00m>
+            </[94mdiv[39;49;00m>
+
+            <[94mdiv[39;49;00m [36mclass[39;49;00m=[33m"logos"[39;49;00m>
+                <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://nginx.net/"[39;49;00m><[94mimg[39;49;00m
+                    [36msrc[39;49;00m=[33m"/nginx-logo.png"[39;49;00m
+                    [36malt[39;49;00m=[33m"[ Powered by nginx ]"[39;49;00m
+                    [36mwidth[39;49;00m=[33m"121"[39;49;00m [36mheight[39;49;00m=[33m"32"[39;49;00m /></[94ma[39;49;00m>
+
+                <[94ma[39;49;00m [36mhref[39;49;00m=[33m"http://fedoraproject.org/"[39;49;00m><[94mimg[39;49;00m 
+                    [36msrc[39;49;00m=[33m"/poweredby.png"[39;49;00m
+                    [36malt[39;49;00m=[33m"[ Powered by Fedora ]"[39;49;00m 
+                    [36mwidth[39;49;00m=[33m"88"[39;49;00m [36mheight[39;49;00m=[33m"31"[39;49;00m /></[94ma[39;49;00m>
+            </[94mdiv[39;49;00m>
+        </[94mdiv[39;49;00m>
+    </[94mbody[39;49;00m>
+</[94mhtml[39;49;00m>
+
+
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ vagrant ssh log
+[?2004lLast login: Sun Jul 30 11:06:58 2023 from 10.0.2.2
+]0;vagrant@log:~[?1034h[vagrant@log ~]$ sudo -i
+]0;root@log:~[?1034h[root@log ~]# cd /var/log/rsyslog/web/
+]0;root@log:/var/log/rsyslog/web[root@log web]# ll
+total 8
+-rw-------. 1 root root 259 Jul 30 11:07 nginx_access.log
+-rw-------. 1 root root 246 Jul 30 11:07 nginx_error.log
+]0;root@log:/var/log/rsyslog/web[root@log web]# cat nginx_ax  access.log 
+Jul 30 11:07:20 web nginx_access: 192.168.59.1 - - [30/Jul/2023:11:07:20 +0300] "GET / HTTP/1.1" 200 4833 "-" "HTTPie/3.2.1"
+Jul 30 11:07:25 web nginx_access: 192.168.59.1 - - [30/Jul/2023:11:07:25 +0300] "GET /asdasdasd HTTP/1.1" 404 3650 "-" "HTTPie/3.2.1"
+]0;root@log:/var/log/rsyslog/web[root@log web]# cat nginx_error.log 
+Jul 30 11:07:25 web nginx_error: 2023/07/30 11:07:25 [error] 4202#4202: *2 open() "/usr/share/nginx/html/asdasdasd" failed (2: No such file or directory), client: 192.168.59.1, server: _, request: "GET /asdasdasd HTTP/1.1", host: "192.168.59.10"
+]0;root@log:/var/log/rsyslog/web[root@log web]# 
+]0;root@log:/var/log/rsyslog/web[root@log web]# 
+]0;root@log:/var/log/rsyslog/web[root@log web]# 
+]0;root@log:/var/log/rsyslog/web[root@log web]# logout
+]0;vagrant@log:~[vagrant@log ~]$ logout
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ 
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ ssh vagrant -i [K[K[Kweb
+[?2004lssh: Could not resolve hostname vagrant: Temporary failure in name resolution
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ vagrant ssh re[K[Kweb
+[?2004lLast login: Sun Jul 30 11:05:51 2023 from 10.0.2.2
+]0;vagrant@web:~[?1034h[vagrant@web ~]$ sudo -i
+]0;root@web:~[?1034h[root@web ~]# chmod _ +x /etc/nginx/nginx.conf
+]0;root@web:~[root@web ~]# logout
+]0;vagrant@web:~[vagrant@web ~]$ logout
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ vagrant ssh webssh vagrant[C[C[C[Cvagrant ssh log
+[?2004lLast login: Sun Jul 30 11:07:33 2023 from 10.0.2.2
+]0;vagrant@log:~[?1034h[vagrant@log ~]$ sudo -i
+]0;root@log:~[?1034h[root@log ~]# grep web /var/log/audit/audit.log 
+node=[01;31m[Kweb[m[K type=DAEMON_START msg=audit(1690704352.858:8382): op=start ver=2.8.5 format=raw kernel=3.10.0-1127.el7.x86_64 auid=4294967295 pid=4691 uid=0 ses=4294967295 subj=system_u:system_r:auditd_t:s0 res=success
+node=[01;31m[Kweb[m[K type=CONFIG_CHANGE msg=audit(1690704353.027:1572): audit_backlog_limit=8192 old=8192 auid=4294967295 ses=4294967295 subj=system_u:system_r:unconfined_service_t:s0 res=1
+node=[01;31m[Kweb[m[K type=CONFIG_CHANGE msg=audit(1690704353.027:1573): audit_failure=1 old=1 auid=4294967295 ses=4294967295 subj=system_u:system_r:unconfined_service_t:s0 res=1
+node=[01;31m[Kweb[m[K type=CONFIG_CHANGE msg=audit(1690704353.027:1574): auid=4294967295 ses=4294967295 subj=system_u:system_r:unconfined_service_t:s0 op=add_rule key="nginx_conf" list=4 res=1
+node=[01;31m[Kweb[m[K type=CONFIG_CHANGE msg=audit(1690704353.027:1575): auid=4294967295 ses=4294967295 subj=system_u:system_r:unconfined_service_t:s0 op=add_rule key="nginx_conf" list=4 res=1
+node=[01;31m[Kweb[m[K type=SERVICE_START msg=audit(1690704353.027:1576): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=auditd comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704353.043:1577): pid=4665 uid=0 auid=1000 ses=4 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='op=PAM:session_close grantors=pam_keyinit,pam_keyinit,pam_limits,pam_systemd,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=CRED_DISP msg=audit(1690704353.043:1578): pid=4665 uid=0 auid=1000 ses=4 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704353.051:1579): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_LOGOUT msg=audit(1690704353.051:1580): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_LOGIN msg=audit(1690704353.057:1581): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=USER_START msg=audit(1690704353.057:1582): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704353.061:1583): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=4718 suid=1000  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704353.072:1584): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=USER_LOGOUT msg=audit(1690704353.072:1585): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704361.949:1586): pid=1646 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=1647 suid=74  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704361.949:1587): pid=1646 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:c0:15:1a:3f:bb:77:f5:1c:f1:3c:cc:3b:66:c7:92:d4:26:a5:6b:e0:d2:27:4c:b2:f5:04:dc:14:c9:b2:77:d7 direction=? spid=1646 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704361.949:1588): pid=1646 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:60:ef:4e:5e:a5:86:03:cd:df:7c:a9:c1:cc:ce:a4:ae:c0:cb:89:47:80:53:22:c2:c0:1a:13:72:6b:3e:be:ee direction=? spid=1646 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704361.949:1589): pid=1646 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=1646 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_LOGIN msg=audit(1690704361.949:1590): pid=1646 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login acct="(unknown)" exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=ssh res=failed'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704413.139:1591): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=3242 suid=1000  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704413.139:1592): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=session fp=? direction=both spid=3242 suid=1000 rport=47492 laddr=10.0.2.15 lport=22  exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704413.146:1593): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:session_close grantors=pam_selinux,pam_loginuid,pam_selinux,pam_namespace,pam_keyinit,pam_keyinit,pam_limits,pam_systemd,pam_unix,pam_lastlog acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRED_DISP msg=audit(1690704413.146:1594): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704413.147:1595): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:c0:15:1a:3f:bb:77:f5:1c:f1:3c:cc:3b:66:c7:92:d4:26:a5:6b:e0:d2:27:4c:b2:f5:04:dc:14:c9:b2:77:d7 direction=? spid=3239 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704413.147:1596): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:60:ef:4e:5e:a5:86:03:cd:df:7c:a9:c1:cc:ce:a4:ae:c0:cb:89:47:80:53:22:c2:c0:1a:13:72:6b:3e:be:ee direction=? spid=3239 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704413.147:1597): pid=3239 uid=0 auid=1000 ses=4 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=3239 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704420.206:1598): pid=1613 uid=0 auid=1000 ses=2 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=session fp=? direction=both spid=1616 suid=1000 rport=54712 laddr=10.0.2.15 lport=22  exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704420.208:1599): pid=1613 uid=0 auid=1000 ses=2 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=1616 suid=1000  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704420.210:1600): pid=1613 uid=0 auid=1000 ses=2 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:session_close grantors=pam_selinux,pam_loginuid,pam_selinux,pam_namespace,pam_keyinit,pam_keyinit,pam_limits,pam_systemd,pam_unix,pam_lastlog acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRED_DISP msg=audit(1690704420.210:1601): pid=1613 uid=0 auid=1000 ses=2 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704420.210:1602): pid=1613 uid=0 auid=1000 ses=2 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:c0:15:1a:3f:bb:77:f5:1c:f1:3c:cc:3b:66:c7:92:d4:26:a5:6b:e0:d2:27:4c:b2:f5:04:dc:14:c9:b2:77:d7 direction=? spid=1613 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704420.210:1603): pid=1613 uid=0 auid=1000 ses=2 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:60:ef:4e:5e:a5:86:03:cd:df:7c:a9:c1:cc:ce:a4:ae:c0:cb:89:47:80:53:22:c2:c0:1a:13:72:6b:3e:be:ee direction=? spid=1613 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704420.210:1604): pid=1613 uid=0 auid=1000 ses=2 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=1613 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.487:1605): pid=4731 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:c0:15:1a:3f:bb:77:f5:1c:f1:3c:cc:3b:66:c7:92:d4:26:a5:6b:e0:d2:27:4c:b2:f5:04:dc:14:c9:b2:77:d7 direction=? spid=4731 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.487:1606): pid=4731 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:60:ef:4e:5e:a5:86:03:cd:df:7c:a9:c1:cc:ce:a4:ae:c0:cb:89:47:80:53:22:c2:c0:1a:13:72:6b:3e:be:ee direction=? spid=4731 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.487:1607): pid=4731 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=4731 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_SESSION msg=audit(1690704497.490:1608): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=start direction=from-server cipher=chacha20-poly1305@openssh.com ksize=512 mac=<implicit> pfs=curve25519-sha256 spid=4731 suid=74 rport=34300 laddr=10.0.2.15 lport=22  exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_SESSION msg=audit(1690704497.490:1609): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=start direction=from-client cipher=chacha20-poly1305@openssh.com ksize=512 mac=<implicit> pfs=curve25519-sha256 spid=4731 suid=74 rport=34300 laddr=10.0.2.15 lport=22  exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_AUTH msg=audit(1690704497.558:1610): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=pubkey_auth rport=34300 acct="vagrant" exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_AUTH msg=audit(1690704497.558:1611): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=key algo=ssh-rsa size=2048 fp=SHA256:db:e3:60:1f:dd:04:7d:6a:6d:5d:41:0b:53:d9:eb:91:7f:95:a4:f0:88:6c:3b:1a:64:bd:dd:2e:25:c1:2d:ae rport=34300 acct="vagrant" exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_ACCT msg=audit(1690704497.561:1612): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:accounting grantors=pam_unix,pam_localuser acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.577:1613): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=session fp=? direction=both spid=4731 suid=74 rport=34300 laddr=10.0.2.15 lport=22  exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_AUTH msg=audit(1690704497.580:1614): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=success acct="vagrant" exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRED_ACQ msg=audit(1690704497.580:1615): pid=4730 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=LOGIN msg=audit(1690704497.580:1616): pid=4730 uid=0 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 old-auid=4294967295 auid=1000 tty=(none) old-ses=4294967295 ses=5 res=1
+node=[01;31m[Kweb[m[K type=USER_ROLE_CHANGE msg=audit(1690704497.729:1617): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='pam: default-context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 selected-context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=USER_START msg=audit(1690704497.750:1618): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:session_open grantors=pam_selinux,pam_loginuid,pam_selinux,pam_namespace,pam_keyinit,pam_keyinit,pam_limits,pam_systemd,pam_unix,pam_lastlog acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.753:1619): pid=4733 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:c0:15:1a:3f:bb:77:f5:1c:f1:3c:cc:3b:66:c7:92:d4:26:a5:6b:e0:d2:27:4c:b2:f5:04:dc:14:c9:b2:77:d7 direction=? spid=4733 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.753:1620): pid=4733 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:60:ef:4e:5e:a5:86:03:cd:df:7c:a9:c1:cc:ce:a4:ae:c0:cb:89:47:80:53:22:c2:c0:1a:13:72:6b:3e:be:ee direction=? spid=4733 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.753:1621): pid=4733 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=4733 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRED_ACQ msg=audit(1690704497.753:1622): pid=4733 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=USER_LOGIN msg=audit(1690704497.758:1623): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_START msg=audit(1690704497.758:1624): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704497.767:1625): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=4734 suid=1000  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_ACCT msg=audit(1690704502.263:1626): pid=4757 uid=1000 auid=1000 ses=5 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='op=PAM:accounting grantors=pam_unix,pam_localuser acct="vagrant" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_CMD msg=audit(1690704502.263:1627): pid=4757 uid=1000 auid=1000 ses=5 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='cwd="/home/vagrant" cmd="-bash" terminal=pts/0 res=success'
+node=[01;31m[Kweb[m[K type=CRED_REFR msg=audit(1690704502.263:1628): pid=4757 uid=0 auid=1000 ses=5 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_START msg=audit(1690704502.282:1629): pid=4757 uid=0 auid=1000 ses=5 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='op=PAM:session_open grantors=pam_keyinit,pam_keyinit,pam_keyinit,pam_limits,pam_systemd,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=SYSCALL msg=audit(1690704512.088:1630): arch=c000003e syscall=268 success=yes exit=0 a0=ffffffffffffff9c a1=149f420 a2=1ed a3=7ffcc7b292a0 items=1 ppid=4759 pid=4782 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=5 comm="chmod" exe="/usr/bin/chmod" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="nginx_conf"
+node=[01;31m[Kweb[m[K type=CWD msg=audit(1690704512.088:1630):  cwd="/root"
+node=[01;31m[Kweb[m[K type=PATH msg=audit(1690704512.088:1630): item=0 name="/etc/nginx/nginx.conf" inode=67541952 dev=08:01 mode=0100644 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:httpd_config_t:s0 objtype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+node=[01;31m[Kweb[m[K type=PROCTITLE msg=audit(1690704512.088:1630): proctitle=63686D6F64002B78002F6574632F6E67696E782F6E67696E782E636F6E66
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704512.656:1631): pid=4757 uid=0 auid=1000 ses=5 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='op=PAM:session_close grantors=pam_keyinit,pam_keyinit,pam_keyinit,pam_limits,pam_systemd,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=CRED_DISP msg=audit(1690704512.656:1632): pid=4757 uid=0 auid=1000 ses=5 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704512.882:1633): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=USER_LOGOUT msg=audit(1690704512.882:1634): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login id=1000 exe="/usr/sbin/sshd" hostname=? addr=? terminal=/dev/pts/0 res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704512.883:1635): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=4733 suid=1000  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704512.883:1636): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=session fp=? direction=both spid=4733 suid=1000 rport=34300 laddr=10.0.2.15 lport=22  exe="/usr/sbin/sshd" hostname=? addr=10.0.2.2 terminal=? res=success'
+node=[01;31m[Kweb[m[K type=USER_END msg=audit(1690704512.886:1637): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:session_close grantors=pam_selinux,pam_loginuid,pam_selinux,pam_namespace,pam_keyinit,pam_keyinit,pam_limits,pam_systemd,pam_unix,pam_lastlog acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRED_DISP msg=audit(1690704512.886:1638): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:setcred grantors=pam_env,pam_unix acct="vagrant" exe="/usr/sbin/sshd" hostname=10.0.2.2 addr=10.0.2.2 terminal=ssh res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704512.886:1639): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:c0:15:1a:3f:bb:77:f5:1c:f1:3c:cc:3b:66:c7:92:d4:26:a5:6b:e0:d2:27:4c:b2:f5:04:dc:14:c9:b2:77:d7 direction=? spid=4730 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704512.886:1640): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:60:ef:4e:5e:a5:86:03:cd:df:7c:a9:c1:cc:ce:a4:ae:c0:cb:89:47:80:53:22:c2:c0:1a:13:72:6b:3e:be:ee direction=? spid=4730 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+node=[01;31m[Kweb[m[K type=CRYPTO_KEY_USER msg=audit(1690704512.886:1641): pid=4730 uid=0 auid=1000 ses=5 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:9a:b1:35:64:c9:e5:36:a5:8a:b8:ec:47:7f:78:23:da:75:b4:f4:8b:4d:a6:cc:01:fc:67:ec:07:93:e0:24:fd direction=? spid=4730 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+]0;root@log:~[root@log ~]# logout
+]0;vagrant@log:~[vagrant@log ~]$ logout
+[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ # The end!
+[?2004l[?2004h]0;zoid@dll: ~/projects/otus/2023-04-linux/24[01;32mzoid@dll[00m:[01;34m~/projects/otus/2023-04-linux/24[00m$ [?2004l
+exit
+
+Script done on 2023-07-30 11:09:04+03:00 [COMMAND_EXIT_CODE="0"]

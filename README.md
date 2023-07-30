@@ -31,3 +31,5 @@
 [21. Prometheus](21/README.md)
 
 [22. PAM](22/README.md)
+
+[24. Основы сбора и хранения логов](24/README.md)

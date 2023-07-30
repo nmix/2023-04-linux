@@ -1,0 +1,83 @@
+---
+- name: Config web server
+  hosts: all
+  become: true
+  vars:
+    log_ip: 192.168.59.15
+
+  tasks:
+    - name: Set localtime
+      ansible.builtin.file:
+        src: /usr/share/zoneinfo/Europe/Moscow
+        dest: /etc/localtime
+        state: link
+
+    - name: Restart chronyd
+      ansible.builtin.service:
+        name: chronyd
+        state: restarted
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - vim
+          - epel-release
+          - audispd-plugins
+
+    - name: Install nginx
+      ansible.builtin.yum:
+        name: nginx
+
+    - name: Config nginx error log
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/nginx.conf
+        line: "error_log syslog:server={{ log_ip }}:514,tag=nginx_error;"
+        insertafter: error_log /var/log/nginx/error.log;
+
+    - name: Config nginx access log
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/nginx.conf
+        line: "    access_log syslog:server={{ log_ip }}:514,tag=nginx_access,severity=info combined;"
+        insertafter: access_log  /var/log/nginx/access.log  main;
+
+    - name: Test nginx config syntax
+      ansible.builtin.shell: nginx -t
+      register: nginx_syntax_result
+      changed_when: false
+      failed_when: nginx_syntax_result.rc != 0
+
+    - name: Start nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+
+    - name: Add audit rules
+      ansible.builtin.lineinfile:
+        path: /etc/audit/rules.d/audit.rules
+        line: "{{ item }}"
+      with_items:
+        - "-w /etc/nginx/nginx.conf -p wa -k nginx_conf"
+        - "-w /etc/nginx/default.d/ -p wa -k nginx_conf"
+
+    - name: Config auditd
+      ansible.builtin.replace:
+        path: /etc/audit/auditd.conf
+        regexp: '^(name_format).*'
+        replace: '\1 = HOSTNAME'
+
+    - name: Config plugin
+      ansible.builtin.replace:
+        path: /etc/audisp/plugins.d/au-remote.conf
+        regexp: '^(active).*'
+        replace: '\1 = yes'
+
+    - name: Config audisp-remote
+      ansible.builtin.replace:
+        path: /etc/audisp/audisp-remote.conf
+        regexp: '^(remote_server).*'
+        replace: '\1 = {{ log_ip }}'
+
+    - name: Restart auditd
+      ansible.builtin.shell: service auditd restart
