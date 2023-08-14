@@ -1,0 +1,60 @@
+---
+- name: Config backup server
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install epel-release
+      ansible.builtin.yum:
+        name: epel-release
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - vim
+          - borgbackup
+
+    - name: Create .ssh directory
+      ansible.builtin.file:
+        path: /root/.ssh
+        state: directory
+        mode: "0700"
+
+    - name: Add ssh keys
+      ansible.builtin.copy:
+        src: ssh/
+        dest: /root/.ssh/
+        mode: "0600"
+
+    - name: Disable strict host check
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/ssh_config"
+        line: "StrictHostKeyChecking no"
+
+    - name: Init borg repository
+      ansible.builtin.command: borg init --encryption=repokey borg@192.168.59.10:/var/backup/
+      environment:
+        BORG_PASSPHRASE: secret
+
+    - name: Add backup service config
+      ansible.builtin.copy:
+        src: systemd/
+        dest: /etc/systemd/system/
+        mode: "0644"
+
+    - name: Reload systemd (if config changed)
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Enable backup timer
+      ansible.builtin.systemd:
+        name: borg-backup.timer
+        state: started
+        enabled: true
+
+    - name: Initial start backup service
+      ansible.builtin.systemd:
+        name: borg-backup
+        state: started
