@@ -1,0 +1,33 @@
+---
+- name: Config office2Router
+  hosts: all
+  become: true
+  vars:
+    cmd: "ip route del default; ip route add default via 192.168.1.1 dev eth1"
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install packages
+      ansible.builtin.apt:
+        name:
+          - vim
+          - traceroute
+
+    # --- Static routes
+
+    #     Костыльная реализация.
+    #     В данном случае соединение с Debian зависает при попытке
+    #     перезагрузить сетевой интерфейс. Видимо связано с тем, что
+    #     мы работает по сети.
+
+    - name: Set default route for current session
+      ansible.builtin.shell: "{{ cmd }}"
+
+    - name: Restore default route on startup
+      ansible.builtin.cron:
+        name: "Set default route"
+        special_time: reboot
+        job: "{{ cmd }}"

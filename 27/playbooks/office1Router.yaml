@@ -1,0 +1,36 @@
+---
+- name: Config office1Router
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install packages
+      ansible.builtin.apt:
+        name:
+          - vim
+          - traceroute
+
+    # --- Forwarding
+
+    - name: Set up forward packages across routers
+      ansible.builtin.sysctl:
+        name: net.ipv4.conf.all.forwarding
+        value: '1'
+        state: present
+
+    # --- Static routes
+
+    - name: Set default route to centralRouter
+      ansible.builtin.copy:
+        src: files/office1Router-route.yaml
+        dest: /etc/netplan/50-vagrant.yaml
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Apply netplan
+      ansible.builtin.shell: netplan apply
