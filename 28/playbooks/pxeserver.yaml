@@ -139,3 +139,11 @@
         name: dhcpd
         state: restarted
         enabled: true
+
+    - name: copy ks.cfg
+      ansible.builtin.template:
+        src: templates/ks.cfg
+        dest: /iso/ks.cfg
+        owner: root
+        group: root
+        mode: 0755
