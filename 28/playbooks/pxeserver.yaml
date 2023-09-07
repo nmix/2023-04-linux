@@ -1,0 +1,141 @@
+---
+- name: Set up PXE server
+  hosts: all
+  become: true
+  tasks:
+    - name: Setup repo
+      ansible.builtin.replace:
+        path: "{{ item }}"
+        regexp: "mirrorlist"
+        replace: "#mirrorlist"
+      with_items:
+        - /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+        - /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+
+    - name: set up repo
+      replace:
+        path: "{{ item }}"
+        regexp: '#baseurl=http://mirror.centos.org'
+        replace: 'baseurl=http://vault.centos.org'
+      with_items:
+        - /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+        - /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+
+    - name: Install softs on CentOS
+      ansible.builtin.yum:
+        name:
+          - vim
+          - wget
+          - epel-release
+          - httpd
+          - tftp-server
+          - dhcp-server
+        state: present
+        update_cache: true
+
+    # - name: Download ISO image CentOS 8.4.2105
+    #   ansible.builtin.get_url:
+    #     url: https://mirror.cs.pitt.edu/centos-vault/8.4.2105/isos/x86_64/CentOS-8.4.2105-x86_64-dvd1.iso
+    #     dest: ~/CentOS-8.4.2105-x86_64-dvd1.iso
+    #     mode: '0755'
+
+    - name: Create ISO directory
+      ansible.builtin.file:
+        path: /iso
+        state: directory
+        mode: "0755"
+
+    - name: Mount ISO image
+      ansible.builtin.mount:
+        path: /mnt
+        src: /vagrant/CentOS-8.4.2105-x86_64-dvd1.iso
+        fstype: iso9660
+        opts: ro,loop
+        state: mounted
+
+    - name: Copy ALL files from /mnt to /iso
+      ansible.builtin.copy:
+        src: /mnt/
+        dest: /iso
+        remote_src: true
+        directory_mode: true
+
+    - name: Set up httpd config
+      ansible.builtin.template:
+        src: templates/pxeboot.conf
+        dest: /etc/httpd/conf.d/pxeboot.conf
+        owner: root
+        group: root
+        mode: 0640
+
+    - name: Restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+        enabled: true
+
+    - name: Create TFTP directory
+      ansible.builtin.file:
+        path: /var/lib/tftpboot/pxelinux.cfg
+        state: directory
+        mode: "0755"
+
+    #Копируем файл-меню на сервер
+    - name: Set up pxelinux
+      ansible.builtin.template:
+        src: templates/default
+        dest: /var/lib/tftpboot/pxelinux.cfg/default
+        owner: root
+        group: root
+        mode: "0644"
+
+    #Извлекаем файлы из RPM-пакета
+    - name: extract packages syslinux
+      ansible.builtin.shell: rpm2cpio /iso/BaseOS/Packages/syslinux-tftpboot-6.04-5.el8.noarch.rpm | cpio -dimv
+
+    #Копируем файлы в каталог /var/lib/tftpboot/
+    - name: copy files to TFTP share
+      ansible.builtin.copy:
+        src: /home/vagrant/tftpboot/{{ item }}
+        dest: /var/lib/tftpboot/{{ item }}
+        mode: "0644"
+        remote_src: true
+      with_items:
+        - pxelinux.0
+        - ldlinux.c32
+        - libmenu.c32
+        - libutil.c32
+        - menu.c32
+        - vesamenu.c32
+
+    #Копируем файлы в каталог /var/lib/tftpboot/
+    - name: Copy initrd and vmlinuz files to TFTP share
+      ansible.builtin.copy:
+        src: /iso/images/pxeboot/{{ item }}
+        dest: /var/lib/tftpboot/{{ item }}
+        mode: "0755"
+        remote_src: true
+      with_items:
+        - initrd.img
+        - vmlinuz
+
+    #Перезапускаем TFTP-сервер и добавляем его в автозагрузку
+    - name: Restart tftp-server
+      ansible.builtin.service:
+        name: tftp.service
+        state: restarted
+        enabled: true
+
+     #Копирование файла конфигурации DHCP-сервера
+    - name: Set up dhcp-server
+      ansible.builtin.template:
+        src: dhcpd.conf
+        dest: /etc/dhcp/dhcpd.conf
+        mode: "0644"
+
+    #Перезапуск службы и добавление в автозагрузку
+    - name: restart dhcp-server
+      ansible.builtin.service:
+        name: dhcpd
+        state: restarted
+        enabled: true
