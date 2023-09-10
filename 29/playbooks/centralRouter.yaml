@@ -13,6 +13,7 @@
         name:
           - vim
           - traceroute
+          - nmap
 
     # --- Forwarding
 
@@ -58,3 +59,31 @@
       ansible.builtin.systemd:
         name: network
         state: restarted
+
+    # --- SSH
+
+    - name: Create .ssh directory
+      ansible.builtin.file:
+        path: /home/vagrant/.ssh
+        state: directory
+        mode: "0700"
+        owner: vagrant
+        group: vagrant
+
+    - name: Add ssh keys
+      ansible.builtin.copy:
+        src: ssh/
+        dest: /home/vagrant/.ssh/
+        mode: "0600"
+        owner: vagrant
+        group: vagrant
+
+    # --- Knock
+
+    - name: Add knock script
+      ansible.builtin.copy:
+        src: files/knock.sh
+        dest: /home/vagrant/knock.sh
+        mode: "0755"
+        owner: vagrant
+        group: vagrant

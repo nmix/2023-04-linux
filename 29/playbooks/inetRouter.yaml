@@ -62,3 +62,55 @@
       ansible.builtin.systemd:
         name: network
         state: restarted
+
+    # --- SSH access
+
+    - name: Create .ssh directory
+      ansible.builtin.file:
+        path: /home/vagrant/.ssh
+        state: directory
+        mode: "0700"
+        owner: vagrant
+        group: vagrant
+
+    - name: Copy authorized_keys file
+      ansible.builtin.file:
+        path: /home/vagrant/.ssh/authorized_keys
+        state: touch
+        mode: "0600"
+        owner: vagrant
+        group: vagrant
+
+    - name: Add authorized key
+      ansible.builtin.lineinfile:
+        path: /home/vagrant/.ssh/authorized_keys
+        line: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
+        create: true
+
+    # --- Knockd
+
+    - name: Install knockd
+      ansible.builtin.yum:
+        name:
+          - knock-server
+        state: present
+
+    - name: Add ssh keys
+      ansible.builtin.copy:
+        src: files/knockd.conf
+        dest: /etc/knockd.conf
+        mode: "0664"
+        owner: root
+        group: root
+
+    - name: set up repo
+      ansible.builtin.replace:
+        path: /usr/lib/systemd/system/knockd.service
+        regexp: 'ExecStart=.*'
+        replace: "ExecStart=/usr/sbin/knockd -i eth1 -d $OPTIONS"
+
+    - name: Start and enable knockd service
+      ansible.builtin.service:
+        name: knockd
+        state: restarted
+        enabled: true
