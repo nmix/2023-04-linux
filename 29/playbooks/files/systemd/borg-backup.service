@@ -1,0 +1,15 @@
+[Unit]
+Description=Borg Backup
+
+[Service]
+Type=oneshot
+
+Environment="BORG_PASSPHRASE=secret"
+Environment=REPO=borg@192.168.59.10:/var/backup/
+Environment=BACKUP_TARGET=/etc
+
+ExecStart=/bin/borg create --stats ${REPO}::etc-{now:%%Y-%%m-%%d_%%H:%%M:%%S} ${BACKUP_TARGET}
+
+ExecStart=/bin/borg check ${REPO}
+
+ExecStart=/bin/borg prune --keep-hourly 5 ${REPO}
