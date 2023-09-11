@@ -22,7 +22,7 @@
 
     - name: Copy iptables config
       ansible.builtin.template:
-        src: files/iptables
+        src: files/iptables-inetRouter.rules
         dest: /etc/sysconfig/iptables
         owner: root
         group: root

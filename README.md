@@ -40,3 +40,4 @@
 
 [28. DHCP, PXE](28/README.md)
 
+[29. Фильтрация трафика - firewalld, iptables](29/README.md)

@@ -27,15 +27,25 @@ MACHINES = {
       ]
   },
 
-  # :centralServer => {
-  #   :box_name => "centos/7",
-  #   :box_version => "2004.01",
-  #   :vm_name => "centralServer",
-  #   :net => [
-  #     {ip: '192.168.0.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
-  #     {ip: '192.168.56.12', adapter: 8},
-  #     ]
-  # },
+  :centralServer => {
+    :box_name => "centos/7",
+    :box_version => "2004.01",
+    :vm_name => "centralServer",
+    :net => [
+      {ip: '192.168.0.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
+      {ip: '192.168.56.12', adapter: 8},
+      ]
+  },
+
+  :inetRouter2 => {
+    :box_name => "centos/7",
+    :box_version => "2004.01",
+    :vm_name => "inetRouter2",
+    :net => [
+      {ip: '192.168.56.100', adapter: 8},
+      ]
+  },
+
 }
 
 Vagrant.configure("2") do |config|

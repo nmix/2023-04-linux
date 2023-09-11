@@ -1,0 +1,51 @@
+---
+- name: Config inetRouter
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install epel-release
+      ansible.builtin.yum:
+        name: epel-release
+
+    # --- IP Tables
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name:
+          - vim
+          - traceroute
+          - iptables
+          - iptables-services
+        state: present
+        update_cache: true
+
+    - name: Copy iptables config
+      ansible.builtin.template:
+        src: files/iptables-inetRouter2.rules
+        dest: /etc/sysconfig/iptables
+        owner: root
+        group: root
+        mode: "0600"
+
+    - name: Start and enable iptables service
+      ansible.builtin.service:
+        name: iptables
+        state: restarted
+        enabled: true
+
+    # --- Forwarding
+
+    - name: Set up forward packages across routers
+      ansible.builtin.sysctl:
+        name: net.ipv4.conf.all.forwarding
+        value: '1'
+        state: present
+
+    # --- Local routing
+
+    - name: Set up localnet
+      ansible.builtin.sysctl:
+        name: net.ipv4.conf.all.route_localnet
+        value: '1'
+        state: present

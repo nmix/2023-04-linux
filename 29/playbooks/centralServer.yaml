@@ -35,3 +35,16 @@
       ansible.builtin.systemd:
         name: network
         state: restarted
+
+    # --- Nginx
+
+    - name: Install nginx
+      ansible.builtin.yum:
+        name:
+          - nginx
+
+    - name: Start and enable nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
