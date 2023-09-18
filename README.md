@@ -41,3 +41,5 @@
 [28. DHCP, PXE](28/README.md)
 
 [29. Фильтрация трафика - firewalld, iptables](29/README.md)
+
+[32. Статическая и динамическая маршрутизация, OSPF](32/README.md)
