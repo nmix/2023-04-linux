@@ -70,6 +70,8 @@
         owner: frr
         group: frr
         mode: 0640
+      tags:
+        - setup_ospf
 
     # Перезапускам FRR и добавляем в автозагрузку
     - name: restart FRR
@@ -77,3 +79,5 @@
         name: frr
         state: restarted
         enabled: true
+      tags:
+        - setup_ospf
