@@ -1,0 +1,48 @@
+- name: OpenVPN config
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install epel-release
+      ansible.builtin.yum:
+        name: epel-release
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name:
+          - openvpn
+          - iperf3
+
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+
+    - name: Copy key file
+      ansible.builtin.copy:
+        src: files/static.key
+        dest: /etc/openvpn/static.key
+        owner: root
+        group: root
+        mode: "0640"
+
+    - name: Copy openvpn conf
+      ansible.builtin.copy:
+        src: "files/server.conf-{{ ansible_hostname }}"
+        dest: /etc/openvpn/server.conf
+        owner: root
+        group: root
+        mode: "0640"
+
+    - name: Copy openvpn service unit
+      ansible.builtin.copy:
+        src: "files/openvpn.service"
+        dest: /etc/systemd/system/openvpn@.service
+        owner: root
+        group: root
+        mode: "0640"
+
+    - name: Start openvpn
+      ansible.builtin.service:
+        name: openvpn@server
+        state: started
+        enabled: true
