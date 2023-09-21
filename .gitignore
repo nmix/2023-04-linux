@@ -3,6 +3,7 @@
 .vagrant
 *.file
 *.iso
+*.ovpn
 
 # Swap
 [._]*.s[a-v][a-z]
