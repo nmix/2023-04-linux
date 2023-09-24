@@ -22,3 +22,9 @@
 ```bash
 scriptreplay --timing=timing.log --divisor=5 script.log
 ```
+
+## Практика
+
+Для задания 1 выполняется плейбук из директории provisioning.
+
+Для задания 2 выполняется плейбук из директории provisioning2.
