@@ -31,7 +31,7 @@ scriptreplay --timing=timing.log --divisor=5 script.log
 На ВМ *worker* запущены сервисы: *frontend* (Go), *cartservice* (C#), *productcatalogservice* (Go), *currencyservice* (Node.js).
 Это минимальный набор сервисов для отображения стартовой страницы.
 
-![Стартовая страница Boutique.Online]('./homepage.png')
+![Стартовая страница Boutique.Online](./homepage.png)
 
 Сервисы запущены через docker.
 
