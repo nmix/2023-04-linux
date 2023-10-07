@@ -1,0 +1,42 @@
+---
+- name: Set up edge server
+  hosts: all
+  become: true
+  tasks:
+    - name: Install softs on CentOS
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - vim
+          - wget
+          - nginx
+        state: present
+        update_cache: true
+
+    - name: disable firewalld
+      service:
+        name: firewalld
+        state: stopped
+        enabled: false
+
+    - name: disable SElinux
+      selinux:
+        state: disabled
+
+    - name: Copy config
+      copy:
+        src: "{{ item }}"
+        dest: /etc/nginx/conf.d
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - files/frontend.conf
+        - files/currency.conf
+        - files/productcatalog.conf
+        - files/cart.conf
+
+    - name: Start nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted

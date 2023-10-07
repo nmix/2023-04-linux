@@ -1,0 +1,87 @@
+---
+- name: Set up worker server
+  hosts: all
+  become: true
+  tasks:
+    - name: Install softs on CentOS
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - vim
+          - wget
+          - docker
+        state: present
+        update_cache: true
+
+    # - name: Install python packages
+    #   ansible.builtin.pip:
+    #     name:
+    #       - requests
+
+    - name: disable firewalld
+      service:
+        name: firewalld
+        state: stopped
+        enabled: false
+
+    - name: start frontend container
+      containers.podman.podman_container:
+        name: frontend
+        image: gcr.io/google-samples/microservices-demo/frontend:v0.8.0
+        recreate: true
+        state: started
+        ports:
+          - "8081:8080"
+        env:
+          CURRENCY_SERVICE_ADDR: boutique.local:8082
+          PRODUCT_CATALOG_SERVICE_ADDR: boutique.local:8083
+          CART_SERVICE_ADDR: boutique.local:8084
+          # ---
+          RECOMMENDATION_SERVICE_ADDR: otus.local:8085
+          CHECKOUT_SERVICE_ADDR: otus.local:8086
+          SHIPPING_SERVICE_ADDR: otus.local:8087
+          AD_SERVICE_ADDR: otus.local:8087
+
+    - name: start currency service
+      containers.podman.podman_container:
+        name: currency
+        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.8.0
+        recreate: true
+        state: started
+        ports:
+          - "8082:7000"
+        env:
+          PORT: 7000
+          DISABLE_PROFILER: 1
+
+    - name: start productcatalog service
+      containers.podman.podman_container:
+        name: productcatalog
+        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.8.0
+        recreate: true
+        state: started
+        ports:
+          - "8083:3550"
+        env:
+          PORT: 3550
+          DISABLE_PROFILER: 1
+
+    - name: start redis for cart service
+      containers.podman.podman_container:
+        name: redis
+        image: docker.io/library/redis:latest
+        recreate: true
+        state: started
+        ports:
+          - "6379:6379"
+
+    - name: start cart service
+      containers.podman.podman_container:
+        name: cart
+        image: gcr.io/google-samples/microservices-demo/cartservice:v0.8.0
+        recreate: true
+        state: started
+        ports:
+          - "8084:7070"
+        env:
+          REDIS_ADDR: otus.local:6379
