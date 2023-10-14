@@ -2,7 +2,15 @@
 - name: Set up master server
   hosts: all
   become: true
+  gather_facts: false
   tasks:
+
+    # - name: Install python3
+    #   ansible.builtin.raw: yum install -y python3 python3-pip
+    #   changed_when: true
+
+    # - name: Gather facts
+    #   ansible.builtin.setup:
 
     # - name: Install packages
     #   ansible.builtin.yum:
@@ -10,6 +18,11 @@
     #       - epel-release
     #       - vim
     #     state: present
+
+    # - name: Install python packages
+    #   ansible.builtin.pip:
+    #     name:
+    #       - pymysql
 
     # - name: Add Percona yum repository
     #   ansible.builtin.yum:
@@ -35,12 +48,24 @@
     #     - 04-slow-query.cnf
     #     - 05-binlog.cnf
 
-    # - name: Start MySQL in safe mode
-    #   command: mysqld_safe --skip-grant-tables --skip-networking
+    # - name: Start MySQL server
+    #   ansible.builtin.service:
+    #     name: mysql
+    #     state: started
 
-    - name: update root password
-      community.mysql.mysql_user:
+    # - name: Get generated mysql password
+    #   ansible.builtin.shell: "cat /var/log/mysqld.log | grep 'root@localhost:' | awk '{print $11}'"
+    #   register: generated_password
+
+    # - debug:
+    #     var: generated_password.stdout
+
+    - name: Change MySQL root password
+      mysql_user:
         name: root
-        password: "Supersecret123!"
-        login_user: root
+        # login_user: root
+        # config_file: /etc/my.cnf
         login_unix_socket: /var/lib/mysql/mysql.sock
+        password: supersecret123!
+        check_implicit_admin: yes
+        priv: "*.*:ALL"
