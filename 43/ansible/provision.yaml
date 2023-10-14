@@ -4,7 +4,8 @@
   become: true
   gather_facts: false
   vars:
-    root_password: SuperSecret1#
+    root_password: "SuperSecret1#"
+    repl_password: "!OtusLinux2018"
   tasks:
 
     - name: Install python3
@@ -74,17 +75,33 @@
       community.mysql.mysql_db:
         name: bet
         state: present
+      when: inventory_hostname == 'master'
 
     - name: Restore data from dmp
       community.mysql.mysql_db:
         name: bet
         state: import
         target: /vagrant/bet.dmp
+      when: inventory_hostname == 'master'
 
     - name: Create repl user
       community.mysql.mysql_user:
         name: repl
-        password: "!OtusLinux2018"
+        password: "{{ repl_password }}"
         priv: "*.*:REPLICATION SLAVE"
         host: "%"
+      when: inventory_hostname == 'master'
 
+    - name: Set primary server
+      community.mysql.mysql_replication:
+        mode: changeprimary
+        primary_host: 192.168.56.150
+        primary_user: repl
+        primary_password: "{{ repl_password }}"
+        primary_auto_position: true
+      when: inventory_hostname == 'slave'
+
+    - name: Start replication
+      community.mysql.mysql_replication:
+        mode: startreplica
+      when: inventory_hostname == 'slave'
