@@ -5,67 +5,60 @@
   gather_facts: false
   tasks:
 
-    # - name: Install python3
-    #   ansible.builtin.raw: yum install -y python3 python3-pip
-    #   changed_when: true
+    - name: Install python3
+      ansible.builtin.raw: yum install -y python3 python3-pip
+      changed_when: true
 
-    # - name: Gather facts
-    #   ansible.builtin.setup:
+    - name: Gather facts
+      ansible.builtin.setup:
 
-    # - name: Install packages
-    #   ansible.builtin.yum:
-    #     name:
-    #       - epel-release
-    #       - vim
-    #     state: present
+    - name: Install python packages
+      ansible.builtin.pip:
+        name:
+          - pymysql
 
-    # - name: Install python packages
-    #   ansible.builtin.pip:
-    #     name:
-    #       - pymysql
+    - name: Install packages
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - vim
+        state: present
 
-    # - name: Add Percona yum repository
-    #   ansible.builtin.yum:
-    #     name: https://repo.percona.com/yum/percona-release-latest.noarch.rpm
-    #     state: present
+    - name: Add Percona yum repository
+      ansible.builtin.yum:
+        name: https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+        state: present
 
-    # - name: Enable Percona repository
-    #   command: "percona-release setup ps57 -y"
+    - name: Enable Percona repository
+      command: "percona-release setup ps57 -y"
 
-    # - name: Install Perconf
-    #   ansible.builtin.yum:
-    #     name: Percona-Server-server-57
-    #     state: present
+    - name: Install Perconf
+      ansible.builtin.yum:
+        name: Percona-Server-server-57
+        state: present
 
-    # - name: Copy config
-    #   ansible.builtin.template:
-    #     src: conf.d/{{ item }}
-    #     dest: /etc/my.cnf.d/{{ item }}
-    #   with_items:
-    #     - 01-base.cnf
-    #     - 02-max-connections.cnf
-    #     - 03-performance.cnf
-    #     - 04-slow-query.cnf
-    #     - 05-binlog.cnf
+    - name: Copy config
+      ansible.builtin.template:
+        src: conf.d/{{ item }}
+        dest: /etc/my.cnf.d/{{ item }}
+      with_items:
+        - 01-base.cnf
+        - 02-max-connections.cnf
+        - 03-performance.cnf
+        - 04-slow-query.cnf
+        - 05-binlog.cnf
 
-    # - name: Start MySQL server
-    #   ansible.builtin.service:
-    #     name: mysql
-    #     state: started
+    - name: Start MySQL server
+      ansible.builtin.service:
+        name: mysql
+        state: started
 
-    # - name: Get generated mysql password
-    #   ansible.builtin.shell: "cat /var/log/mysqld.log | grep 'root@localhost:' | awk '{print $11}'"
-    #   register: generated_password
+    - name: Get generated mysql password
+      ansible.builtin.shell: "cat /var/log/mysqld.log | grep 'root@localhost:' | awk '{print $11}'"
+      register: generated_password
 
     # - debug:
     #     var: generated_password.stdout
 
     - name: Change MySQL root password
-      mysql_user:
-        name: root
-        # login_user: root
-        # config_file: /etc/my.cnf
-        login_unix_socket: /var/lib/mysql/mysql.sock
-        password: supersecret123!
-        check_implicit_admin: yes
-        priv: "*.*:ALL"
+      ansible.builtin.shell: "mysql -u root -p'{{ generated_password.stdout }}' --connect-expired-password -e \"ALTER USER USER() IDENTIFIED BY 'SuperSecret1#';\""
