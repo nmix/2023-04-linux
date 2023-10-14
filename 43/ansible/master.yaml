@@ -1,0 +1,46 @@
+---
+- name: Set up master server
+  hosts: all
+  become: true
+  tasks:
+
+    # - name: Install packages
+    #   ansible.builtin.yum:
+    #     name:
+    #       - epel-release
+    #       - vim
+    #     state: present
+
+    # - name: Add Percona yum repository
+    #   ansible.builtin.yum:
+    #     name: https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+    #     state: present
+
+    # - name: Enable Percona repository
+    #   command: "percona-release setup ps57 -y"
+
+    # - name: Install Perconf
+    #   ansible.builtin.yum:
+    #     name: Percona-Server-server-57
+    #     state: present
+
+    # - name: Copy config
+    #   ansible.builtin.template:
+    #     src: conf.d/{{ item }}
+    #     dest: /etc/my.cnf.d/{{ item }}
+    #   with_items:
+    #     - 01-base.cnf
+    #     - 02-max-connections.cnf
+    #     - 03-performance.cnf
+    #     - 04-slow-query.cnf
+    #     - 05-binlog.cnf
+
+    # - name: Start MySQL in safe mode
+    #   command: mysqld_safe --skip-grant-tables --skip-networking
+
+    - name: update root password
+      community.mysql.mysql_user:
+        name: root
+        password: "Supersecret123!"
+        login_user: root
+        login_unix_socket: /var/lib/mysql/mysql.sock
