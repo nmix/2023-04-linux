@@ -1,27 +1,29 @@
 # -*- mode: ruby -*-
 # vim: set ft=ruby :
 
-MACHINES = {
-  :master => {
-        :box_name => "centos/7",
-        :box_version => "2004.01",
-        :ip_addr => '192.168.56.150'
+MACHINES = [
+  {
+    :name => "master",
+    :box_name => "centos/7",
+    :box_version => "2004.01",
+    :ip_addr => '192.168.56.150'
   },
-  :slave => {
-        :box_name => "centos/7",
-        :box_version => "2004.01",
-        :ip_addr => '192.168.56.151'
+  {
+    :name => "slave",
+    :box_name => "centos/7",
+    :box_version => "2004.01",
+    :ip_addr => '192.168.56.151'
   }
-}
+]
 
 Vagrant.configure("2") do |config|
 
-  MACHINES.each do |boxname, boxconfig|
+  MACHINES.each do |boxconfig|
 
-    config.vm.define boxname do |box|
+    config.vm.define boxconfig[:name] do |box|
 
       box.vm.box = boxconfig[:box_name]
-      box.vm.host_name = boxname.to_s
+      box.vm.host_name = boxconfig[:name]
 
       box.vm.network "private_network", ip: boxconfig[:ip_addr]
 
@@ -33,18 +35,9 @@ Vagrant.configure("2") do |config|
          s.inline = 'mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh'
       end
 
-      # box.vm.provision :ansible do |ansible|
-      #   ansible.playbook = "ansible/#{boxname}.yaml"
-      #   ansible.inventory_path = "ansible/hosts"
-      # end
-
-
-      if boxname.to_s == 'slave'
-        box.vm.provision "ansible" do |ansible|
-          ansible.playbook = "ansible/provision.yaml"
-          ansible.inventory_path = "ansible/hosts"
-          ansible.host_key_checking = "false"
-        end
+      box.vm.provision "ansible" do |ansible|
+        ansible.inventory_path = "ansible/hosts"
+        ansible.playbook = "ansible/provision.yaml"
       end
     end
   end

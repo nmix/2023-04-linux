@@ -1,5 +1,5 @@
 ---
-- name: Set up master server
+- name: Set up mysql servers
   hosts: all
   become: true
   gather_facts: false
