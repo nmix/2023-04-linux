@@ -1,0 +1,23 @@
+---
+- name: Set up edge server
+  hosts: all
+  become: true
+  tasks:
+    - name: Install softs on CentOS
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - vim
+          - telnet
+        state: present
+        update_cache: true
+
+    - name: disable firewalld
+      service:
+        name: firewalld
+        state: stopped
+        enabled: false
+
+    - name: disable SElinux
+      selinux:
+        state: disabled
