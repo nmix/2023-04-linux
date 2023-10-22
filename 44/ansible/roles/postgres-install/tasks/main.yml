@@ -1,0 +1,32 @@
+- name: disable firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: disable SElinux
+  ansible.builtin.selinux:
+    state: disabled
+
+- name: Add Postgres 14 repo
+  ansible.builtin.shell: |
+    dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+- name: Disable built-in PostgreSQL module
+  ansible.builtin.shell: |
+    dnf -qy module disable postgresql
+
+- name: Install postgres
+  ansible.builtin.yum:
+    name:
+      - postgresql14-server
+    state: present
+
+- name: Init database
+  ansible.builtin.shell: /usr/pgsql-14/bin/postgresql-14-setup initdb
+
+- name: Start postgres service
+  ansible.builtin.service:
+    name: postgresql-14
+    state: started
+    enabled: true
