@@ -1,0 +1,27 @@
+---
+- name: Install packages
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Install softs on CentOS
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - vim
+          - telnet
+        state: present
+        update_cache: true
+
+- name: Install postgres 14 and set up replication
+  hosts: node1,node2
+  become: true
+  roles:
+     - postgres-install
+     - postgres-replication
+
+- name: Set up backup
+  hosts: all
+  become: true
+  roles:
+   - barman-install

@@ -1,0 +1,76 @@
+- name: Install python3
+  ansible.builtin.raw: yum install -y python3 python3-pip
+  changed_when: true
+
+# - name: Gather facts
+#   ansible.builtin.setup:
+
+- name: Install python packages
+  ansible.builtin.pip:
+    name:
+      - psycopg2==2.7.7
+      - pexpect
+
+- name: Create replicator user
+  community.postgresql.postgresql_user:
+    name: replicator
+    password: "Otus2022!"
+    role_attr_flags: replication
+  when: inventory_hostname == 'node1'
+  become_user: postgres
+
+- name: Copy config file
+  ansible.builtin.copy:
+    src: postgresql.conf
+    dest: /var/lib/pgsql/14/data/postgresql.conf
+    force: true
+  when: inventory_hostname == 'node1'
+
+- name: Fix connection params
+  ansible.builtin.blockinfile:
+    path: /var/lib/pgsql/14/data/pg_hba.conf
+    backup: true
+    block: |
+      local   all             all                                     trust
+      host    replication replicator    192.168.57.11/32        scram-sha-256
+      host    replication replicator    192.168.57.12/32        scram-sha-256
+  when: inventory_hostname == 'node1'
+
+- name: Restart postgres on node1
+  ansible.builtin.service:
+    name: postgresql-14
+    state: restarted
+  when: inventory_hostname == 'node1'
+
+- name: Stop postgres on node2
+  ansible.builtin.service:
+    name: postgresql-14
+    state: stopped
+  when: inventory_hostname == 'node2'
+
+- name: Remove old data on node2
+  ansible.builtin.file:
+    path: /var/lib/pgsql/14/data
+    state: absent
+  when: inventory_hostname == 'node2'
+
+- name: Request basebackup
+  become_user: postgres
+  expect:
+    command: 'pg_basebackup -h 192.168.57.11 -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P'
+    responses: 
+      '.*Password*': "Otus2022!"
+  when: inventory_hostname == 'node2'
+
+- name: Replace listen IP
+  ansible.builtin.lineinfile:
+    path: /var/lib/pgsql/14/data/postgresql.conf
+    regexp: "^listen_addresses"
+    line: "listen_addresses =  'localhost, 192.168.57.12'"
+  when: inventory_hostname == 'node2'
+
+- name: Restart postgres on node2
+  ansible.builtin.service:
+    name: postgresql-14
+    state: restarted
+  when: inventory_hostname == 'node2'

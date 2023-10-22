@@ -1,0 +1,10 @@
+node1 ansible_host=192.168.57.11 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/node1/virtualbox/private_key
+node2 ansible_host=192.168.57.12 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/node2/virtualbox/private_key
+barman ansible_host=192.168.57.13 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/barman/virtualbox/private_key
+
+[postgres]
+node1
+node2
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
