@@ -2,7 +2,23 @@
 - name: Set up edge server
   hosts: all
   become: true
+  gather_facts: false
   tasks:
+
+    - name: Install python3
+      ansible.builtin.raw: yum install -y python3 python3-pip
+      changed_when: true
+      when: inventory_hostname == 'node1'
+
+    - name: Gather facts
+      ansible.builtin.setup:
+
+    - name: Install python packages
+      ansible.builtin.pip:
+        name:
+          - psycopg2==2.7.7
+      when: inventory_hostname == 'node1'
+
     - name: Install softs on CentOS
       ansible.builtin.yum:
         name:
@@ -48,3 +64,47 @@
         state: started
         enabled: true
       when: inventory_hostname in groups["postgres"]
+
+    - name: Create replicator user
+      community.postgresql.postgresql_user:
+        name: replicator
+        password: "Otus2022!"
+        role_attr_flags: replication
+      when: inventory_hostname == 'node1'
+      become_user: postgres
+
+    - name: Copy config file
+      ansible.builtin.copy:
+        src: postgresql.conf
+        dest: /var/lib/pgsql/14/data/postgresql.conf
+        force: true
+      when: inventory_hostname == 'node1'
+
+    - name: Fix connection params
+      community.postgresql.postgresql_pg_hba:
+        dest: /var/lib/pgsql/14/data/pg_hba.conf
+        overwrite: true
+        contype: host
+        users: replication
+        databases: replication
+        method: scram-sha-256
+        source: "{{ item }}"
+      with_items:
+        - 192.168.57.11/32
+        - 192.168.57.12/32 
+      when: inventory_hostname == 'node1'
+
+    - name: Fix connection params
+      ansible.builtin.blockinfile:
+        path: /var/lib/pgsql/14/data/pg_hba.conf
+        backup: true
+        block: |
+          host    replication replication    192.168.57.11/32        scram-sha-256
+          host    replication replication    192.168.57.12/32        scram-sha-256
+      when: inventory_hostname == 'node1'
+
+    - name: Restart postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: restarted
+      when: inventory_hostname == 'node1'
