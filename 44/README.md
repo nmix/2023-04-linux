@@ -20,3 +20,5 @@ scriptreplay --timing=timing.log --divisor=5 script.log
 ```
 
 ## Практическая часть
+
+Имя пользователя для реплиации *replicator*, не *replication*. Необходимо скорректировать pg_hba и команду `pg_basebackup`.

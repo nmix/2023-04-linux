@@ -20,3 +20,8 @@
      - postgres-install
      - postgres-replication
 
+- name: Set up backup
+  hosts: all
+  become: true
+  roles:
+   - barman-install

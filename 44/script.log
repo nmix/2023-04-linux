@@ -1,0 +1,603 @@
+Script started on 2023-10-22 14:52:10+03:00 [TERM="tmux-256color" TTY="/dev/pts/1" COLUMNS="109" LINES="54"]
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ vagrant status
+[?2004l[0mCurrent machine states:
+
+node1                     not created (virtualbox)
+node2                     not created (virtualbox)
+barman                    not created (virtualbox)
+
+This environment represents multiple VMs. The VMs are all listed
+above with their current state. For more information about a specific
+VM, run `vagrant status NAME`.[0m
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ vagrant up
+[?2004l[0mBringing machine 'node1' up with 'virtualbox' provider...[0m
+[0mBringing machine 'node2' up with 'virtualbox' provider...[0m
+[0mBringing machine 'barman' up with 'virtualbox' provider...[0m
+[1m==> node1: Importing base box 'generic/centos8s'...[0m
+[0m[K[0m[0mProgress: 10%[0m[0m[K[0m[0mProgress: 20%[0m[0m[K[0m[0mProgress: 30%[0m[0m[K[0m[0mProgress: 40%[0m[0m[K[0m[0mProgress: 90%[0m[0m[K[0m[1m==> node1: Matching MAC address for NAT networking...[0m
+[1m==> node1: Checking if box 'generic/centos8s' version '4.2.16' is up to date...[0m
+[1m==> node1: Setting the name of the VM: 44_node1_1697975563189_96588[0m
+[1m==> node1: Clearing any previously set network interfaces...[0m
+[1m==> node1: Preparing network interfaces based on configuration...[0m
+[0m    node1: Adapter 1: nat[0m
+[0m    node1: Adapter 2: hostonly[0m
+[1m==> node1: Forwarding ports...[0m
+[0m    node1: 22 (guest) => 2222 (host) (adapter 1)[0m
+[1m==> node1: Running 'pre-boot' VM customizations...[0m
+[1m==> node1: Booting VM...[0m
+[1m==> node1: Waiting for machine to boot. This may take a few minutes...[0m
+[0m    node1: SSH address: 127.0.0.1:2222[0m
+[0m    node1: SSH username: vagrant[0m
+[0m    node1: SSH auth method: private key[0m
+[0m    node1: 
+    node1: Vagrant insecure key detected. Vagrant will automatically replace
+    node1: this with a newly generated keypair for better security.[0m
+[0m    node1: 
+    node1: Inserting generated public key within guest...[0m
+[0m    node1: Removing insecure key from the guest if it's present...[0m
+[0m    node1: Key inserted! Disconnecting and reconnecting using new SSH key...[0m
+[1m==> node1: Machine booted and ready![0m
+[1m==> node1: Checking for guest additions in VM...[0m
+[0m    node1: The guest additions on this VM do not match the installed version of
+    node1: VirtualBox! In most cases this is fine, but in rare cases it can
+    node1: prevent things such as shared folders from working properly. If you see
+    node1: shared folder errors, please make sure the guest additions within the
+    node1: virtual machine match the version of VirtualBox you have installed on
+    node1: your host and reload your VM.
+    node1: 
+    node1: Guest Additions Version: 6.1.30
+    node1: VirtualBox Version: 7.0[0m
+[1m==> node1: Setting hostname...[0m
+[1m==> node1: Configuring and enabling network interfaces...[0m
+[1m==> node2: Importing base box 'generic/centos8s'...[0m
+[0m[K[0m[0mProgress: 10%[0m[0m[K[0m[0mProgress: 20%[0m[0m[K[0m[0mProgress: 30%[0m[0m[K[0m[0mProgress: 40%[0m[0m[K[0m[0mProgress: 80%[0m[0m[K[0m[0mProgress: 90%[0m[0m[K[0m[1m==> node2: Matching MAC address for NAT networking...[0m
+[1m==> node2: Checking if box 'generic/centos8s' version '4.2.16' is up to date...[0m
+[1m==> node2: Setting the name of the VM: 44_node2_1697975698698_1659[0m
+[1m==> node2: Fixed port collision for 22 => 2222. Now on port 2200.[0m
+[1m==> node2: Clearing any previously set network interfaces...[0m
+[1m==> node2: Preparing network interfaces based on configuration...[0m
+[0m    node2: Adapter 1: nat[0m
+[0m    node2: Adapter 2: hostonly[0m
+[1m==> node2: Forwarding ports...[0m
+[0m    node2: 22 (guest) => 2200 (host) (adapter 1)[0m
+[1m==> node2: Running 'pre-boot' VM customizations...[0m
+[1m==> node2: Booting VM...[0m
+[1m==> node2: Waiting for machine to boot. This may take a few minutes...[0m
+[0m    node2: SSH address: 127.0.0.1:2200[0m
+[0m    node2: SSH username: vagrant[0m
+[0m    node2: SSH auth method: private key[0m
+[0m    node2: 
+    node2: Vagrant insecure key detected. Vagrant will automatically replace
+    node2: this with a newly generated keypair for better security.[0m
+[0m    node2: 
+    node2: Inserting generated public key within guest...[0m
+[0m    node2: Removing insecure key from the guest if it's present...[0m
+[0m    node2: Key inserted! Disconnecting and reconnecting using new SSH key...[0m
+[1m==> node2: Machine booted and ready![0m
+[1m==> node2: Checking for guest additions in VM...[0m
+[0m    node2: The guest additions on this VM do not match the installed version of
+    node2: VirtualBox! In most cases this is fine, but in rare cases it can
+    node2: prevent things such as shared folders from working properly. If you see
+    node2: shared folder errors, please make sure the guest additions within the
+    node2: virtual machine match the version of VirtualBox you have installed on
+    node2: your host and reload your VM.
+    node2: 
+    node2: Guest Additions Version: 6.1.30
+    node2: VirtualBox Version: 7.0[0m
+[1m==> node2: Setting hostname...[0m
+[1m==> node2: Configuring and enabling network interfaces...[0m
+[1m==> barman: Importing base box 'generic/centos8s'...[0m
+[0m[K[0m[0mProgress: 10%[0m[0m[K[0m[0mProgress: 20%[0m[0m[K[0m[0mProgress: 30%[0m[0m[K[0m[0mProgress: 40%[0m[0m[K[0m[0mProgress: 60%[0m[0m[K[0m[0mProgress: 90%[0m[0m[K[0m[1m==> barman: Matching MAC address for NAT networking...[0m
+[1m==> barman: Checking if box 'generic/centos8s' version '4.2.16' is up to date...[0m
+[1m==> barman: Setting the name of the VM: 44_barman_1697975833995_6232[0m
+[1m==> barman: Fixed port collision for 22 => 2222. Now on port 2201.[0m
+[1m==> barman: Clearing any previously set network interfaces...[0m
+[1m==> barman: Preparing network interfaces based on configuration...[0m
+[0m    barman: Adapter 1: nat[0m
+[0m    barman: Adapter 2: hostonly[0m
+[1m==> barman: Forwarding ports...[0m
+[0m    barman: 22 (guest) => 2201 (host) (adapter 1)[0m
+[1m==> barman: Running 'pre-boot' VM customizations...[0m
+[1m==> barman: Booting VM...[0m
+[1m==> barman: Waiting for machine to boot. This may take a few minutes...[0m
+[0m    barman: SSH address: 127.0.0.1:2201[0m
+[0m    barman: SSH username: vagrant[0m
+[0m    barman: SSH auth method: private key[0m
+[0m    barman: 
+    barman: Vagrant insecure key detected. Vagrant will automatically replace
+    barman: this with a newly generated keypair for better security.[0m
+[0m    barman: 
+    barman: Inserting generated public key within guest...[0m
+[0m    barman: Removing insecure key from the guest if it's present...[0m
+[0m    barman: Key inserted! Disconnecting and reconnecting using new SSH key...[0m
+[1m==> barman: Machine booted and ready![0m
+[1m==> barman: Checking for guest additions in VM...[0m
+[0m    barman: The guest additions on this VM do not match the installed version of
+    barman: VirtualBox! In most cases this is fine, but in rare cases it can
+    barman: prevent things such as shared folders from working properly. If you see
+    barman: shared folder errors, please make sure the guest additions within the
+    barman: virtual machine match the version of VirtualBox you have installed on
+    barman: your host and reload your VM.
+    barman: 
+    barman: Guest Additions Version: 6.1.30
+    barman: VirtualBox Version: 7.0[0m
+[1m==> barman: Setting hostname...[0m
+[1m==> barman: Configuring and enabling network interfaces...[0m
+[1m==> barman: Running provisioner: ansible...[0m
+[0m    barman: Running ansible-playbook...[0m
+[0m
+PLAY [Install packages] ********************************************************
+[0m[0m
+TASK [Install softs on CentOS] *************************************************
+[0m[0m[0;32mok: [node1][0m
+[0m[0m[0;32mok: [node2][0m
+[0m[0m[0;32mok: [barman][0m
+[0m[0m
+PLAY [Install postgres 14 and set up replication] ******************************
+[0m[0m
+TASK [Gathering Facts] *********************************************************
+[0m[0m[0;32mok: [node2][0m
+[0m[0m[0;32mok: [node1][0m
+[0m[0m
+TASK [postgres-install : disable firewalld] ************************************
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-install : disable SElinux] **************************************
+[0m[0m[1;35m[WARNING]: SELinux state temporarily changed from 'enforcing' to 'permissive'.[0m
+[1;35mState change will take effect next reboot.[0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-install : Add Postgres 14 repo] *********************************
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-install : Disable built-in PostgreSQL module] *******************
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-install : Install postgres] *************************************
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-install : Init database] ****************************************
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-install : Start postgres service] *******************************
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-replication : Install python3] **********************************
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-replication : Install python packages] **************************
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-replication : Create replicator user] ***************************
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[1;35m[WARNING]: Module remote_tmp /var/lib/pgsql/.ansible/tmp did not exist and was[0m
+[1;35mcreated with a mode of 0700, this may cause issues when running as another[0m
+[1;35muser. To avoid this, create the remote_tmp dir with the correct permissions[0m
+[1;35mmanually[0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-replication : Copy config file] *********************************
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-replication : Fix connection params] ****************************
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-replication : Restart postgres on node1] ************************
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [postgres-replication : Stop postgres on node2] ***************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-replication : Remove old data on node2] *************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-replication : Request basebackup] *******************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-replication : Replace listen IP] ********************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [postgres-replication : Restart postgres on node2] ************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+PLAY [Set up backup] ***********************************************************
+[0m[0m
+TASK [Gathering Facts] *********************************************************
+[0m[0m[0;32mok: [node1][0m
+[0m[0m[0;32mok: [node2][0m
+[0m[0m[0;32mok: [barman][0m
+[0m[0m
+TASK [barman-install : install base tools] *************************************
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : disable firewalld service] ******************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : Disable SELinux] ****************************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : Ensure SELinux is set to disable mode] ******************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;32mok: [barman][0m
+[0m[0m
+TASK [barman-install : install repo] *******************************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : disable old postgresql module] **************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : install epel-release] ***********************************
+[0m[0m[0;32mok: [node1][0m
+[0m[0m[0;32mok: [barman][0m
+[0m[0m[0;32mok: [node2][0m
+[0m[0m
+TASK [barman-install : install barman and postgresql packages on barman] *******
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : install barman-cli and postgresql packages on nodes] ****
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : generate SSH key for postgres] **************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : generate SSH key for barman] ****************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : fetch all public ssh keys node1] ************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : transfer public key to barman] **************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1 -> barman(192.168.57.13)][0m
+[0m[0m
+TASK [barman-install : fetch all public ssh keys barman] ***********************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : transfer public key to barman] **************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman -> node1(192.168.57.11)][0m
+[0m[0m
+TASK [barman-install : Create barman user] *************************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : Add permission for barman] ******************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [barman-install : Add permission for barman] ******************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m[0;33mchanged: [node2][0m
+[0m[0m
+TASK [barman-install : restart postgresql-server on node1] *********************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : Create DB for backup] ***********************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : Add tables to otus_backup] ******************************
+[0m[0m[0;36mskipping: [barman][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [node1][0m
+[0m[0m
+TASK [barman-install : copy .pgpass] *******************************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : copy barman.conf] ***************************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : create barman.d directory] ******************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : copy node1.conf] ****************************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : barman switch-wal node1] ********************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[1;35m[WARNING]: Module remote_tmp /var/lib/barman/.ansible/tmp did not exist and was[0m
+[1;35mcreated with a mode of 0700, this may cause issues when running as another[0m
+[1;35muser. To avoid this, create the remote_tmp dir with the correct permissions[0m
+[1;35mmanually[0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+TASK [barman-install : barman cron] ********************************************
+[0m[0m[0;36mskipping: [node1][0m
+[0m[0m[0;36mskipping: [node2][0m
+[0m[0m[0;33mchanged: [barman][0m
+[0m[0m
+PLAY RECAP *********************************************************************
+[0;33mbarman[0m                     : [0;32mok=19  [0m [0;33mchanged=15  [0m unreachable=0    failed=0    [0;36mskipped=10  [0m rescued=0    ignored=0   
+[0m[0m[0;33mnode1[0m                      : [0;32mok=28  [0m [0;33mchanged=24  [0m unreachable=0    failed=0    [0;36mskipped=20  [0m rescued=0    ignored=0   
+[0;33mnode2[0m                      : [0;32mok=22  [0m [0;33mchanged=18  [0m unreachable=0    failed=0    [0;36mskipped=26  [0m rescued=0    ignored=0   
+
+[0m[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ [K[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ [K[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ [K[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ vagrant ssh node1
+[?2004lLast login: Sun Oct 22 12:04:19 2023 from 192.168.57.1
+[vagrant@node1 ~]$ sudo -i[Ku postgres psql
+could not change directory to "/home/vagrant": Permission denied
+psql (14.9)
+Type "help" for help.
+
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ otus      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(4 rows)
+
+postgres=# CREATE DATABASE otus_test;
+CREATE DATABASE
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ otus      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ otus_test | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(5 rows)
+
+postgres=# \q
+[vagrant@node1 ~]$ logout
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ vagrant ssh node1[K2
+[?2004lLast login: Sun Oct 22 12:04:17 2023 from 192.168.57.1
+[vagrant@node2 ~]$ sudo -u postgres psql
+could not change directory to "/home/vagrant": Permission denied
+psql (14.9)
+Type "help" for help.
+
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ otus      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ otus_test | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(5 rows)
+
+postgres=# \q
+[vagrant@node2 ~]$ logout
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ s[Kvagrant ssh barman
+[?2004lLast login: Sun Oct 22 12:04:24 2023 from 192.168.57.1
+[vagrant@barman ~]$ sudo -i
+[root@barman ~]# barman switch-wal node1
+The WAL file 000000010000000000000004 has been closed on server 'node1'
+[root@barman ~]# batm[K[Krman cron
+Starting WAL archiving for server node1
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# barman check node1
+Server node1:
+	PostgreSQL: [32mOK[0m
+	superuser or standard user with backup privileges: [32mOK[0m
+	PostgreSQL streaming: [32mOK[0m
+	wal_level: [32mOK[0m
+	replication slot: [32mOK[0m
+	directories: [32mOK[0m
+	retention policy settings: [32mOK[0m
+	backup maximum age: [31mFAILED[0m (interval provided: 4 days, latest backup age: No available backups)
+	backup minimum size: [32mOK[0m (0 B)
+	wal maximum age: [32mOK[0m (no last_wal_maximum_age provided)
+	wal size: [32mOK[0m (0 B)
+	compression settings: [32mOK[0m
+	failed backups: [32mOK[0m (there are 0 failed backups)
+	minimum redundancy requirements: [31mFAILED[0m (have 0 backups, expected at least 1)
+	pg_basebackup: [32mOK[0m
+	pg_basebackup compatible: [32mOK[0m
+	pg_basebackup supports tablespaces mapping: [32mOK[0m
+	systemid coherence: [32mOK[0m (no system Id stored on disk)
+	pg_receivexlog: [32mOK[0m
+	pg_receivexlog compatible: [32mOK[0m
+	receive-wal running: [32mOK[0m
+	archiver errors: [32mOK[0m
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# barman backup node1 --wait
+Starting backup using postgres method for server node1 in /var/lib/barman/node1/base/20231022T120704
+Backup start at LSN: 0/5000060 (000000010000000000000005, 00000060)
+Starting backup copy via pg_basebackup for 20231022T120704
+Copy done (time: less than one second)
+Finalising the backup.
+This is the first backup for server node1
+WAL segments preceding the current backup have been found:
+	000000010000000000000004 from server node1 has been removed
+Backup size: 41.8 MiB
+Backup end at LSN: 0/7000000 (000000010000000000000006, 00000000)
+Backup completed (start time: 2023-10-22 12:07:04.090497, elapsed time: 1 second)
+Waiting for the WAL file 000000010000000000000006 from server 'node1'
+Processing xlog segments from streaming for node1
+	000000010000000000000005
+	000000010000000000000006
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# barman list-backup node1
+node1 20231022T120704 - Sun Oct 22 09:07:05 2023 - Size: 41.8 MiB - WAL Size: 0 B
+[root@barman ~]# logout
+[vagrant@barman ~]$ logout
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ vagrant ssh barman[1Pnode21
+[?2004lLast login: Sun Oct 22 12:04:45 2023 from 10.0.2.2
+[vagrant@node1 ~]$ sudo -u postgres psql
+could not change directory to "/home/vagrant": Permission denied
+psql (14.9)
+Type "help" for help.
+
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ otus      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ otus_test | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(5 rows)
+
+postgres=# dtop     r  DROP DATABASE otus;
+DROP DATABASE
+postgres=# DROP_DA    DATABASE otus_test;
+DROP DATABASE
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(3 rows)
+
+postgres=# \q
+[vagrant@node1 ~]$ logout
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ 
+[?2004l[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ vagrant ssh node1barman
+[?2004lLast login: Sun Oct 22 12:06:00 2023 from 10.0.2.2
+[vagrant@barman ~]$ sudo -i
+[root@barman ~]# brammmmm[K[K[K[Kan[K[K[K[K[Kara[Kman list-backup m[Knode1
+node1 20231022T120704 - Sun Oct 22 09:07:05 2023 - Size: 41.8 MiB - WAL Size: 0 B
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# barman recover node1 20231022T120704 /var/lib/pgsql/14/data/ --remote-ssh-comman "ssh postgres@192.168.57.11"
+The authenticity of host '192.168.57.11 (192.168.57.11)' can't be established.
+RSA key fingerprint is SHA256:o+NZOckE4w0RzpbEA60qHOhISCw4wbZNUKJZmwpKQVw.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Starting remote restore for server node1 using backup 20231022T120704
+Destination directory: /var/lib/pgsql/14/data/
+Remote command: ssh postgres@192.168.57.11
+Copying the base backup.
+Copying required WAL segments.
+Generating archive status files
+Identify dangerous settings in destination directory.
+
+Recovery completed (start time: 2023-10-22 12:08:58.422576+00:00, elapsed time: 4 seconds)
+Your PostgreSQL server has been successfully prepared for recovery!
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# 
+[root@barman ~]# logout
+[vagrant@barman ~]$ logout
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ vagrant ssh barman[1Pnode1
+[?2004lLast login: Sun Oct 22 12:07:39 2023 from 10.0.2.2
+[vagrant@node1 ~]$ sudo -u postgres psql
+could not change directory to "/home/vagrant": Permission denied
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+[vagrant@node1 ~]$ sudo systemctl start postgresql-14
+[vagrant@node1 ~]$ sudo systemctl start postgresql-14[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13P-u postgres psql
+could not change directory to "/home/vagrant": Permission denied
+psql (14.9)
+Type "help" for help.
+
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ otus      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ otus_test | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(5 rows)
+
+postgres=# \q
+[vagrant@node1 ~]$ logout
+[?2004h[01;32mzoid@npc[00m:[01;34m~/projects/otus/2023-04-linux/44[00m$ [?2004l
+exit
+
+Script done on 2023-10-22 15:09:46+03:00 [COMMAND_EXIT_CODE="0"]
