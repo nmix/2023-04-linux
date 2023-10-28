@@ -1,0 +1,16 @@
+- name: Install packages
+  ansible.builtin.yum:
+    name:
+      - epel-release
+      - vim
+      - tmux
+      - httpie
+    state: present
+    update_cache: true
+
+- name: Install docker
+  ansible.builtin.import_role:
+    name: geerlingguy.docker
+  vars:
+    docker_users:
+      - vagrant
