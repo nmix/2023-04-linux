@@ -1,0 +1,19 @@
+- name: Common config
+  ansible.builtin.import_role:
+    name: common-config
+
+- name: Install docker
+  ansible.builtin.import_role:
+    name: geerlingguy.docker
+  vars:
+    docker_install_compose_plugin: true
+    docker_install_compose: false
+    docker_users:
+      - vagrant
+
+- name: Install python packages
+  pip:
+    name:
+      - docker
+      - docker-compose
+

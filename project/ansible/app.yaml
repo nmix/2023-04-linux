@@ -1,0 +1,66 @@
+- name: Common config
+  hosts: all
+  become: true
+  vars:
+    project_dir: /opt/cms
+
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config-docker
+
+    - name: Move eth1 to dmz zone
+      ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+
+    - name: Create project directory
+      ansible.builtin.file:
+        path: "{{ project_dir }}"
+        state: directory
+        mode: "0775"
+        owner: vagrant
+        group: vagrant
+
+    - name: Copy compose file
+      ansible.builtin.copy:
+        src: "docker-compose.yaml"
+        dest: "{{ project_dir }}/docker-compose.yaml"
+        owner: vagrant
+        group: vagrant
+
+    - name: Copy env file
+      ansible.builtin.copy:
+        src: "env-local"
+        dest: "{{ project_dir }}/.env-local"
+        owner: vagrant
+        group: vagrant
+
+    - name: Start database service
+      community.docker.docker_compose:
+        project_src: "{{ project_dir }}"
+        state: present
+        services:
+          - database_default
+
+    - name: Migrate database
+      ansible.builtin.shell:
+        cmd: docker compose run web python manage.py migrate
+        chdir: "{{ project_dir }}"
+
+    - name: Create superuser (if not exists)
+      ansible.builtin.shell:
+        cmd: docker compose run web python manage.py createsuperuser --no-input --username=admin --email=admin@example.com
+        chdir: "{{ project_dir }}"
+      ignore_errors: yes
+
+    - name: Start cms service
+      community.docker.docker_compose:
+        project_src: "{{ project_dir }}"
+        state: present
+        services:
+          - web
+
