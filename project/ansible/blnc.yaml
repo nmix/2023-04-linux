@@ -1,5 +1,45 @@
 - name: Common config
   hosts: all
   become: true
-  roles:
-    - common-config
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config
+
+    - name: Install docker
+      ansible.builtin.import_role:
+        name: geerlingguy.docker
+      vars:
+        docker_users:
+          - vagrant
+
+    # --- does not work
+    # - name: Move eth1 to dmz zone
+    #   ansible.posix.firewalld:
+    #     zone: dmz
+    #     interface: eth1
+    #     permanent: true
+    #     state: enabled
+
+    - name: Move eth1 to dmz zone
+      ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
+
+    # - name: Enable http zone
+    #   ansible.posix.firewalld:
+    #   zone: dmz
+    #   service: http
+    #   permanent: true
+    #   state: enabled
+
+    - name: Run balancer container
+      community.docker.docker_container:
+        name: balancer
+        image: nginx:latest
+        state: started
+        ports:
+          - "80:80"
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded

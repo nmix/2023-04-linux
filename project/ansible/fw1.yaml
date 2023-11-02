@@ -1,5 +1,49 @@
 - name: Common config
   hosts: all
   become: true
-  roles:
-    - common-config
+
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config
+
+    # --- does not work
+    # - name: Move eth1 to dmz zone
+    #   ansible.posix.firewalld:
+    #     zone: dmz
+    #     interface: eth1
+    #     permanent: true
+    #     state: enabled
+
+    - name: Move eth1 to dmz zone
+      ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
+
+    - name: Enable masquerade for dmz
+      ansible.posix.firewalld:
+        masquerade: true
+        state: enabled
+        permanent: true
+        zone: dmz
+
+    - name: Permit traffic in public zone for http service
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        zone: public
+
+    - name: Enable http port-forward to balancer
+      ansible.posix.firewalld:
+        zone: public
+        permanent: true
+        state: enabled
+        port_forward:
+          - port: 80
+            proto: tcp
+            toport: 80
+            toaddr: 192.168.1.21
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
