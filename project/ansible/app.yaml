@@ -3,6 +3,8 @@
   become: true
   vars:
     project_dir: /opt/cms
+    cms_admin: "admin"
+    cms_admin_password: "secret"
 
   tasks:
     - name: Install common
@@ -51,16 +53,26 @@
         cmd: docker compose run web python manage.py migrate
         chdir: "{{ project_dir }}"
 
-    - name: Create superuser (if not exists)
-      ansible.builtin.shell:
-        cmd: docker compose run web python manage.py createsuperuser --no-input --username=admin --email=admin@example.com
-        chdir: "{{ project_dir }}"
-      ignore_errors: yes
-
     - name: Start cms service
       community.docker.docker_compose:
         project_src: "{{ project_dir }}"
         state: present
         services:
           - web
+
+    - name: Create superuser (if not exists)
+      community.docker.docker_container_exec:
+        container: cms_web_1
+        argv:
+          - python
+          - manage.py
+          - shell
+          - "-c"
+          - "from django.contrib.auth.hashers import make_password;
+            from django.contrib.auth import get_user_model;
+            MyUser = get_user_model();
+            MyUser.objects.filter( username__exact = '{{ cms_admin }}' ).count() == 0 or exit();
+            new_super_user = MyUser(username = '{{ cms_admin }}', email='{{ cms_admin }}@example.com', is_superuser = True, is_staff = True );
+            new_super_user.password = make_password('{{ cms_admin_password }}');
+            new_super_user.save();"
 
