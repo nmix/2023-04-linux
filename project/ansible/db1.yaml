@@ -1,0 +1,68 @@
+- name: Common config
+  hosts: all
+  become: true
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config
+
+    - name: Move eth1 to internal zone
+      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
+
+    - name: Enable postgresql service in zone
+      ansible.posix.firewalld:
+        zone: internal
+        service: postgresql
+        permanent: true
+        state: enabled
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+
+    - name: Install progress
+      ansible.builtin.import_role:
+        name: postgres-install
+
+    - name: Copy config file
+      ansible.builtin.copy:
+        src: postgresql.conf
+        dest: /var/lib/pgsql/14/data/postgresql.conf
+        force: true
+
+    - name: Fix connection params
+      ansible.builtin.blockinfile:
+        path: /var/lib/pgsql/14/data/pg_hba.conf
+        backup: true
+        block: |
+          local all all            trust
+          host  all all 0.0.0.0/0  md5
+
+    - name: Restart postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: restarted
+
+    - name: install base tools
+      ansible.builtin.dnf:
+        name:
+          - python3-pexpect.noarch
+          - python3-psycopg2
+        state: present
+        update_cache: true
+
+    - name: Create a new database for cms
+      community.postgresql.postgresql_db:
+        name: cms
+      become_user: postgres
+
+    - name: Create database user
+      community.postgresql.postgresql_user:
+        db: cms
+        name: django
+        password: secret
+        # priv: "ALL"
+        role_attr_flags: "CREATEDB,NOSUPERUSER"
+        state: present
+      become_user: postgres

@@ -5,39 +5,41 @@ BOX_NAME = "generic/centos8s"
 BOX_VERSION = "4.2.16"
 
 Vagrant.configure("2") do |config|
-  # --- firewall 1
-  config.vm.define :fw1 do |box|
+  # --- database 1
+  config.vm.define :db1 do |box|
     box.vm.provider "virtualbox" do |v|
       v.memory = 1024
       v.cpus = 1
     end
     box.vm.box = BOX_NAME
     box.vm.box_version = BOX_VERSION
-    box.vm.host_name = "fw1"
+    box.vm.host_name = "db1"
     box.vm.network "private_network",
-      ip: "192.168.1.10", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "dmz-net"
+      ip: "10.10.1.131", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "internal"
     box.vm.network "private_network",
-      ip: "192.168.56.10", adapter: 8
+      ip: "192.168.56.131", adapter: 8
     box.vm.provision "ansible" do |ansible|
-      ansible.playbook = "ansible/fw1.yaml"
+      ansible.playbook = "ansible/db1.yaml"
     end
   end
 
-  # --- balancer
-  config.vm.define :blnc do |box|
+  # --- firewall
+  config.vm.define :fw do |box|
     box.vm.provider "virtualbox" do |v|
       v.memory = 1024
       v.cpus = 1
     end
     box.vm.box = BOX_NAME
     box.vm.box_version = BOX_VERSION
-    box.vm.host_name = "blnc"
+    box.vm.host_name = "fw"
     box.vm.network "private_network",
-      ip: "192.168.1.21", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "dmz-net"
+      ip: "192.168.1.101", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "dmz-net"
     box.vm.network "private_network",
-      ip: "192.168.56.21", adapter: 8
+      ip: "10.10.1.101", adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "internal"
+    box.vm.network "private_network",
+      ip: "192.168.56.101", adapter: 8
     box.vm.provision "ansible" do |ansible|
-      ansible.playbook = "ansible/blnc.yaml"
+      ansible.playbook = "ansible/fw.yaml"
     end
   end
 
@@ -59,23 +61,22 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # # --- firewall 2
-  # config.vm.define :fw2 do |box|
-  #   box.vm.provider "virtualbox" do |v|
-  #     v.memory = 1024
-  #     v.cpus = 1
-  #   end
-  #   box.vm.box = BOX_NAME
-  #   box.vm.box_version = BOX_VERSION
-  #   box.vm.host_name = "fw2"
-  #   box.vm.network "private_network",
-  #     ip: "192.168.1.101", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "dmz-net"
-  #   box.vm.network "private_network",
-  #     ip: "10.10.1.101", adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "internal"
-  #   box.vm.network "private_network",
-  #     ip: "192.168.56.101", adapter: 8
-  #   box.vm.provision "ansible" do |ansible|
-  #     ansible.playbook = "ansible/fw1.yaml"
-  #   end
-  # end
+  # --- balancer
+  config.vm.define :blnc do |box|
+    box.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
+    box.vm.box = BOX_NAME
+    box.vm.box_version = BOX_VERSION
+    box.vm.host_name = "blnc"
+    box.vm.network "private_network",
+      ip: "192.168.1.10", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "dmz-net"
+    box.vm.network "private_network",
+      ip: "192.168.56.10", adapter: 8
+    box.vm.provision "ansible" do |ansible|
+      ansible.playbook = "ansible/blnc.yaml"
+    end
+  end
+
 end
