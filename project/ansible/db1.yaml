@@ -1,4 +1,4 @@
-- name: Common config
+- name: Database 1 config
   hosts: all
   become: true
   tasks:
@@ -25,6 +25,21 @@
       ansible.builtin.import_role:
         name: postgres-install
 
+    - name: Install base tools
+      ansible.builtin.dnf:
+        name:
+          - python3-pexpect.noarch
+          - python3-psycopg2
+        state: present
+        update_cache: true
+
+    - name: Create replicator user
+      community.postgresql.postgresql_user:
+        name: replicator
+        password: secret
+        role_attr_flags: replication
+      become_user: postgres
+
     - name: Copy config file
       ansible.builtin.copy:
         src: postgresql.conf
@@ -36,21 +51,15 @@
         path: /var/lib/pgsql/14/data/pg_hba.conf
         backup: true
         block: |
-          local all all            trust
-          host  all all 0.0.0.0/0  md5
+          local   all         all                                 trust
+          host    all         all           0.0.0.0/0             md5
+          host    replication replicator    10.10.1.131/32        scram-sha-256
+          host    replication replicator    10.10.1.132/32        scram-sha-256
 
     - name: Restart postgres
       ansible.builtin.service:
         name: postgresql-14
         state: restarted
-
-    - name: install base tools
-      ansible.builtin.dnf:
-        name:
-          - python3-pexpect.noarch
-          - python3-psycopg2
-        state: present
-        update_cache: true
 
     - name: Create a new database for cms
       community.postgresql.postgresql_db:
@@ -62,7 +71,7 @@
         db: cms
         name: django
         password: secret
-        # priv: "ALL"
         role_attr_flags: "CREATEDB,NOSUPERUSER"
         state: present
       become_user: postgres
+

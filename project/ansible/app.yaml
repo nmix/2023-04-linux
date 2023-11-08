@@ -1,4 +1,4 @@
-- name: Common config
+- name: Run application
   hosts: all
   become: true
   vars:
@@ -58,13 +58,6 @@
         dest: "{{ project_dir }}/.env-local"
         owner: vagrant
         group: vagrant
-
-    # - name: Start database service
-    #   community.docker.docker_compose:
-    #     project_src: "{{ project_dir }}"
-    #     state: present
-    #     services:
-    #       - database_default
 
     - name: Migrate database
       ansible.builtin.shell:

@@ -23,6 +23,24 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  # --- database 2
+  config.vm.define :db2 do |box|
+    box.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
+    box.vm.box = BOX_NAME
+    box.vm.box_version = BOX_VERSION
+    box.vm.host_name = "db2"
+    box.vm.network "private_network",
+      ip: "10.10.1.132", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "internal"
+    box.vm.network "private_network",
+      ip: "192.168.56.132", adapter: 8
+    box.vm.provision "ansible" do |ansible|
+      ansible.playbook = "ansible/db2.yaml"
+    end
+  end
+
   # --- firewall
   config.vm.define :fw do |box|
     box.vm.provider "virtualbox" do |v|
