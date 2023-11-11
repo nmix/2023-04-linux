@@ -1,0 +1,6 @@
+---
+- import_playbook: "db1.yaml"
+- import_playbook: "db2.yaml"
+- import_playbook: "fw.yaml"
+- import_playbook: "app.yaml"
+- import_playbook: "blnc.yaml"

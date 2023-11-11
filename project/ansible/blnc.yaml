@@ -1,5 +1,5 @@
 - name: Run balancer
-  hosts: all
+  hosts: blnc
   become: true
   tasks:
     - name: Install common
@@ -18,13 +18,6 @@
 
     - name: Move eth1 to dmz zone
       ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
-
-    # - name: Enable http zone
-    #   ansible.posix.firewalld:
-    #   zone: dmz
-    #   service: http
-    #   permanent: true
-    #   state: enabled
 
     - name: Reload firewalld
       ansible.builtin.service:

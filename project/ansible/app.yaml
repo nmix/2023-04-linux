@@ -1,5 +1,5 @@
 - name: Run application
-  hosts: all
+  hosts: apps
   become: true
   vars:
     project_dir: /opt/cms

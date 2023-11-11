@@ -1,5 +1,5 @@
 - name: Database 2 config
-  hosts: all
+  hosts: db2
   become: true
   tasks:
     - name: Install common

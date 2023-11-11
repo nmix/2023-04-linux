@@ -1,5 +1,5 @@
 - name: Config firewall
-  hosts: all
+  hosts: fw
   become: true
 
   tasks:
