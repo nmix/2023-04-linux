@@ -26,3 +26,11 @@
     name: postgresql-14
     state: started
     enabled: true
+
+- name: install barman-cli and postgresql packages on nodes
+  dnf:
+    name:
+      - barman
+      - barman-cli
+    state: present
+    update_cache: true

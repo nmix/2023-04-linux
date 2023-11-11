@@ -5,9 +5,13 @@ fw       ansible_host=192.168.56.101  ansible_user=vagrant ansible_private_key_f
 db1      ansible_host=192.168.56.131  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/db1/virtualbox/private_key
 db2      ansible_host=192.168.56.132  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/db2/virtualbox/private_key
 
+[apps]
+app1
+
+[database]
+db1
+db2
+
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_user=vagrant
-
-[apps]
-app1

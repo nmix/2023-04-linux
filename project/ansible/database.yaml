@@ -1,10 +1,12 @@
-- name: Database 1 config
-  hosts: db1
+- name: Config databse hosts and install postgres
+  hosts: database
   become: true
   tasks:
     - name: Install common
       ansible.builtin.import_role:
         name: common-config
+
+    # --- Конфигурация сетевого экрана
 
     - name: Move eth1 to internal zone
       ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
@@ -21,11 +23,9 @@
         name: firewalld
         state: reloaded
 
-    - name: Install progress
-      ansible.builtin.import_role:
-        name: postgres-install
+    # --- Установка БД и сопуствующих утилит
 
-    - name: Install base tools
+    - name: Install libs
       ansible.builtin.dnf:
         name:
           - python3-pexpect.noarch
@@ -33,6 +33,14 @@
         state: present
         update_cache: true
 
+    - name: Install progress
+      ansible.builtin.import_role:
+        name: postgres-install
+
+- name: Config replication master
+  hosts: db1
+  become: true
+  tasks:
     - name: Create replicator user
       community.postgresql.postgresql_user:
         name: replicator
@@ -61,6 +69,44 @@
         name: postgresql-14
         state: restarted
 
+
+- name: Config replication slave
+  hosts: db2
+  become: true
+  tasks:
+    - name: Stop postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: stopped
+
+    - name: Remove old data
+      ansible.builtin.file:
+        path: /var/lib/pgsql/14/data
+        state: absent
+
+    - name: Request basebackup
+      ansible.builtin.expect:
+        command: 'pg_basebackup -h 10.10.1.131 -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P'
+        responses: 
+          '.*Password*': "secret"
+      become_user: postgres
+
+    - name: Copy config file
+      ansible.builtin.copy:
+        src: postgresql.conf
+        dest: /var/lib/pgsql/14/data/postgresql.conf
+        force: true
+
+    - name: Restart postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: restarted
+
+
+- name: Init application database
+  hosts: db1
+  become: true
+  tasks:
     - name: Create a new database for cms
       community.postgresql.postgresql_db:
         name: cms
@@ -74,4 +120,3 @@
         role_attr_flags: "CREATEDB,NOSUPERUSER"
         state: present
       become_user: postgres
-

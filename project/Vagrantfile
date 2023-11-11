@@ -54,7 +54,10 @@ Vagrant.configure("2") do |config|
         box.vm.network "private_network", **ipconf
       end
 
-      # --- ansible запускаем после создания крайней машины в MACHINES
+      # --- ansible запускаем после запуска всех машин из MACHINES
+      #     для запуска индивидуальных плейбуков необходимо использовать
+      #     команду:
+      #     ansible-playbook -i ansible/hosts ansible/playbook-name.yaml
       if index == (MACHINES.length - 1)
         box.vm.provision "ansible" do |ansible|
           ansible.playbook = "ansible/provision.yaml"
