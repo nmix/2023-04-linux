@@ -36,6 +36,12 @@ MACHINES = {
       { ip: "192.168.56.132", adapter: 8 },
     ],
   },
+  barman: {
+    networks: [
+      { ip: "10.10.1.141",    adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "internal"},
+      { ip: "192.168.56.141", adapter: 8 },
+    ],
+  }
 }
 
 
@@ -54,18 +60,18 @@ Vagrant.configure("2") do |config|
         box.vm.network "private_network", **ipconf
       end
 
-      # --- ansible запускаем после запуска всех машин из MACHINES
-      #     для запуска индивидуальных плейбуков необходимо использовать
-      #     команду:
-      #     ansible-playbook -i ansible/hosts ansible/playbook-name.yaml
-      if index == (MACHINES.length - 1)
-        box.vm.provision "ansible" do |ansible|
-          ansible.playbook = "ansible/provision.yaml"
-          ansible.inventory_path = "ansible/hosts"
-          ansible.host_key_checking = "false"
-          ansible.limit = "all"
-        end
-      end
+      # # --- ansible запускаем после запуска всех машин из MACHINES
+      # #     для запуска индивидуальных плейбуков необходимо использовать
+      # #     команду:
+      # #     ansible-playbook -i ansible/hosts ansible/playbook-name.yaml
+      # if index == (MACHINES.length - 1)
+      #   box.vm.provision "ansible" do |ansible|
+      #     ansible.playbook = "ansible/provision.yaml"
+      #     ansible.inventory_path = "ansible/hosts"
+      #     ansible.host_key_checking = "false"
+      #     ansible.limit = "all"
+      #   end
+      # end
     end
   end
 end
