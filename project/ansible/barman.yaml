@@ -205,3 +205,8 @@
       become_user: barman
       when: (ansible_hostname == "barman")
 
+    - name: create backup
+      ansible.builtin.shell: barman backup db1
+      become_user: barman
+      when: (ansible_hostname == "barman")
+

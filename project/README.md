@@ -22,3 +22,11 @@ ansible-playbook -i ansible/hosts ansible/playbook-name.yaml
 barman backup db1
 barman list-backups db1
 ```
+
+Переводим Slave в Master
+```bash
+# --- on master
+systemctl stop postgresql-14
+# --- on slave
+/usr/pgsql-14/bin/pg_ctl promote -D /var/lib/pgsql/14/data
+```
