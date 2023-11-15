@@ -16,3 +16,9 @@
 ```bash
 ansible-playbook -i ansible/hosts ansible/playbook-name.yaml
 ```
+
+Создание резервной копии БД
+```bash
+barman backup db1
+barman list-backups db1
+```
