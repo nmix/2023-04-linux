@@ -4,7 +4,7 @@ app1     ansible_host=192.168.56.31   ansible_user=vagrant ansible_private_key_f
 fw       ansible_host=192.168.56.101  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/fw/virtualbox/private_key
 db1      ansible_host=192.168.56.131  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/db1/virtualbox/private_key
 db2      ansible_host=192.168.56.132  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/db2/virtualbox/private_key
-barman   ansible_host=192.168.56.141  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/barman/virtualbox/private_key
+storage  ansible_host=192.168.56.141  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/storage/virtualbox/private_key
 
 [apps]
 app1
@@ -16,7 +16,7 @@ db2
 [backup_outline]
 db1
 db2
-barman
+storage
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3

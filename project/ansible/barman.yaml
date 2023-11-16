@@ -1,5 +1,5 @@
 - name: Config barman host
-  hosts: barman
+  hosts: storage
   become: true
   vars:
     master_ip: '10.10.1.131'
@@ -70,7 +70,7 @@
     - name: copy barman.conf
       template:
         src: barman.conf.j2
-        dest: /etc/barman.conf 
+        dest: /etc/barman.conf
         owner: barman
         group: barman
         mode: '0755'
@@ -84,14 +84,14 @@
         mode: '0755'
 
     # Копируем файл master.conf
-    - name: copy db1.conf
+    - name: copy master.conf
       template:
-        src: db1.conf.j2
-        dest: /etc/barman.d/db1.conf
+        src: master.conf.j2
+        dest: /etc/barman.d/master.conf
         owner: barman
         group: barman
         mode: '0755'
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "storage")
 
 
 - name: Config backup
@@ -132,9 +132,9 @@
     - name: transfer public key to barman
       ansible.builtin.authorized_key:
         key: "{{ ssh_keys.stdout }}"
-        comment: "{{ansible_hostname}}"
+        comment: "{{ ansible_hostname }}"
         user: barman
-      delegate_to: barman
+      delegate_to: storage
       when: (ansible_hostname == master)
 
     #  Генерируем SSH-ключ для пользователя barman на хосте barman
@@ -146,22 +146,22 @@
         ssh_key_type: rsa
         ssh_key_bits: 4096
         force: no
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "storage")
 
     #  Забираем содержимое открытого ключа barman c хоста barman 
     - name: fetch all public ssh keys barman
       ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
       register: ssh_keys
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "storage")
 
-    #  Копируем ключ с barman на master
+
     - name: transfer public key to barman
       ansible.builtin.authorized_key:
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ansible_hostname}}"
         user: postgres
       delegate_to: "{{master}}"
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "storage")
 
 
     # CREATE USER barman SUPERUSER;
@@ -195,18 +195,17 @@
         state: restarted
       when: (ansible_hostname == master)
 
-    - name: barman switch-wal db1
-      ansible.builtin.shell: barman switch-wal db1
+    - name: barman switch-wal master
+      ansible.builtin.shell: barman switch-wal --force master
       become_user: barman
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "storage")
 
     - name: barman cron
       ansible.builtin.shell: barman cron
       become_user: barman
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "storage")
 
     - name: create backup
-      ansible.builtin.shell: barman backup db1
+      ansible.builtin.shell: barman backup master
       become_user: barman
-      when: (ansible_hostname == "barman")
-
+      when: (ansible_hostname == "storage")

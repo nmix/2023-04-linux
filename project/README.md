@@ -29,4 +29,5 @@ barman list-backups db1
 systemctl stop postgresql-14
 # --- on slave
 /usr/pgsql-14/bin/pg_ctl promote -D /var/lib/pgsql/14/data
+# ansible-playbook -i ansible/hosts ansible/barman.yaml -e master_ip=10.10.1.131
 ```
