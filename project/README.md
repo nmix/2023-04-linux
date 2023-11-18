@@ -35,3 +35,21 @@ systemctl stop postgresql-14
 # in server conf: active = false
 # ansible-playbook -i ansible/hosts ansible/barman.yaml -e master_ip=10.10.1.131
 ```
+
+Если удален хост мастер базы данных:
+```bash
+ansible-playbook -i ansible/hosts ansible/switch-on-master.yaml target=db2
+```
+Плейбук выполняет:
+* переводит slave в master на db2
+* переводит приложение на db2
+* декактивирует резервирование db1
+* активирует резервирование db2
+
+Включаем db1 и инициализируем как slave
+
+```bash
+ansible-playbook -i ansible/hosts ansible/database-slave-reinit.yaml target=db1
+```
+* инициализирует db1 как slave
+
