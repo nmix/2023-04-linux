@@ -23,14 +23,14 @@ barman backup db1
 barman list-backups db1
 ```
 
-Переводим Slave в Master
 ```bash
 # --- on master
 systemctl stop postgresql-14
 # --- on slave
 /usr/pgsql-14/bin/pg_ctl promote -D /var/lib/pgsql/14/data
+systemctl restart postgresql-14
 # barman receive-wal --stop db2
-# --- after 10 seconds
+# --- after 10-20 seconds
 # barman receive-wal --drop-slot db2
 # in server conf: active = false
 # ansible-playbook -i ansible/hosts ansible/barman.yaml -e master_ip=10.10.1.131
@@ -38,18 +38,19 @@ systemctl stop postgresql-14
 
 Если удален хост мастер базы данных:
 ```bash
-ansible-playbook -i ansible/hosts ansible/switch-on-master.yaml target=db2
+ansible-playbook -i ansible/hosts ansible/switch-on-another-database.yaml target=db2
 ```
-Плейбук выполняет:
+Плейбук:
 * переводит slave в master на db2
-* переводит приложение на db2
-* декактивирует резервирование db1
-* активирует резервирование db2
+* переключает приложение на db2
+
 
 Включаем db1 и инициализируем как slave
-
 ```bash
 ansible-playbook -i ansible/hosts ansible/database-slave-reinit.yaml target=db1
 ```
+Плейбук:
 * инициализирует db1 как slave
+* деактивирует резервирование db1
+* активирует резервирование db2
 

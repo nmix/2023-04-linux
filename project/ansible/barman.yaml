@@ -2,7 +2,6 @@
   hosts: storage
   become: true
   vars:
-    master_ip: '10.10.1.131'
     master_user: 'postgres'
     barman_ip: '10.10.1.141'
     barman_user: 'barman'
@@ -83,16 +82,21 @@
         group: barman
         mode: '0755'
 
-    # Копируем файл master.conf
-    - name: copy master.conf
+    - name: copy server config
       template:
-        src: master.conf.j2
-        dest: /etc/barman.d/master.conf
+        src: db.conf.j2
+        dest: "/etc/barman.d/{{ db_hostname }}.conf"
         owner: barman
         group: barman
         mode: '0755'
+      vars:
+        db_hostname: "{{ item.db_hostname }}"
+        db_ip: "{{ item.db_ip }}"
+        active: "{{ item.active }}"
+      with_items:
+        - { db_hostname: "db1", db_ip: "10.10.1.131", active: "false" }
+        - { db_hostname: "db2", db_ip: "10.10.1.132", active: "false" }
       when: (ansible_hostname == "storage")
-
 
 - name: Config backup
   hosts: backup_outline
@@ -241,14 +245,14 @@
       when: (ansible_hostname == master) or (ansible_hostname == slave) 
 
     # Перезагружаем службу postgresql-server
-    - name: restart postgresql-server on master
+    - name: restart postgresql-server
       service: 
         name: postgresql-14
         state: restarted
-      when: (ansible_hostname == master)
+      when: (ansible_hostname == master) or (ansible_hostname == slave) 
 
     - name: barman switch-wal master
-      ansible.builtin.shell: barman switch-wal --force master
+      ansible.builtin.shell: barman switch-wal --force db1
       become_user: barman
       when: (ansible_hostname == "storage")
 
@@ -258,6 +262,7 @@
       when: (ansible_hostname == "storage")
 
     # --- Для формирования бекапа требуется подождать какое-то время
+    #     TODO добаивть таску с ожиданием 30с
     # - name: create backup
     #   ansible.builtin.shell: barman backup master
     #   become_user: barman
