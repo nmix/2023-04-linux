@@ -154,13 +154,65 @@
       register: ssh_keys
       when: (ansible_hostname == "storage")
 
-
-    - name: transfer public key to barman
+    - name: transfer public key to master
       ansible.builtin.authorized_key:
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ansible_hostname}}"
         user: postgres
       delegate_to: "{{master}}"
+      when: (ansible_hostname == "storage")
+
+
+    # --- Генерируем ssh ключи на barman и на slave-реплике
+
+    #  Генерируем SSH-ключ для пользователя postgres на хосте slave
+    - name: generate SSH key for postgres
+      ansible.builtin.user:
+        name: postgres
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        force: no
+      when: (ansible_hostname == slave)
+
+    #  Забираем содержимое открытого ключа с slave
+    - name: fetch all public ssh keys master
+      ansible.builtin.shell: cat /var/lib/pgsql/.ssh/id_rsa.pub
+      register: ssh_keys
+      when: (ansible_hostname == slave)
+
+    #  Копируем ключ с slave на barman
+    - name: transfer public key to barman from slave
+      ansible.builtin.authorized_key:
+        key: "{{ ssh_keys.stdout }}"
+        comment: "{{ ansible_hostname }}"
+        user: barman
+      delegate_to: storage
+      when: (ansible_hostname == slave)
+
+    #  Генерируем SSH-ключ для пользователя barman на хосте barman
+    - name: generate SSH key for barman
+      ansible.builtin.user:
+        name: barman
+        shell: /bin/bash
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        force: no
+      when: (ansible_hostname == "storage")
+
+    #  Забираем содержимое открытого ключа barman c хоста barman 
+    - name: fetch all public ssh keys barman
+      ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
+      register: ssh_keys
+      when: (ansible_hostname == "storage")
+
+    - name: transfer public key to slave
+      ansible.builtin.authorized_key:
+        key: "{{ ssh_keys.stdout }}"
+        comment: "{{ansible_hostname}}"
+        user: postgres
+      delegate_to: "{{ slave }}"
       when: (ansible_hostname == "storage")
 
 
@@ -205,7 +257,8 @@
       become_user: barman
       when: (ansible_hostname == "storage")
 
-    - name: create backup
-      ansible.builtin.shell: barman backup master
-      become_user: barman
-      when: (ansible_hostname == "storage")
+    # --- Для формирования бекапа требуется подождать какое-то время
+    # - name: create backup
+    #   ansible.builtin.shell: barman backup master
+    #   become_user: barman
+    #   when: (ansible_hostname == "storage")
