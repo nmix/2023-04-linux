@@ -1,5 +1,5 @@
 - name: Config databse hosts and install postgres
-  hosts: db2
+  hosts: "{{ target | default('no_hosts') }}"
   become: true
   tasks:
     - name: Install common
@@ -39,7 +39,7 @@
 
 
 - name: Config replication slave
-  hosts: db2
+  hosts: "{{ target | default('no_hosts') }}"
   become: true
   tasks:
     - name: Stop postgres
@@ -74,7 +74,7 @@
   hosts: backup_outline
   become: true
   vars:
-    master: "db2"
+    master: db1
   tasks:
     - name: install barman on database hosts
       ansible.builtin.dnf:

@@ -8,49 +8,25 @@
 
 ## План восстановления
 
-> TODO
+### db1
+
+Если удален хост мастер базы данных
+
+```bash
+# --- возобновляем работу приложения
+ansible-playbook -i ansible/hosts ansible/promote-database.yaml -e target=db2
+ansible-playbook -i ansible/hosts ansible/switch-on-another-master.yaml -e db_ip=10.10.1.132
+# --- готовим новую реплику
+vagrant up db1
+ansible-playbook -u ansible/hosts ansible/database-slave-reinit.yaml -e target=db1
+ansible-playbook -u ansible/hosts ansible/switch-barman-on-another-master.yaml -e master=db2
+```
 
 ## Полезные команды
 
-Запуск одельного плейбука (не через Vagrant)
-```bash
-ansible-playbook -i ansible/hosts ansible/playbook-name.yaml
-```
-
 Создание резервной копии БД
 ```bash
-barman backup db1
-barman list-backups db1
+# barman backup db1
+# barman list-backups db1
+ansible-playbook -u ansible/hosts ansible/create-database-backup.yaml -e master=db1
 ```
-
-```bash
-# --- on master
-systemctl stop postgresql-14
-# --- on slave
-/usr/pgsql-14/bin/pg_ctl promote -D /var/lib/pgsql/14/data
-systemctl restart postgresql-14
-# barman receive-wal --stop db2
-# --- after 10-20 seconds
-# barman receive-wal --drop-slot db2
-# in server conf: active = false
-# ansible-playbook -i ansible/hosts ansible/barman.yaml -e master_ip=10.10.1.131
-```
-
-Если удален хост мастер базы данных:
-```bash
-ansible-playbook -i ansible/hosts ansible/switch-on-another-database.yaml target=db2
-```
-Плейбук:
-* переводит slave в master на db2
-* переключает приложение на db2
-
-
-Включаем db1 и инициализируем как slave
-```bash
-ansible-playbook -i ansible/hosts ansible/database-slave-reinit.yaml target=db1
-```
-Плейбук:
-* инициализирует db1 как slave
-* деактивирует резервирование db1
-* активирует резервирование db2
-

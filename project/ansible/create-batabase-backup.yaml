@@ -1,0 +1,14 @@
+- name: Create backup
+  hosts: storage
+  become_user: barman
+  vars:
+    master: db1
+  tasks:
+    - name: Create database backup
+      ansible.builtin.shell: "barman backup {{ master }}"
+
+    - name: List backups
+      ansible.builtin.shell: "barman list-backups {{ master }}"
+      register: backups
+
+    - debug: msg="{{ backups.stdout }}"
