@@ -41,6 +41,8 @@
 - name: Config replication slave
   hosts: "{{ target | default('no_hosts') }}"
   become: true
+  vars:
+    master_ip: 10.10.1.132
   tasks:
     - name: Stop postgres
       ansible.builtin.service:
@@ -54,7 +56,7 @@
 
     - name: Request basebackup
       ansible.builtin.expect:
-        command: 'pg_basebackup -h 10.10.1.131 -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P'
+        command: "pg_basebackup -h {{ master_ip }} -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P"
         responses: 
           '.*Password*': "secret"
       become_user: postgres

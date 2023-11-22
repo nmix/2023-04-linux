@@ -10,23 +10,21 @@
 
 ### db1
 
-Если удален хост мастер базы данных
+Если удален хост мастера базы данных
 
 ```bash
 # --- возобновляем работу приложения
 ansible-playbook -i ansible/hosts ansible/promote-database.yaml -e target=db2
-ansible-playbook -i ansible/hosts ansible/switch-on-another-master.yaml -e db_ip=10.10.1.132
+ansible-playbook -i ansible/hosts ansible/switch-app-on-another-master.yaml -e master_ip=10.10.1.132
 # --- готовим новую реплику
 vagrant up db1
-ansible-playbook -u ansible/hosts ansible/database-slave-reinit.yaml -e target=db1
-ansible-playbook -u ansible/hosts ansible/switch-barman-on-another-master.yaml -e master=db2
+ansible-playbook -i ansible/hosts ansible/database-slave-reinit.yaml -e target=db1 -e master_ip=10.10.1.132
+ansible-playbook -i ansible/hosts ansible/switch-barman-on-another-master.yaml -e master=db2
 ```
 
 ## Полезные команды
 
 Создание резервной копии БД
 ```bash
-# barman backup db1
-# barman list-backups db1
-ansible-playbook -u ansible/hosts ansible/create-database-backup.yaml -e master=db1
+ansible-playbook -i ansible/hosts ansible/create-database-backup.yaml -e master=db1
 ```

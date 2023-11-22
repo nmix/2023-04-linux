@@ -1,16 +1,10 @@
 - name: Config backup
   hosts: storage
-  become_user: barman
+  become: true
   vars:
     master: db2
+    barman_user: barman
   tasks:
-    - name: stop backup db1
-      ansible.builtin.shell: barman receive-wal --stop db1
-
-    - name: Pause for 20 seconds for stopping slot
-      ansible.builtin.pause:
-        seconds: 20
-
     - name: copy server config
       template:
         src: db.conf.j2
@@ -29,6 +23,8 @@
 
     - name: barman switch-wal master
       ansible.builtin.shell: barman switch-wal --force db2
+      become_user: barman
 
     - name: barman cron
       ansible.builtin.shell: barman cron
+      become_user: barman

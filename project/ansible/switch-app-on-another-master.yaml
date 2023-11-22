@@ -3,7 +3,7 @@
   become: true
   vars:
     project_dir: "/opt/cms"
-    db_ip: "10.10.1.132"
+    master_ip: "10.10.1.132"
   tasks:
     - name: Replace config file for app
       ansible.builtin.template:
