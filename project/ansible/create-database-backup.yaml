@@ -2,14 +2,14 @@
   hosts: barman
   become: true
   vars:
-    db: db2
+    master: db1
   tasks:
     - name: Create database backup
-      ansible.builtin.shell: "barman backup {{ db }}"
+      ansible.builtin.shell: "barman backup {{ master }}"
       become_user: barman
 
     - name: List backups
-      ansible.builtin.shell: "barman list-backups {{ db }}"
+      ansible.builtin.shell: "barman list-backups {{ master }}"
       register: backups
       become_user: barman
 

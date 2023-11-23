@@ -2,7 +2,7 @@
   hosts: barman
   become: true
   vars:
-    slave: db1
+    master: db2
     barman_user: barman
   tasks:
     - name: copy server config
@@ -17,12 +17,12 @@
         db_ip: "{{ item.db_ip }}"
         active: "{{ item.active }}"
       with_items:
-        - { db_hostname: "db1", db_ip: "10.10.1.131", active: "true" }
-        - { db_hostname: "db2", db_ip: "10.10.1.132", active: "false" }
+        - { db_hostname: "db1", db_ip: "10.10.1.131", active: "false" }
+        - { db_hostname: "db2", db_ip: "10.10.1.132", active: "true" }
       become: true
 
-    - name: barman switch-wal slave
-      ansible.builtin.shell: barman switch-wal --force db1
+    - name: barman switch-wal master
+      ansible.builtin.shell: "barman switch-wal --force {{ master }}"
       become_user: barman
 
     - name: barman cron

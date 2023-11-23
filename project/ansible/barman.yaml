@@ -94,15 +94,15 @@
         db_ip: "{{ item.db_ip }}"
         active: "{{ item.active }}"
       with_items:
-        - { db_hostname: "db1", db_ip: "10.10.1.131", active: "false" }
-        - { db_hostname: "db2", db_ip: "10.10.1.132", active: "true" }
+        - { db_hostname: "db1", db_ip: "10.10.1.131", active: "true" }
+        - { db_hostname: "db2", db_ip: "10.10.1.132", active: "false" }
       when: (ansible_hostname == "barman")
 
 - name: Config backup
   hosts: backup_outline
   become: true
   vars:
-    # master: "db1"
+    master: "db1"
     slave: "db2"
   tasks:
     - name: install barman on database hosts
@@ -112,60 +112,59 @@
           - barman-cli
         state: present
         update_cache: true
-      when: ansible_hostname == slave
-      # when: (ansible_hostname == master) or (ansible_hostname == slave) 
+      when: (ansible_hostname == master) or (ansible_hostname == slave) 
 
-    # # --- Генерируем ssh ключи на barman и на мастер-реплике
+    # --- Генерируем ssh ключи на barman и на мастер-реплике
 
-    # #  Генерируем SSH-ключ для пользователя postgres на хосте master
-    # - name: generate SSH key for postgres
-    #   ansible.builtin.user:
-    #     name: postgres
-    #     generate_ssh_key: yes
-    #     ssh_key_type: rsa
-    #     ssh_key_bits: 4096
-    #     force: no
-    #   when: (ansible_hostname == master)
+    #  Генерируем SSH-ключ для пользователя postgres на хосте master
+    - name: generate SSH key for postgres
+      ansible.builtin.user:
+        name: postgres
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        force: no
+      when: (ansible_hostname == master)
 
-    # #  Забираем содержимое открытого ключа с master
-    # - name: fetch all public ssh keys master
-    #   ansible.builtin.shell: cat /var/lib/pgsql/.ssh/id_rsa.pub
-    #   register: ssh_keys
-    #   when: (ansible_hostname == master)
+    #  Забираем содержимое открытого ключа с master
+    - name: fetch all public ssh keys master
+      ansible.builtin.shell: cat /var/lib/pgsql/.ssh/id_rsa.pub
+      register: ssh_keys
+      when: (ansible_hostname == master)
 
-    # #  Копируем ключ с master на barman
-    # - name: transfer public key to barman
-    #   ansible.builtin.authorized_key:
-    #     key: "{{ ssh_keys.stdout }}"
-    #     comment: "{{ ansible_hostname }}"
-    #     user: barman
-    #   delegate_to: barman
-    #   when: (ansible_hostname == master)
+    #  Копируем ключ с master на barman
+    - name: transfer public key to barman
+      ansible.builtin.authorized_key:
+        key: "{{ ssh_keys.stdout }}"
+        comment: "{{ ansible_hostname }}"
+        user: barman
+      delegate_to: barman
+      when: (ansible_hostname == master)
 
-    # #  Генерируем SSH-ключ для пользователя barman на хосте barman
-    # - name: generate SSH key for barman
-    #   ansible.builtin.user:
-    #     name: barman
-    #     shell: /bin/bash
-    #     generate_ssh_key: yes
-    #     ssh_key_type: rsa
-    #     ssh_key_bits: 4096
-    #     force: no
-    #   when: (ansible_hostname == "barman")
+    #  Генерируем SSH-ключ для пользователя barman на хосте barman
+    - name: generate SSH key for barman
+      ansible.builtin.user:
+        name: barman
+        shell: /bin/bash
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        force: no
+      when: (ansible_hostname == "barman")
 
-    # #  Забираем содержимое открытого ключа barman c хоста barman 
-    # - name: fetch all public ssh keys barman
-    #   ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
-    #   register: ssh_keys
-    #   when: (ansible_hostname == "barman")
+    #  Забираем содержимое открытого ключа barman c хоста barman 
+    - name: fetch all public ssh keys barman
+      ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
+      register: ssh_keys
+      when: (ansible_hostname == "barman")
 
-    # - name: transfer public key to master
-    #   ansible.builtin.authorized_key:
-    #     key: "{{ ssh_keys.stdout }}"
-    #     comment: "{{ansible_hostname}}"
-    #     user: postgres
-    #   delegate_to: "{{master}}"
-    #   when: (ansible_hostname == "barman")
+    - name: transfer public key to master
+      ansible.builtin.authorized_key:
+        key: "{{ ssh_keys.stdout }}"
+        comment: "{{ansible_hostname}}"
+        user: postgres
+      delegate_to: "{{master}}"
+      when: (ansible_hostname == "barman")
 
 
     # --- Генерируем ssh ключи на barman и на slave-реплике
@@ -229,30 +228,28 @@
         role_attr_flags: SUPERUSER 
       become_user: postgres
       ignore_errors: true
-      when: (ansible_hostname == slave)
+      when: (ansible_hostname == master) 
 
-     # Добавляем разрешения для поключения с хоста barman
+    # Добавляем разрешения для поключения с хоста barman
     - name: Add permission for barman
       lineinfile:
         path: /var/lib/pgsql/14/data/pg_hba.conf
         line: 'host    all   barman    10.10.1.141/32    scram-sha-256'
-      when: (ansible_hostname == slave) 
-      # when: (ansible_hostname == master) or (ansible_hostname == slave) 
+      when: (ansible_hostname == master) or (ansible_hostname == slave) 
 
     # Добавляем разрешения для подключения с хоста barman
     - name: Add permission for barman
       lineinfile:
         path: /var/lib/pgsql/14/data/pg_hba.conf
         line: 'host    replication   barman    10.10.1.141/32    scram-sha-256'
-      when: (ansible_hostname == slave) 
-      # when: (ansible_hostname == master) or (ansible_hostname == slave) 
+      when: (ansible_hostname == master) or (ansible_hostname == slave) 
 
     # Перезагружаем службу postgresql-server
     - name: restart postgresql-server
       service: 
         name: postgresql-14
         state: restarted
-      when: (ansible_hostname == slave) 
+      when: (ansible_hostname == master) or (ansible_hostname == slave) 
 
     - name: barman switch-wal master
       ansible.builtin.shell: barman switch-wal --force db2
