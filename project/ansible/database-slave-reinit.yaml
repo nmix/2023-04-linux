@@ -111,7 +111,7 @@
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ ansible_hostname }}"
         user: barman
-      delegate_to: storage
+      delegate_to: barman
       when: (ansible_hostname == master)
 
     #  Генерируем SSH-ключ для пользователя barman на хосте barman
@@ -123,13 +123,13 @@
         ssh_key_type: rsa
         ssh_key_bits: 4096
         force: no
-      when: (ansible_hostname == "storage")
+      when: (ansible_hostname == "barman")
 
     #  Забираем содержимое открытого ключа barman c хоста barman 
     - name: fetch all public ssh keys barman
       ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
       register: ssh_keys
-      when: (ansible_hostname == "storage")
+      when: (ansible_hostname == "barman")
 
     - name: transfer public key to master
       ansible.builtin.authorized_key:
@@ -137,4 +137,4 @@
         comment: "{{ansible_hostname}}"
         user: postgres
       delegate_to: "{{master}}"
-      when: (ansible_hostname == "storage")
+      when: (ansible_hostname == "barman")

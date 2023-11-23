@@ -36,7 +36,7 @@ MACHINES = {
       { ip: "192.168.56.132", adapter: 8 },
     ],
   },
-  storage: {
+  barman: {
     networks: [
       { ip: "10.10.1.141",    adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "internal"},
       { ip: "192.168.56.141", adapter: 8 },
