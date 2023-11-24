@@ -252,7 +252,7 @@
       when: (ansible_hostname == master) or (ansible_hostname == slave) 
 
     - name: barman switch-wal master
-      ansible.builtin.shell: barman switch-wal --force db2
+      ansible.builtin.shell: barman switch-wal --force db1
       become_user: barman
       when: (ansible_hostname == "barman")
 
