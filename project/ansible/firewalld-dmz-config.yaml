@@ -1,0 +1,13 @@
+- name: Config firewalld in dmz zone
+  hosts: dmz
+  become: true
+
+  tasks:
+    - name: Move eth1 to dmz zone
+      ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+

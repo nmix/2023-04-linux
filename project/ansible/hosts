@@ -23,6 +23,9 @@ db1
 db2
 barman
 
+[dmz]
+app1
+
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_user=vagrant

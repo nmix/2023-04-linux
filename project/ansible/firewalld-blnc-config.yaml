@@ -1,0 +1,16 @@
+- name: Config firewalld on balancer
+  hosts: blnc
+  become: true
+
+  tasks:
+    - name: Move eth2 to external zone
+      ansible.builtin.shell: "firewall-cmd --zone=external --change-interface=eth2 --permanent"
+
+    - name: Move eth1 to dmz zone
+      ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+

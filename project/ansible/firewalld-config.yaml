@@ -1,0 +1,5 @@
+---
+- import_playbook: "firewalld-internal-config.yaml"
+- import_playbook: "firewalld-fw-config.yaml"
+- import_playbook: "firewalld-dmz-config.yaml"
+- import_playbook: "firewalld-blnc-config.yaml"
