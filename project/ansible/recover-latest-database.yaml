@@ -1,0 +1,38 @@
+- name: Recover latest database
+  hosts: backup_outline
+  become: true
+  vars:
+    master: db1
+    master_ip: 10.10.1.131
+
+  tasks:
+    - name: get latest backup
+      ansible.builtin.shell: "barman list-backups {{ master }} | tail -n 1 | awk '{print $2}'"
+      register: latest_backup
+      become_user: barman
+      when: (ansible_hostname == "barman")
+
+    - debug: msg={{ latest_backup.stdout }}
+      when: (ansible_hostname == "barman")
+
+    - name: stop postgresql-server on master
+      service: 
+        name: postgresql-14
+        state: stopped
+      when: (ansible_hostname == master)
+
+    - name: recover database from backup
+      ansible.builtin.shell: "barman recover {{ master }} {{ latest_backup.stdout }} /var/lib/pgsql/14/data/ --remote-ssh-command \"ssh -o 'StrictHostKeyChecking no' postgres@{{ master_ip }}\""
+      become_user: barman
+      when: (ansible_hostname == "barman")
+
+    # - name: pause for postgresql server recovery process
+    #   ansible.builtin.pause:
+    #     seconds: 20
+    #   when: (ansible_hostname == "barman")
+
+    - name: restart postgresql-server on master
+      service: 
+        name: postgresql-14
+        state: started
+      when: (ansible_hostname == master)
