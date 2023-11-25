@@ -6,23 +6,6 @@
       ansible.builtin.import_role:
         name: common-config
 
-    # --- Конфигурация сетевого экрана
-
-    - name: Move eth1 to internal zone
-      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
-
-    - name: Enable postgresql service in zone
-      ansible.posix.firewalld:
-        zone: internal
-        service: postgresql
-        permanent: true
-        state: enabled
-
-    - name: Reload firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: reloaded
-
     # --- Установка БД и сопуствующих утилит
 
     - name: Install libs

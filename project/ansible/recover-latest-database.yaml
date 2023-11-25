@@ -26,11 +26,6 @@
       become_user: barman
       when: (ansible_hostname == "barman")
 
-    # - name: pause for postgresql server recovery process
-    #   ansible.builtin.pause:
-    #     seconds: 20
-    #   when: (ansible_hostname == "barman")
-
     - name: restart postgresql-server on master
       service: 
         name: postgresql-14

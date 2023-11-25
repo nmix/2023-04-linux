@@ -18,6 +18,11 @@ db1
 db2
 barman
 
+[internal]
+db1
+db2
+barman
+
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_user=vagrant

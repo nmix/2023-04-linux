@@ -9,13 +9,6 @@
     - name: Move eth2 to external zone
       ansible.builtin.shell: "firewall-cmd --zone=external --change-interface=eth2 --permanent"
 
-    # - name: Enable http service for external zone
-    #   ansible.posix.firewalld:
-    #     zone: external
-    #     service: http
-    #     permanent: true
-    #     state: enabled
-
     - name: Move eth1 to dmz zone
       ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
 
@@ -39,5 +32,6 @@
           - "/home/vagrant/nginx.conf:/etc/nginx/conf.d/default.conf"
         state: started
         restart: true
+        restart_policy: unless-stopped
         ports:
           - "80:80"
