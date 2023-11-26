@@ -1,5 +1,5 @@
 - name: Config backup
-  hosts: barman
+  hosts: fs
   become: true
   vars:
     master: db2

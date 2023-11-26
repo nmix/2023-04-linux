@@ -1,5 +1,5 @@
 - name: Create backup
-  hosts: barman
+  hosts: fs
   become: true
   vars:
     master: db1

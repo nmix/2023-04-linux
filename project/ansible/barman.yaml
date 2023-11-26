@@ -1,5 +1,5 @@
 - name: Config barman host
-  hosts: barman
+  hosts: fs
   become: true
   vars:
     master_user: 'postgres'
@@ -89,10 +89,10 @@
       with_items:
         - { db_hostname: "db1", db_ip: "10.10.1.131", active: "true" }
         - { db_hostname: "db2", db_ip: "10.10.1.132", active: "false" }
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
 - name: Config backup
-  hosts: backup_outline
+  hosts: db_outline
   become: true
   vars:
     master: "db1"
@@ -131,7 +131,7 @@
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ ansible_hostname }}"
         user: barman
-      delegate_to: barman
+      delegate_to: fs
       when: (ansible_hostname == master)
 
     #  Генерируем SSH-ключ для пользователя barman на хосте barman
@@ -143,13 +143,13 @@
         ssh_key_type: rsa
         ssh_key_bits: 4096
         force: no
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     #  Забираем содержимое открытого ключа barman c хоста barman 
     - name: fetch all public ssh keys barman
       ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
       register: ssh_keys
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     - name: transfer public key to master
       ansible.builtin.authorized_key:
@@ -157,7 +157,7 @@
         comment: "{{ansible_hostname}}"
         user: postgres
       delegate_to: "{{master}}"
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
 
     # --- Генерируем ssh ключи на barman и на slave-реплике
@@ -184,7 +184,7 @@
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ ansible_hostname }}"
         user: barman
-      delegate_to: barman
+      delegate_to: fs
       when: (ansible_hostname == slave)
 
     #  Генерируем SSH-ключ для пользователя barman на хосте barman
@@ -196,13 +196,13 @@
         ssh_key_type: rsa
         ssh_key_bits: 4096
         force: no
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     #  Забираем содержимое открытого ключа barman c хоста barman 
     - name: fetch all public ssh keys barman
       ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
       register: ssh_keys
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     - name: transfer public key to slave
       ansible.builtin.authorized_key:
@@ -210,7 +210,7 @@
         comment: "{{ansible_hostname}}"
         user: postgres
       delegate_to: "{{ slave }}"
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
 
     # CREATE USER barman SUPERUSER;
@@ -247,12 +247,12 @@
     - name: barman switch-wal master
       ansible.builtin.shell: barman switch-wal --force db1
       become_user: barman
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     - name: barman cron
       ansible.builtin.shell: barman cron
       become_user: barman
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     - name: create backup cronjob
       ansible.builtin.cron:
@@ -261,4 +261,4 @@
         hour: "0"
         job: "barman cron && barman backup db1"
       become_user: barman
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")

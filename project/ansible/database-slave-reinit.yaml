@@ -73,7 +73,7 @@
         state: restarted
 
 - name: Barman config
-  hosts: backup_outline
+  hosts: db_outline
   become: true
   # vars:
   #   master: db1
@@ -111,7 +111,7 @@
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ ansible_hostname }}"
         user: barman
-      delegate_to: barman
+      delegate_to: fs
       when: (ansible_hostname == target)
 
     #  Генерируем SSH-ключ для пользователя barman на хосте barman
@@ -123,13 +123,13 @@
         ssh_key_type: rsa
         ssh_key_bits: 4096
         force: no
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     #  Забираем содержимое открытого ключа barman c хоста barman 
     - name: fetch all public ssh keys barman
       ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
       register: ssh_keys
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
     - name: transfer public key to target
       ansible.builtin.authorized_key:
@@ -137,10 +137,10 @@
         comment: "{{ansible_hostname}}"
         user: postgres
       delegate_to: "{{target}}"
-      when: (ansible_hostname == "barman")
+      when: (ansible_hostname == "fs")
 
 - name: Config backup
-  hosts: barman
+  hosts: fs
   become: true
   vars:
     master: db2
