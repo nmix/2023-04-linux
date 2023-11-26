@@ -8,6 +8,10 @@
       ansible.builtin.shell: "barman switch-wal --force {{ master }}"
       become_user: barman
 
+    # - name: barman cron
+    #   ansible.builtin.shell: barman cron
+    #   become_user: barman
+
     - name: Create database backup
       ansible.builtin.shell: "barman backup {{ master }}"
       become_user: barman

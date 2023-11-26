@@ -75,8 +75,8 @@
 - name: Barman config
   hosts: backup_outline
   become: true
-  vars:
-    master: db1
+  # vars:
+  #   master: db1
   tasks:
     - name: install barman on database hosts
       ansible.builtin.dnf:
@@ -85,11 +85,11 @@
           - barman-cli
         state: present
         update_cache: true
-      when: (ansible_hostname == master)
+      when: (ansible_hostname == target)
 
     # --- Генерируем ssh ключи на barman и на мастер-реплике
 
-    #  Генерируем SSH-ключ для пользователя postgres на хосте master
+    #  Генерируем SSH-ключ для пользователя postgres на хосте target
     - name: generate SSH key for postgres
       ansible.builtin.user:
         name: postgres
@@ -97,22 +97,22 @@
         ssh_key_type: rsa
         ssh_key_bits: 4096
         force: no
-      when: (ansible_hostname == master)
+      when: (ansible_hostname == target)
 
-    #  Забираем содержимое открытого ключа с master
-    - name: fetch all public ssh keys master
+    #  Забираем содержимое открытого ключа с target
+    - name: fetch all public ssh keys target
       ansible.builtin.shell: cat /var/lib/pgsql/.ssh/id_rsa.pub
       register: ssh_keys
-      when: (ansible_hostname == master)
+      when: (ansible_hostname == target)
 
-    #  Копируем ключ с master на barman
+    #  Копируем ключ с target на barman
     - name: transfer public key to barman
       ansible.builtin.authorized_key:
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ ansible_hostname }}"
         user: barman
       delegate_to: barman
-      when: (ansible_hostname == master)
+      when: (ansible_hostname == target)
 
     #  Генерируем SSH-ключ для пользователя barman на хосте barman
     - name: generate SSH key for barman
@@ -131,10 +131,41 @@
       register: ssh_keys
       when: (ansible_hostname == "barman")
 
-    - name: transfer public key to master
+    - name: transfer public key to target
       ansible.builtin.authorized_key:
         key: "{{ ssh_keys.stdout }}"
         comment: "{{ansible_hostname}}"
         user: postgres
-      delegate_to: "{{master}}"
+      delegate_to: "{{target}}"
       when: (ansible_hostname == "barman")
+
+- name: Config backup
+  hosts: barman
+  become: true
+  vars:
+    master: db2
+    barman_user: barman
+  tasks:
+    - name: copy server config
+      template:
+        src: db.conf.j2
+        dest: "/etc/barman.d/{{ db_hostname }}.conf"
+        owner: barman
+        group: barman
+        mode: '0755'
+      vars:
+        db_hostname: "{{ item.db_hostname }}"
+        db_ip: "{{ item.db_ip }}"
+        active: "{{ item.active }}"
+      with_items:
+        - { db_hostname: "db1", db_ip: "10.10.1.131", active: "false" }
+        - { db_hostname: "db2", db_ip: "10.10.1.132", active: "true" }
+      become: true
+
+    - name: barman switch-wal master
+      ansible.builtin.shell: "barman switch-wal --force {{ master }}"
+      become_user: barman
+
+    - name: barman cron
+      ansible.builtin.shell: barman cron
+      become_user: barman

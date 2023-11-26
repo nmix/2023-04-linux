@@ -1,0 +1,4 @@
+---
+- import_playbook: "database-promote.yaml"
+- import_playbook: "switch-app-on-another-master.yaml"
+
