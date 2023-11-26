@@ -1,4 +1,4 @@
-- name: Config barman host
+- name: Config barman backuping
   hosts: fs
   become: true
   vars:

@@ -14,8 +14,19 @@
         state: enabled
       when: ansible_hostname in groups["database"]
 
+    - name: Enable nfs services
+      ansible.posix.firewalld:
+        zone: internal
+        service: "{{ item }}"
+        permanent: true
+        state: enabled
+      with_items:
+        - nfs3
+        - rpc-bind
+        - mountd
+      when: ansible_hostname == "fs"
+
     - name: Reload firewalld
       ansible.builtin.service:
         name: firewalld
         state: reloaded
-
