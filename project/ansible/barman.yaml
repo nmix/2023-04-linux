@@ -253,3 +253,12 @@
       ansible.builtin.shell: barman cron
       become_user: barman
       when: (ansible_hostname == "barman")
+
+    - name: create backup cronjob
+      ansible.builtin.cron:
+        name: create backup
+        minute: "15"
+        hour: "0"
+        job: "barman cron && barman backup db1"
+      become_user: barman
+      when: (ansible_hostname == "barman")
