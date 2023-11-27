@@ -1,9 +1,37 @@
 - name: Config NFS for app files
-  hosts: fs
+  hosts: nfs
   become: true
   vars:
-    nfs_server_ip: 10.10.1.141
+    nfs_client_network: 10.10.1.0/24
+    nfs_data_dir: /opt/cms/data
   tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config
+
+    # --- Config firewalld
+
+    - name: Move eth1 to internal zone
+      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
+
+    - name: Enable nfs services
+      ansible.posix.firewalld:
+        zone: internal
+        service: "{{ item }}"
+        permanent: true
+        state: enabled
+      with_items:
+        - nfs
+        - rpc-bind
+        - mountd
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+
+    # ---
+
     - name: Install nfs packages
       ansible.builtin.dnf:
         name:
@@ -18,7 +46,7 @@
 
     - name: Create share data directory
       ansible.builtin.file:
-        path: /opt/cms/data
+        path: "{{ nfs_data_dir }}"
         state: directory
         owner: nobody
         group: nobody
@@ -31,4 +59,4 @@
         dest: /etc/exports
 
     - name: export filesystem
-      ansible.builtin.shell: exportfs -r
+      ansible.builtin.shell: exportfs -arv

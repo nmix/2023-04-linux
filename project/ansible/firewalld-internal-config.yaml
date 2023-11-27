@@ -21,7 +21,7 @@
         permanent: true
         state: enabled
       with_items:
-        - nfs3
+        - nfs
         - rpc-bind
         - mountd
       when: ansible_hostname == "fs"

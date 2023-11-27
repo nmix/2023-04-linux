@@ -1,15 +1,21 @@
-- name: Run application
+- name: Config App host
   hosts: apps
   become: true
-  vars:
-    project_dir: /opt/cms
-    cms_admin: "admin"
-    cms_admin_password: "secret"
-
   tasks:
     - name: Install common
       ansible.builtin.import_role:
         name: common-config-docker
+
+    # --- Config firewalld
+
+    - name: Move eth1 to dmz zone
+      ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+
 
     # --- Static routes to internal network
 
@@ -25,6 +31,39 @@
         name: NetworkManager
         state: restarted
 
+
+- name: Mount data dir via nfs
+  hosts: apps
+  become: true
+  vars:
+    data_dir: /opt/cms/data
+    nfs_server_ip: "10.10.1.142"
+    nfs_server_data_dir: /opt/cms/data
+  tasks:
+    - name: Install nfs packages
+      ansible.builtin.dnf:
+        name:
+          - nfs-utils
+          - nfs4-acl-tools
+        state: present
+
+    - name: Mount an NFS volume
+      ansible.posix.mount:
+        src: "{{ nfs_server_ip }}:{{ nfs_server_data_dir }}"
+        path: "{{ data_dir }}"
+        state: mounted
+        fstype: nfs
+
+
+- name: Run application
+  hosts: apps
+  become: true
+  vars:
+    project_dir: /opt/cms
+    cms_admin: "admin"
+    cms_admin_password: "secret"
+
+  tasks:
     # --- Run application
 
     - name: Create project directory
@@ -76,4 +115,3 @@
             new_super_user = MyUser(username = '{{ cms_admin }}', email='{{ cms_admin }}@example.com', is_superuser = True, is_staff = True );
             new_super_user.password = make_password('{{ cms_admin_password }}');
             new_super_user.save();"
-

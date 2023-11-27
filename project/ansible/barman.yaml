@@ -11,7 +11,7 @@
       ansible.builtin.import_role:
         name: common-config
 
-    # --- Конфигурация сетевого экрана
+    # --- Config firewalld
 
     - name: Move eth1 to internal zone
       ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"

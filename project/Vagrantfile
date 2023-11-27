@@ -42,6 +42,12 @@ MACHINES = {
       { ip: "192.168.56.141", adapter: 8 },
     ],
   },
+  nfs: {
+    networks: [
+      { ip: "10.10.1.142",    adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "internal"},
+      { ip: "192.168.56.142", adapter: 8 },
+    ],
+  },
 }
 
 
