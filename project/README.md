@@ -8,6 +8,16 @@
 
 ## План восстановления
 
+### app1 / app2
+
+`app1` и `app2` - серверы приложений. Здесь крутится web-контейнер cms.
+На данном сервере данные не сохраняются, поэтому выполняем стандартный плейбук инициализации сервера
+
+```bash
+vagrant up app1
+ansible-playbook -i ansible/hosts ansible/app.yaml
+```
+
 ### db1
 
 `db1` - мастер базы данных
@@ -33,6 +43,15 @@ ansible-playbook -i ansible/hosts ansible/database-master-reinit.yaml -e target=
 vagrant up db1
 ansible-playbook -i ansible/hosts ansible/database-slave-reinit.yaml -e target=db1 -e master=db2 -e master_ip=10.10.1.132
 # ansible-playbook -i ansible/hosts ansible/switch-barman-on-another-master.yaml
+```
+
+### db2
+
+`db2` - slave-хост базы данных. При удалении хоста выполняем повторную инициализацию
+
+```bash
+vagrant up db2
+ansible-playbook -i ansible/hosts ansible/database-slave-reinit.yaml -e target=db2 -e master=db1 -e master_ip=10.10.1.131
 ```
 
 

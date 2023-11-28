@@ -17,6 +17,12 @@ MACHINES = {
       { ip: "192.168.56.31", adapter: 8 },
     ],
   },
+  app2: {
+    networks: [
+      { ip: "192.168.1.32", adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "dmz-net" },
+      { ip: "192.168.56.32", adapter: 8 },
+    ],
+  },
   fw: {
     networks: [
       { ip: "192.168.1.101",  adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "dmz-net" },

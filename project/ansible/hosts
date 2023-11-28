@@ -1,6 +1,7 @@
 [all]
 blnc     ansible_host=192.168.56.10   ansible_user=vagrant ansible_private_key_file=.vagrant/machines/blnc/virtualbox/private_key
 app1     ansible_host=192.168.56.31   ansible_user=vagrant ansible_private_key_file=.vagrant/machines/app1/virtualbox/private_key
+app2     ansible_host=192.168.56.32   ansible_user=vagrant ansible_private_key_file=.vagrant/machines/app2/virtualbox/private_key
 fw       ansible_host=192.168.56.101  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/fw/virtualbox/private_key
 db1      ansible_host=192.168.56.131  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/db1/virtualbox/private_key
 db2      ansible_host=192.168.56.132  ansible_user=vagrant ansible_private_key_file=.vagrant/machines/db2/virtualbox/private_key
@@ -9,6 +10,7 @@ nfs      ansible_host=192.168.56.142  ansible_user=vagrant ansible_private_key_f
 
 [apps]
 app1
+app2
 
 [database]
 db1
@@ -27,6 +29,7 @@ nfs
 
 [dmz]
 app1
+app2
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3

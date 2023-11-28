@@ -24,7 +24,7 @@
         - nfs
         - rpc-bind
         - mountd
-      when: ansible_hostname == "fs"
+      when: ansible_hostname == "nfs"
 
     - name: Reload firewalld
       ansible.builtin.service:
