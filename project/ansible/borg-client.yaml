@@ -84,3 +84,12 @@
         hour: "0"
         job: "borg create --stats borg@{{ borg_repo }}::cms-data-{now:%Y-%m-%d_%H:%M:%S} {{ data_dir }}"
       become_user: borg
+
+    - name: Share data directory for nobody
+      ansible.builtin.file:
+        path: "{{ data_dir }}"
+        state: directory
+        owner: nobody
+        group: nobody
+        recurse: yes
+        mode: '0777'
