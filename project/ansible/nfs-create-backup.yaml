@@ -1,0 +1,20 @@
+- name: Create backup of cms data
+  hosts: nfs
+  become: true
+  environment:
+    BORG_PASSPHRASE: secret
+  vars:
+    borg_repo: 10.10.1.141:/var/backup
+    data_dir: /opt/cms/data
+
+  tasks:
+    - name: Create archive
+      ansible.builtin.shell: "borg create --stats borg@{{ borg_repo }}::cms-data-{now:%Y-%m-%d_%H:%M:%S} {{ data_dir }}"
+      become_user: borg
+
+    - name: Check archive
+      ansible.builtin.shell: "borg check borg@{{ borg_repo }}"
+      become_user: borg
+      register: check
+
+    - debug: msg={{ check.stdout }}

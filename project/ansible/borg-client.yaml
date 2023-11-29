@@ -1,67 +1,3 @@
-- name: Config borg server
-  hosts: fs
-  become: true
-  tasks:
-    - name: Install common
-      ansible.builtin.import_role:
-        name: common-config
-
-    # --- Config firewalld
-
-    - name: Move eth1 to internal zone
-      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
-
-    # ---
-
-    - name: Install dnf plugins
-      ansible.builtin.yum:
-        name:
-          - dnf-plugins-core
-        state: present
-
-    - name: Enable powertools
-      ansible.builtin.shell: "yum config-manager --set-enabled powertools"
-
-    - name: Install borg
-      ansible.builtin.yum:
-        name:
-          - borgbackup
-        state: present
-
-    - name: Create borg group
-      ansible.builtin.group:
-        name: borg
-        state: present
-
-    - name: Create borg user
-      ansible.builtin.user:
-        name: borg
-        group: borg
-        state: present
-
-    - name: Create .ssh directory
-      ansible.builtin.file:
-        path: /home/borg/.ssh
-        state: directory
-        mode: "0700"
-        owner: borg
-        group: borg
-
-    - name: Create authorized_keys file
-      ansible.builtin.file:
-        path: /home/borg/.ssh/authorized_keys
-        state: touch
-        mode: "0600"
-        owner: borg
-        group: borg
-
-    - name: Create backup directory
-      ansible.builtin.file:
-        path: /var/backup
-        state: directory
-        owner: borg
-        group: borg
-
 - name: Copy ssh key to client
   hosts:
     - fs
@@ -97,6 +33,7 @@
     BORG_PASSPHRASE: secret
   vars:
     borg_repo: 10.10.1.141:/var/backup
+    data_dir: /opt/cms/data
   tasks:
     - name: Install common
       ansible.builtin.import_role:
@@ -140,6 +77,10 @@
       changed_when: result.rc == 0
       failed_when: result.rc == 2 and 'A repository already exists at' not in result.stderr or result.rc != 2 and result.rc != 0
 
-    - name: Make initial backup
-      ansible.builtin.shell: "borg create --stats borg@{{ borg_repo }}::cms-data-{now:%Y-%m-%d_%H:%M:%S} /opt/cms/data"
+    - name: create backup cronjob
+      ansible.builtin.cron:
+        name: create nfs backup
+        minute: "15"
+        hour: "0"
+        job: "borg create --stats borg@{{ borg_repo }}::cms-data-{now:%Y-%m-%d_%H:%M:%S} {{ data_dir }}"
       become_user: borg

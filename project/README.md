@@ -18,6 +18,28 @@ vagrant up app1
 ansible-playbook -i ansible/hosts ansible/app.yaml
 ```
 
+### fw
+
+`fw` - firewall - сетевой экран между dmz и internal зонами сети.
+Пропускает соединения только с хостов `app1` и `app2`.
+Сервер является **точкой отказа**. 
+
+```bash
+vagrant up fw
+ansible-playbook -i ansible/hosts ansible/fw.yaml
+```
+
+### nfs
+
+`nfs` - Network File System сервер. Здесь расположены статические файлы приложения: картинки, видео, вложения и прочее.
+Сервер является **точкой отказа**. 
+Система не работает до восстановления данных из резервной копии.
+
+```bash
+vagrant up nfs
+ansible-playbook -i ansible/hosts ansible/nfs-recover-latest.yaml
+```
+
 ### db1
 
 `db1` - мастер базы данных
@@ -56,6 +78,18 @@ ansible-playbook -i ansible/hosts ansible/database-slave-reinit.yaml -e target=d
 
 
 ## Полезные команды
+
+Создание резервной копии статических файлов
+
+```bash
+ansible-playbook -i ansible/hosts ansible/nfs-create-backup.yaml
+```
+
+Восстановление статических файлов из резервной копии
+
+```bash
+ansible-playbook -i ansible/hosts ansible/nfs-recover-latest.yaml
+```
 
 Создание резервной копии БД
 ```bash
