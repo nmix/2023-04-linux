@@ -89,3 +89,57 @@
         user: borg
       delegate_to: "fs"
       when: (ansible_hostname == "nfs")
+
+- name: Config borg client
+  hosts: nfs
+  become: true
+  environment:
+    BORG_PASSPHRASE: secret
+  vars:
+    borg_repo: 10.10.1.141:/var/backup
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config
+
+    # --- Config firewalld
+
+    - name: Move eth1 to internal zone
+      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
+
+    # ---
+
+    - name: Install dnf plugins
+      ansible.builtin.yum:
+        name:
+          - dnf-plugins-core
+        state: present
+
+    - name: Enable powertools
+      ansible.builtin.shell: "yum config-manager --set-enabled powertools"
+
+    - name: Install borg
+      ansible.builtin.yum:
+        name:
+          - borgbackup
+        state: present
+
+    # ---
+
+    - name: Disable strict host check
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/ssh_config"
+        line: "StrictHostKeyChecking no"
+
+    # --- @see https://github.com/borgbackup/borg/issues/271#issuecomment-953328932
+    - name: Init borg repository
+      ansible.builtin.command: "borg init --encryption=repokey borg@{{ borg_repo }}"
+      become_user: borg
+      # when: result.rc == 2
+      register: result
+      changed_when: result.rc == 0
+      failed_when: result.rc == 2 and 'A repository already exists at' not in result.stderr or result.rc != 2 and result.rc != 0
+
+    - name: Make initial backup
+      ansible.builtin.shell: "borg create --stats borg@{{ borg_repo }}::cms-data-{now:%Y-%m-%d_%H:%M:%S} /opt/cms/data"
+      become_user: borg
