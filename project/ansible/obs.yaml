@@ -1,44 +1,57 @@
-- name: Base observer config
-  hosts: obs
+# - name: Base observer config
+#   hosts: obs
+#   become: true
+#   tasks:
+#     - name: Install common
+#       ansible.builtin.import_role:
+#         name: common-config-docker
+
+#     # --- Config firewalld
+
+#     - name: Move eth1 to internal zone
+#       ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
+
+#     - name: Reload firewalld
+#       ansible.builtin.service:
+#         name: firewalld
+#         state: reloaded
+
+#     # ---
+
+#     - name: Add static route
+#       ansible.builtin.blockinfile:
+#         path: /etc/sysconfig/network-scripts/route-eth1
+#         create: true
+#         block: |
+#           192.168.1.0/24 via 10.10.1.101
+
+#     - name: Restart network service
+#       ansible.builtin.systemd:
+#         name: NetworkManager
+#         state: restarted
+
+# - name: Config grafana and prometheus
+#   hosts: main
+#   become: true
+#   tasks:
+#     - name: Install main duckprom node
+#       ansible.builtin.import_role:
+#         name: nmix.duckprom
+#       vars:
+#         duckprom_dir: /opt/duckprom
+#         duckprom_grafana_host: grafana.local
+#         duckprom_node_type: main
+#         duckprom_traefik_https_enabled: false
+#         duckprom_basic_auth_enabled: false
+
+- name: Config exporters
+  hosts: edge
   become: true
   tasks:
-    - name: Install common
-      ansible.builtin.import_role:
-        name: common-config-docker
-
-    # --- Config firewalld
-
-    - name: Move eth1 to internal zone
-      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
-
-    - name: Reload firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: reloaded
-
-    # ---
-
-    - name: Add static route
-      ansible.builtin.blockinfile:
-        path: /etc/sysconfig/network-scripts/route-eth1
-        create: true
-        block: |
-          192.168.1.0/24 via 10.10.1.101
-
-    - name: Restart network service
-      ansible.builtin.systemd:
-        name: NetworkManager
-        state: restarted
-
-- name: Config grafana and prometheus
-  hosts: main
-  become: true
-  tasks:
-    - name: Install main duckprom node
+    - name: Install edge duckprom node
       ansible.builtin.import_role:
         name: nmix.duckprom
       vars:
         duckprom_dir: /opt/duckprom
-        duckprom_node_type: main
-        duckprom_traefik_https_enabled: false
+        duckprom_grafana_host: 10.10.1.143
         duckprom_basic_auth_enabled: false

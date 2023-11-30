@@ -8,3 +8,4 @@
 - import_playbook: "borg-client.yaml"
 - import_playbook: "app.yaml"
 - import_playbook: "blnc.yaml"
+- import_playbook: "obs.yaml"

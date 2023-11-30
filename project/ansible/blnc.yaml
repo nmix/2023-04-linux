@@ -19,6 +19,21 @@
         name: firewalld
         state: reloaded
 
+    # --- Static routes to internal network
+
+    - name: Add static route
+      ansible.builtin.blockinfile:
+        path: /etc/sysconfig/network-scripts/route-eth1
+        create: true
+        block: |
+          10.10.1.0/24 via 192.168.1.101
+
+    - name: Restart network service
+      ansible.builtin.systemd:
+        name: NetworkManager
+        state: restarted
+
+
     # ---
 
     - name: Copy nginx config file
