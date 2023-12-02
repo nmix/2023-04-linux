@@ -1,0 +1,179 @@
+- name: Config databse hosts and install postgres
+  hosts: "{{ target | default('no_hosts') }}"
+  become: true
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config
+
+    # --- Конфигурация сетевого экрана
+
+    - name: Move eth1 to internal zone
+      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
+
+    - name: Enable postgresql service in zone
+      ansible.posix.firewalld:
+        zone: internal
+        service: postgresql
+        permanent: true
+        state: enabled
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+
+    # --- Установка БД и сопуствующих утилит
+
+    - name: Install libs
+      ansible.builtin.dnf:
+        name:
+          - python3-pexpect.noarch
+          - python3-psycopg2
+        state: present
+        update_cache: true
+
+    - name: Install progress
+      ansible.builtin.import_role:
+        name: postgres-install
+
+
+- name: Config replication slave
+  hosts: "{{ target | default('no_hosts') }}"
+  become: true
+  vars:
+    master_ip: 10.10.1.132
+  tasks:
+    - name: Stop postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: stopped
+
+    - name: Remove old data
+      ansible.builtin.file:
+        path: /var/lib/pgsql/14/data
+        state: absent
+
+    - name: Request basebackup
+      ansible.builtin.expect:
+        command: "pg_basebackup -h {{ master_ip }} -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P"
+        responses: 
+          '.*Password*': "{{ vault_db_replicator_password }}"
+      become_user: postgres
+
+    - name: Copy config file
+      ansible.builtin.copy:
+        src: postgresql.conf
+        dest: /var/lib/pgsql/14/data/postgresql.conf
+        force: true
+
+    - name: Restart postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: restarted
+
+- name: Barman config
+  hosts: db_outline
+  become: true
+  # vars:
+  #   master: db1
+  tasks:
+    - name: install barman on database hosts
+      ansible.builtin.dnf:
+        name:
+          - barman
+          - barman-cli
+        state: present
+        update_cache: true
+      when: (ansible_hostname == target)
+
+    # --- Генерируем ssh ключи на barman и на мастер-реплике
+
+    #  Генерируем SSH-ключ для пользователя postgres на хосте target
+    - name: generate SSH key for postgres
+      ansible.builtin.user:
+        name: postgres
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        force: no
+      when: (ansible_hostname == target)
+
+    #  Забираем содержимое открытого ключа с target
+    - name: fetch all public ssh keys target
+      ansible.builtin.shell: cat /var/lib/pgsql/.ssh/id_rsa.pub
+      register: ssh_keys
+      when: (ansible_hostname == target)
+
+    #  Копируем ключ с target на barman
+    - name: transfer public key to barman
+      ansible.builtin.authorized_key:
+        key: "{{ ssh_keys.stdout }}"
+        comment: "{{ ansible_hostname }}"
+        user: barman
+      delegate_to: fs
+      when: (ansible_hostname == target)
+
+    #  Генерируем SSH-ключ для пользователя barman на хосте barman
+    - name: generate SSH key for barman
+      ansible.builtin.user:
+        name: barman
+        shell: /bin/bash
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        force: no
+      when: (ansible_hostname == "fs")
+
+    #  Забираем содержимое открытого ключа barman c хоста barman 
+    - name: fetch all public ssh keys barman
+      ansible.builtin.shell: cat /var/lib/barman/.ssh/id_rsa.pub
+      register: ssh_keys
+      when: (ansible_hostname == "fs")
+
+    - name: transfer public key to target
+      ansible.builtin.authorized_key:
+        key: "{{ ssh_keys.stdout }}"
+        comment: "{{ansible_hostname}}"
+        user: postgres
+      delegate_to: "{{target}}"
+      when: (ansible_hostname == "fs")
+
+- name: Config backup
+  hosts: fs
+  become: true
+  vars:
+    master: db2
+    barman_user: barman
+  tasks:
+    - name: copy server config
+      template:
+        src: db.conf.j2
+        dest: "/etc/barman.d/{{ db_hostname }}.conf"
+        owner: barman
+        group: barman
+        mode: '0755'
+      vars:
+        db_hostname: "{{ item.db_hostname }}"
+        db_ip: "{{ item.db_ip }}"
+        active: "{{ item.active }}"
+      with_items:
+        - { db_hostname: "db1", db_ip: "10.10.1.131", active: "false" }
+        - { db_hostname: "db2", db_ip: "10.10.1.132", active: "true" }
+      become: true
+
+    - name: barman switch-wal master
+      ansible.builtin.shell: "barman switch-wal --force {{ master }}"
+      become_user: barman
+
+    - name: barman cron
+      ansible.builtin.shell: barman cron
+      become_user: barman
+
+    - name: update backup cronjob
+      ansible.builtin.cron:
+        name: create backup
+        minute: "15"
+        hour: "0"
+        job: "barman cron && barman backup {{ master }}"
+      become_user: barman

@@ -1,0 +1,17 @@
+[{{ db_hostname }}]
+description = "backup database from {{ db_hostname }} host"
+active = {{ active }}
+ssh_command = ssh postgres@{{ db_ip }}
+conninfo = host={{ db_ip }} user={{ barman_user }} port=5432 dbname=postgres
+retention_policy_mode = auto
+retention_policy = RECOVERY WINDOW OF 7 days
+wal_retention_policy = main
+streaming_archiver=on
+path_prefix = /usr/pgsql-14/bin/
+# --- slot config
+create_slot = auto
+slot_name = {{ db_hostname }}
+# ---
+streaming_conninfo = host={{ db_ip }} user={{ barman_user }}
+backup_method = postgres
+archiver = off

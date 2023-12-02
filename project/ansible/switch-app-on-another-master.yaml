@@ -1,0 +1,21 @@
+- name: Switch app on another database
+  hosts: apps
+  become: true
+  vars:
+    project_dir: "/opt/cms"
+    master_ip: "10.10.1.132"
+  tasks:
+    - name: Replace config file for app
+      ansible.builtin.template:
+        src: env-local.j2
+        dest: "{{ project_dir }}/.env-local"
+        owner: vagrant
+        group: vagrant
+        mode: '0600'
+
+    - name: Restart app
+      community.docker.docker_compose:
+        project_src: "{{ project_dir }}"
+        restarted: true
+        services:
+          - web

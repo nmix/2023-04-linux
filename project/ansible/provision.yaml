@@ -1,0 +1,11 @@
+---
+- import_playbook: "firewalld-config.yaml"
+- import_playbook: "database.yaml"
+- import_playbook: "fw.yaml"
+- import_playbook: "barman.yaml"
+- import_playbook: "borg-server.yaml"
+- import_playbook: "nfs.yaml"
+- import_playbook: "borg-client.yaml"
+- import_playbook: "app.yaml"
+- import_playbook: "blnc.yaml"
+- import_playbook: "obs.yaml"

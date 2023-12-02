@@ -1,0 +1,6 @@
+---
+- import_playbook: "nfs.yaml"
+- import_playbook: "borg-client.yaml"
+- import_playbook: "borg-extract-latest.yaml"
+- import_playbook: "nfsc.yaml"
+

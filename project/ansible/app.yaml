@@ -1,0 +1,117 @@
+- name: Config App host
+  hosts: apps
+  become: true
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config-docker
+
+    # --- Config firewalld
+
+    - name: Move eth1 to dmz zone
+      ansible.builtin.shell: "firewall-cmd --zone=dmz --change-interface=eth1 --permanent"
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+
+
+    # --- Static routes to internal network
+
+    - name: Add static route
+      ansible.builtin.blockinfile:
+        path: /etc/sysconfig/network-scripts/route-eth1
+        create: true
+        block: |
+          10.10.1.0/24 via 192.168.1.101
+
+    - name: Restart network service
+      ansible.builtin.systemd:
+        name: NetworkManager
+        state: restarted
+
+
+- name: Mount data dir via nfs
+  hosts: apps
+  become: true
+  vars:
+    data_dir: /opt/cms/data
+    nfs_server_ip: "10.10.1.142"
+    nfs_server_data_dir: /opt/cms/data
+  tasks:
+    - name: Install nfs packages
+      ansible.builtin.dnf:
+        name:
+          - nfs-utils
+          - nfs4-acl-tools
+        state: present
+
+    - name: Mount an NFS volume
+      ansible.posix.mount:
+        src: "{{ nfs_server_ip }}:{{ nfs_server_data_dir }}"
+        path: "{{ data_dir }}"
+        state: mounted
+        fstype: nfs
+
+
+- name: Run application
+  hosts: apps
+  become: true
+  vars:
+    project_dir: /opt/cms
+    cms_admin: "{{ vault_cms_admin }}"
+    cms_admin_password: "{{ vault_cms_admin_password }}"
+    master_ip: 10.10.1.131
+  tasks:
+    # --- Run application
+
+    - name: Create project directory
+      ansible.builtin.file:
+        path: "{{ project_dir }}"
+        state: directory
+        mode: "0775"
+        owner: vagrant
+        group: vagrant
+
+    - name: Copy compose file
+      ansible.builtin.copy:
+        src: "docker-compose.yaml"
+        dest: "{{ project_dir }}/docker-compose.yaml"
+        owner: vagrant
+        group: vagrant
+
+    - name: Copy env file
+      ansible.builtin.template:
+        src: "env-local.j2"
+        dest: "{{ project_dir }}/.env-local"
+        owner: vagrant
+        group: vagrant
+
+    - name: Migrate database
+      ansible.builtin.shell:
+        cmd: docker compose run web python manage.py migrate
+        chdir: "{{ project_dir }}"
+
+    - name: Start cms service
+      community.docker.docker_compose:
+        project_src: "{{ project_dir }}"
+        state: present
+        services:
+          - web
+
+    - name: Create superuser (if not exists)
+      community.docker.docker_container_exec:
+        container: cms_web_1
+        argv:
+          - python
+          - manage.py
+          - shell
+          - "-c"
+          - "from django.contrib.auth.hashers import make_password;
+            from django.contrib.auth import get_user_model;
+            MyUser = get_user_model();
+            MyUser.objects.filter( username__exact = '{{ cms_admin }}' ).count() == 0 or exit();
+            new_super_user = MyUser(username = '{{ cms_admin }}', email='{{ cms_admin }}@example.com', is_superuser = True, is_staff = True );
+            new_super_user.password = make_password('{{ cms_admin_password }}');
+            new_super_user.save();"

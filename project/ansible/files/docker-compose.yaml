@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  web:
+    image: zoidenberg/django-cms-quickstart-web:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - "./data:/data:rw"
+    command: python manage.py runserver 0.0.0.0:80
+    restart: unless-stopped
+    networks:
+      - djangocmsnet
+    env_file: .env-local
+
+networks:
+  djangocmsnet:

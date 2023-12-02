@@ -1,0 +1,42 @@
+- name: Mount data dir via nfs
+  hosts: apps
+  become: true
+  vars:
+    project_dir: /opt/cms
+    data_dir: /opt/cms/data
+    nfs_server_ip: "10.10.1.142"
+    nfs_server_data_dir: /opt/cms/data
+  tasks:
+    - name: Install nfs packages
+      ansible.builtin.dnf:
+        name:
+          - nfs-utils
+          - nfs4-acl-tools
+        state: present
+
+    - name: Umount old NFS volume
+      ansible.posix.mount:
+        src: "{{ nfs_server_ip }}:{{ nfs_server_data_dir }}"
+        path: "{{ data_dir }}"
+        state: absent
+
+    - name: Remove old data
+      ansible.builtin.file:
+        path: "{{ data_dir }}"
+        state: absent
+
+    - name: Mount an NFS volume
+      ansible.posix.mount:
+        src: "{{ nfs_server_ip }}:{{ nfs_server_data_dir }}"
+        path: "{{ data_dir }}"
+        state: mounted
+        fstype: nfs
+
+    - name: Restarted web service
+      community.docker.docker_compose:
+        project_src: "{{ project_dir }}"
+        state: present
+        restarted: true
+        services:
+          - web
+

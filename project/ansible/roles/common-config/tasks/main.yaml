@@ -1,0 +1,9 @@
+- name: Install packages
+  ansible.builtin.yum:
+    name:
+      - epel-release
+      - vim
+      - tmux
+      - httpie
+    state: present
+    update_cache: true

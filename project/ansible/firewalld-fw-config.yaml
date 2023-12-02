@@ -1,0 +1,40 @@
+- name: Config firewalld firewall host
+  hosts: fw
+  become: true
+
+  tasks:
+    - name: Move eth1 to drop zone
+      ansible.builtin.shell: "firewall-cmd --zone=drop --change-interface=eth1 --permanent"
+
+    - name: Enable masquerade for drop zone
+      ansible.posix.firewalld:
+        masquerade: true
+        state: enabled
+        permanent: true
+        zone: drop
+
+    - name: Add app servers to trusted zone
+      ansible.posix.firewalld:
+        source: "{{ item }}"
+        zone: trusted
+        state: enabled
+        permanent: true
+      with_items:
+        - 192.168.1.10
+        - 192.168.1.31
+        - 192.168.1.32
+
+    - name: Move eth2 to internal zone
+      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth2 --permanent"
+
+    - name: Enable masquerade for internal zone
+      ansible.posix.firewalld:
+        masquerade: true
+        state: enabled
+        permanent: true
+        zone: internal
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded

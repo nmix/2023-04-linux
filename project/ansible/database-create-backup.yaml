@@ -1,0 +1,24 @@
+- name: Create backup
+  hosts: fs
+  become: true
+  vars:
+    master: db1
+  tasks:
+    - name: barman switch-wal master
+      ansible.builtin.shell: "barman switch-wal --force {{ master }}"
+      become_user: barman
+
+    # - name: barman cron
+    #   ansible.builtin.shell: barman cron
+    #   become_user: barman
+
+    - name: Create database backup
+      ansible.builtin.shell: "barman backup {{ master }}"
+      become_user: barman
+
+    - name: List backups
+      ansible.builtin.shell: "barman list-backups {{ master }}"
+      register: backups
+      become_user: barman
+
+    - debug: msg="{{ backups.stdout }}"

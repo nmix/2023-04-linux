@@ -1,0 +1,32 @@
+- name: Config firewalld in internal zone
+  hosts: internal
+  become: true
+
+  tasks:
+    - name: Move eth1 to internal zone
+      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
+
+    - name: Enable postgresql service in zone
+      ansible.posix.firewalld:
+        zone: internal
+        service: postgresql
+        permanent: true
+        state: enabled
+      when: ansible_hostname in groups["database"]
+
+    - name: Enable nfs services
+      ansible.posix.firewalld:
+        zone: internal
+        service: "{{ item }}"
+        permanent: true
+        state: enabled
+      with_items:
+        - nfs
+        - rpc-bind
+        - mountd
+      when: ansible_hostname == "nfs"
+
+    - name: Reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded

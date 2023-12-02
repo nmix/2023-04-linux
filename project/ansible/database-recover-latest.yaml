@@ -1,0 +1,67 @@
+- name: Recover latest database
+  hosts: db_outline
+  become: true
+  vars:
+    master: db1
+    master_ip: 10.10.1.131
+
+  tasks:
+    - name: get latest backup
+      ansible.builtin.shell: "barman list-backups {{ master }} | tail -n 1 | awk '{print $2}'"
+      register: latest_backup
+      become_user: barman
+      when: (ansible_hostname == "fs")
+
+    - debug: msg={{ latest_backup.stdout }}
+      when: (ansible_hostname == "fs")
+
+    - name: stop postgresql-server on master
+      service: 
+        name: postgresql-14
+        state: stopped
+      when: (ansible_hostname == master)
+
+    - name: recover database from backup
+      ansible.builtin.shell: "barman recover {{ master }} {{ latest_backup.stdout }} /var/lib/pgsql/14/data/ --remote-ssh-command \"ssh -o 'StrictHostKeyChecking no' postgres@{{ master_ip }}\""
+      become_user: barman
+      when: (ansible_hostname == "fs")
+
+    - name: restart postgresql-server on master
+      service: 
+        name: postgresql-14
+        state: started
+      when: (ansible_hostname == master)
+
+- name: Config replication slave
+  hosts: "{{ slave | default('no_hosts') }}"
+  become: true
+  vars:
+    master_ip: 10.10.1.131
+  tasks:
+    - name: Stop postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: stopped
+
+    - name: Remove old data
+      ansible.builtin.file:
+        path: /var/lib/pgsql/14/data
+        state: absent
+
+    - name: Request basebackup
+      ansible.builtin.expect:
+        command: "pg_basebackup -h {{ master_ip }} -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P"
+        responses: 
+          '.*Password*': "{{ vault_db_replicator_password }}"
+      become_user: postgres
+
+    - name: Copy config file
+      ansible.builtin.copy:
+        src: postgresql.conf
+        dest: /var/lib/pgsql/14/data/postgresql.conf
+        force: true
+
+    - name: Restart postgres
+      ansible.builtin.service:
+        name: postgresql-14
+        state: restarted

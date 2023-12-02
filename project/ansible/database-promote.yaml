@@ -1,0 +1,17 @@
+- name: Promote slave host
+  hosts: "{{ target | default('no_hosts') }}"
+  become: true
+  tasks:
+    - name: start postgresql-server on slave (if not)
+      service: 
+        name: postgresql-14
+        state: started
+
+    - name: Run promote command on database
+      ansible.builtin.shell: "/usr/pgsql-14/bin/pg_ctl promote -D /var/lib/pgsql/14/data"
+      become_user: postgres
+
+    - name: restart postgresql-server on slave (if not)
+      service: 
+        name: postgresql-14
+        state: restarted

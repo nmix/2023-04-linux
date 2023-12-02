@@ -1,0 +1,95 @@
+- name: Copy ssh key to client
+  hosts:
+    - fs
+    - nfs
+  become: true
+  tasks:
+    - name: generate SSH key for borg client
+      ansible.builtin.user:
+        name: borg
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 4096
+        force: no
+      when: (ansible_hostname == "nfs")
+
+    - name: fetch public key from borg client
+      ansible.builtin.shell: cat /home/borg/.ssh/id_rsa.pub
+      register: ssh_keys
+      when: (ansible_hostname == "nfs")
+
+    - name: transfer public key to borg server
+      ansible.builtin.authorized_key:
+        key: "{{ ssh_keys.stdout }}"
+        comment: "{{ ansible_hostname }}"
+        user: borg
+      delegate_to: "fs"
+      when: (ansible_hostname == "nfs")
+
+- name: Config borg client
+  hosts: nfs
+  become: true
+  environment:
+    BORG_PASSPHRASE: "{{ vault_borg_passphrase }}"
+  vars:
+    borg_repo: 10.10.1.141:/var/backup
+    data_dir: /opt/cms/data
+  tasks:
+    - name: Install common
+      ansible.builtin.import_role:
+        name: common-config
+
+    # --- Config firewalld
+
+    - name: Move eth1 to internal zone
+      ansible.builtin.shell: "firewall-cmd --zone=internal --change-interface=eth1 --permanent"
+
+    # ---
+
+    - name: Install dnf plugins
+      ansible.builtin.yum:
+        name:
+          - dnf-plugins-core
+        state: present
+
+    - name: Enable powertools
+      ansible.builtin.shell: "yum config-manager --set-enabled powertools"
+
+    - name: Install borg
+      ansible.builtin.yum:
+        name:
+          - borgbackup
+        state: present
+
+    # ---
+
+    - name: Disable strict host check
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/ssh_config"
+        line: "StrictHostKeyChecking no"
+
+    # --- @see https://github.com/borgbackup/borg/issues/271#issuecomment-953328932
+    - name: Init borg repository
+      ansible.builtin.command: "borg init --encryption=repokey borg@{{ borg_repo }}"
+      become_user: borg
+      # when: result.rc == 2
+      register: result
+      changed_when: result.rc == 0
+      failed_when: result.rc == 2 and 'A repository already exists at' not in result.stderr or result.rc != 2 and result.rc != 0
+
+    - name: create backup cronjob
+      ansible.builtin.cron:
+        name: create nfs backup
+        minute: "15"
+        hour: "0"
+        job: "borg create --stats borg@{{ borg_repo }}::cms-data-{now:%Y-%m-%d_%H:%M:%S} {{ data_dir }}"
+      become_user: borg
+
+    - name: Share data directory for nobody
+      ansible.builtin.file:
+        path: "{{ data_dir }}"
+        state: directory
+        owner: nobody
+        group: nobody
+        recurse: yes
+        mode: '0777'

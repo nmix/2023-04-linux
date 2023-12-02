@@ -1,0 +1,43 @@
+- name: Common config
+  ansible.builtin.import_role:
+    name: common-config
+
+- name: Install docker
+  ansible.builtin.import_role:
+    name: geerlingguy.docker
+  vars:
+    docker_install_compose_plugin: true
+    docker_install_compose: false
+    docker_users:
+      - vagrant
+
+- name: Check docker daemon config
+  ansible.builtin.stat:
+    path: /etc/docker/daemon.json
+  register: st
+
+- name: Create docker daemon config if not exists
+  ansible.builtin.copy:
+    src: files/docker-daemon.json
+    dest: /etc/docker/daemon.json
+    mode: "0644"
+  when: not st.stat.exists
+
+- name: Reload docker
+  ansible.builtin.service:
+    name: docker
+    state: reloaded
+  when: not st.stat.exists
+
+- name: Restart docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+  when: not st.stat.exists
+
+- name: Install python packages
+  pip:
+    name:
+      - docker
+      - docker-compose
+      - passlib
