@@ -9,7 +9,7 @@
   tasks:
     - name: Install common
       ansible.builtin.import_role:
-        name: common-config
+        name: common-config-docker
 
     # --- Config firewalld
 

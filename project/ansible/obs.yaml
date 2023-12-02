@@ -44,6 +44,20 @@
         duckprom_traefik_https_enabled: false
         duckprom_basic_auth_enabled: false
 
+    - name: Replace prometheus config
+      ansible.builtin.copy:
+        src: prometheus-duckprom.yaml
+        dest: /opt/duckprom/prometheus/duckprom.yaml
+        owner: vagrant
+        group: vagrant
+
+    - name: Restart prometheus
+      community.docker.docker_compose:
+        project_src: "/opt/duckprom"
+        restarted: true
+        services:
+          - prometheus
+
 - name: Config exporters
   hosts: edge
   become: true

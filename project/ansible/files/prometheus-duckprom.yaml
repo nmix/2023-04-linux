@@ -1,0 +1,68 @@
+# Конфигурация для promethus с внутренними адресами хостов
+scrape_configs:
+  - job_name: 'nodeexporter'
+    static_configs:
+      - targets: ['nodeexporter:9100']
+        labels:
+          host: duckprom
+      - targets: ['192.168.1.10:9100']
+        labels:
+          host: blnc
+      - targets: ['192.168.1.31:9100']
+        labels:
+          host: app1
+      - targets: ['192.168.1.32:9100']
+        labels:
+          host: app2
+      - targets: ['10.10.1.101:9100']
+        labels:
+          host: fw
+      - targets: ['10.10.1.131:9100']
+        labels:
+          host: db1
+      - targets: ['10.10.1.132:9100']
+        labels:
+          host: db2
+      - targets: ['10.10.1.142:9100']
+        labels:
+          host: nfs
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          host: duckprom
+      - targets: ['192.168.1.10:9180']
+        labels:
+          host: blnc
+      - targets: ['192.168.1.31:9180']
+        labels:
+          host: app1
+      - targets: ['192.168.1.32:9180']
+        labels:
+          host: app2
+      - targets: ['10.10.1.101:9180']
+        labels:
+          host: fw
+      - targets: ['10.10.1.131:9180']
+        labels:
+          host: db1
+      - targets: ['10.10.1.132:9180']
+        labels:
+          host: db2
+      - targets: ['10.10.1.142:9180']
+        labels:
+          host: nfs
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          host: duckprom
+
+  
+  - job_name: 'pushgateway'
+    static_configs:
+      - targets: ['pushgateway:9091']
+        labels:
+          host: duckprom

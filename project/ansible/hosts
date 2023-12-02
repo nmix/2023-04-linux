@@ -41,7 +41,10 @@ obs
 blnc
 app1
 app2
-
+fw
+db1
+db2
+nfs
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
