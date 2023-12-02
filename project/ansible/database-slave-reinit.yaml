@@ -58,7 +58,7 @@
       ansible.builtin.expect:
         command: "pg_basebackup -h {{ master_ip }} -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P"
         responses: 
-          '.*Password*': "secret"
+          '.*Password*': "{{ vault_db_replicator_password }}"
       become_user: postgres
 
     - name: Copy config file

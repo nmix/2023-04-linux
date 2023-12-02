@@ -60,9 +60,9 @@
   become: true
   vars:
     project_dir: /opt/cms
-    cms_admin: "admin"
-    cms_admin_password: "secret"
-
+    cms_admin: "{{ vault_cms_admin }}"
+    cms_admin_password: "{{ vault_cms_admin_password }}"
+    master_ip: 10.10.1.131
   tasks:
     # --- Run application
 
@@ -82,8 +82,8 @@
         group: vagrant
 
     - name: Copy env file
-      ansible.builtin.copy:
-        src: "env-local"
+      ansible.builtin.template:
+        src: "env-local.j2"
         dest: "{{ project_dir }}/.env-local"
         owner: vagrant
         group: vagrant

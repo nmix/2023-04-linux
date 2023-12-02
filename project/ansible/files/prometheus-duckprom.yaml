@@ -14,9 +14,6 @@ scrape_configs:
       - targets: ['192.168.1.32:9100']
         labels:
           host: app2
-      - targets: ['10.10.1.101:9100']
-        labels:
-          host: fw
       - targets: ['10.10.1.131:9100']
         labels:
           host: db1
@@ -41,9 +38,6 @@ scrape_configs:
       - targets: ['192.168.1.32:9180']
         labels:
           host: app2
-      - targets: ['10.10.1.101:9180']
-        labels:
-          host: fw
       - targets: ['10.10.1.131:9180']
         labels:
           host: db1

@@ -2,10 +2,10 @@
   hosts: fs
   become: true
   vars:
-    master_user: 'postgres'
-    barman_ip: '10.10.1.141'
-    barman_user: 'barman'
-    barman_user_password: 'secret'
+    master_user: "postgres"
+    barman_ip: "10.10.1.141"
+    barman_user: "{{ vault_barman_user }}"
+    barman_user_password: "{{ vault_barman_password }}"
   tasks:
     - name: Install common
       ansible.builtin.import_role:
@@ -216,8 +216,8 @@
     # CREATE USER barman SUPERUSER;
     - name: Create barman user
       ansible.builtin.postgresql_user:
-        name: barman
-        password: 'secret'
+        name: "{{ vault_barman_user }}"
+        password: "{{ vault_barman_password }}"
         role_attr_flags: SUPERUSER 
       become_user: postgres
       ignore_errors: true

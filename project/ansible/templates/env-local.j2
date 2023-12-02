@@ -1,4 +1,4 @@
-DATABASE_URL=postgres://django:secret@{{ master_ip }}:5432/cms
+DATABASE_URL=postgres://{{ vault_db_user }}:{{ vault_db_password }}@{{ master_ip }}:5432/cms
 DEFAULT_STORAGE_DSN=file:///data/media/?url=%2Fmedia%2F
 DEBUG=True
 DOMAIN_ALIASES="localhost, 127.0.0.1"

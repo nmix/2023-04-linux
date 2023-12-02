@@ -30,7 +30,7 @@
   hosts: nfs
   become: true
   environment:
-    BORG_PASSPHRASE: secret
+    BORG_PASSPHRASE: "{{ vault_borg_passphrase }}"
   vars:
     borg_repo: 10.10.1.141:/var/backup
     data_dir: /opt/cms/data

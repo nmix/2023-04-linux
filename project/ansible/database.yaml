@@ -23,9 +23,7 @@
         name: firewalld
         state: reloaded
 
-    # --- Установка БД и сопуствующих утилит
-
-    - name: Install libs
+    - name: Install python libs
       ansible.builtin.dnf:
         name:
           - python3-pexpect.noarch
@@ -44,7 +42,7 @@
     - name: Create replicator user
       community.postgresql.postgresql_user:
         name: replicator
-        password: secret
+        password: "{{ vault_db_replicator_password }}"
         role_attr_flags: replication
       become_user: postgres
 
@@ -88,7 +86,7 @@
       ansible.builtin.expect:
         command: 'pg_basebackup -h 10.10.1.131 -U  replicator -p 5432 -D /var/lib/pgsql/14/data/ -R -P'
         responses: 
-          '.*Password*': "secret"
+          '.*Password*': "{{ vault_db_replicator_password }}"
       become_user: postgres
 
     - name: Copy config file
@@ -115,8 +113,8 @@
     - name: Create database user
       community.postgresql.postgresql_user:
         db: cms
-        name: django
-        password: secret
+        name: "{{ vault_db_user }}"
+        password: "{{ vault_db_password }}"
         role_attr_flags: "CREATEDB,NOSUPERUSER"
         state: present
       become_user: postgres
