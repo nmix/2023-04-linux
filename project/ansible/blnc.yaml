@@ -43,14 +43,27 @@
         owner: vagrant
         group: vagrant
 
+    - name: Copy ssl certificate
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "/home/vagrant/{{ item }}"
+        owner: vagrant
+        group: vagrant
+      with_items:
+        - otus.local.crt
+        - otus.local.key
+
     - name: Run balancer container
       community.docker.docker_container:
         name: balancer
         image: nginx:latest
         volumes:
           - "/home/vagrant/nginx.conf:/etc/nginx/conf.d/default.conf"
+          - "/home/vagrant/otus.local.crt:/etc/nginx/otus.local.crt"
+          - "/home/vagrant/otus.local.key:/etc/nginx/otus.local.key"
         state: started
         restart: true
         restart_policy: unless-stopped
         ports:
           - "80:80"
+          - "443:443"
