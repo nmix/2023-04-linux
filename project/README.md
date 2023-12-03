@@ -4,6 +4,8 @@
 
 За основу взят проект [django-cms-quickstart](https://github.com/django-cms/django-cms-quickstart).
 
+[TOC]
+
 ## Схема развертывания
 
 ![Схема развертывания](docs/otus-project.drawio.png)
@@ -59,11 +61,71 @@ ansible-playbook -i ansible/hosts ansible/provision.yaml
 Выполняем резервное копирование БД и файлов приложения:
 
 ```bash
+# --- БД
 ansible-playbook -i ansible/hosts ansible/database-create-backup.yaml -e master=db1
+# --- файлы приложения
 ansible-playbook -i ansible/hosts ansible/nfs-create-backup.yaml
 ```
 
 Вход в Grafana - [https://grafana.local](https://grafana.local). Логин и пароль: `admin` / `admin`.
+
+## Контрольные команды
+
+HTTPS и балансировка
+```bash
+vagrant ssh blnc
+docker exec balancer cat /etc/nginx/conf.d/default.conf
+
+# --- подключаем к каждому экземпляру приложения и наблюдаем
+#     поочередное обращение к ним
+vagrant ssh app1
+docker logs -f cms_web_1
+
+vagrant ssh app2
+docker logs -f cms_web_1
+```
+
+Файловое хранилище через NFS
+```bash
+vagrant ssh app1
+# --- или
+# vagrant ssh app2
+cat /etc/fstab | grep opt
+10.10.1.142:/opt/cms/data /opt/cms/data nfs defaults 0 0
+```
+
+Сервер NFS и резервная копия файлов
+```bash
+# --- nfs
+vagrant ssh nfs
+sudo -i
+exportfs -v
+/opt/cms/data   10.10.1.0/24(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,all_squash)
+# --- borg
+su borg
+borg list borg@192.168.1.141:/var/backups
+crontab -l
+```
+
+Репликация БД
+```bash
+vagrant ssh db1
+sudo -u postgres psql
+select * from pg_stat_replication;
+
+vagrant ssh db2
+sudo -u postgres psql
+\l
+select * from pg_stat_wal_receiver;
+```
+
+Бекапирование БД
+```bash
+vagrant ssh fs
+sudo -u barman barman list-backups 
+sudo -u barman crontab -l
+```
+
 
 ## План восстановления
 
@@ -84,6 +146,8 @@ ansible-playbook -i ansible/hosts ansible/blnc.yaml
 vagrant up app1
 # vagrant up app2
 ansible-playbook -i ansible/hosts ansible/app.yaml
+# --- если мастер БД изменился, то не обходимо указать параметр master_ip
+ansible-playbook -i ansible/hosts ansible/app.yaml -e master_ip=10.10.1.132
 ```
 
 ### fw
@@ -151,6 +215,7 @@ vagrant up fs
 ansible-playbook -i ansible/hosts ansible/barman.yaml
 ansible-playbook -i ansible/hosts ansible/borg-server.yaml
 ansible-playbook -i ansible/hosts ansible/borg-client.yaml
+
 # --- бекапируем БД
 ansible-playbook -i ansible/hosts ansible/database-create-backup.yaml -e master=db1
 # --- или если мастер на db2
@@ -200,3 +265,24 @@ ansible-playbook -i ansible/hosts ansible/database-recover-latest.yaml -e master
 ```bash
 ansible-playbook -i ansible/hosts ansible/switch-app-on-another-master.yaml -e master_ip=10.10.1.131
 ```
+
+## План развития
+
+### Рефакторинг
+
+Требуется провести большой рефакторинг в части:
+* дублирующий код;
+* фиксированная конфигурация;
+
+### Бекапирование БД
+
+Требуется замена *barman* на другое решение по следующим причинам:
+* сложность;
+* как следствие, непонимание почему не работает, когда только что работало...
+
+### Метрики на `fw`
+
+Метрики на хосте `fw` не работают.
+Причина в том, что запуск контейнеров с экспортерами нарушают работу правил `firewalld`.
+Причины на данный момент не понятны. Принято решение пока метрики на сервере не запускать.
+

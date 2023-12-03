@@ -115,3 +115,15 @@
             new_super_user = MyUser(username = '{{ cms_admin }}', email='{{ cms_admin }}@example.com', is_superuser = True, is_staff = True );
             new_super_user.password = make_password('{{ cms_admin_password }}');
             new_super_user.save();"
+
+- name: Run exporters
+  hosts: apps
+  become: true
+  tasks:
+    - name: Install edge duckprom node
+      ansible.builtin.import_role:
+        name: nmix.duckprom
+      vars:
+        duckprom_dir: /opt/duckprom
+        duckprom_grafana_host: 10.10.1.143
+        duckprom_basic_auth_enabled: false

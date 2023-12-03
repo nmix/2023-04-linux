@@ -177,3 +177,15 @@
         hour: "0"
         job: "barman cron && barman backup {{ master }}"
       become_user: barman
+
+- name: Run exporters
+  hosts: database
+  become: true
+  tasks:
+    - name: Install edge duckprom node
+      ansible.builtin.import_role:
+        name: nmix.duckprom
+      vars:
+        duckprom_dir: /opt/duckprom
+        duckprom_grafana_host: 10.10.1.143
+        duckprom_basic_auth_enabled: false
